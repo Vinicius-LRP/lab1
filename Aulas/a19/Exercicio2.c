@@ -9,13 +9,13 @@ int main(){
 
     struct Point coordinates;
 
-    printf("Write Point X: ");
+    printf("Enter Point X: ");
     scanf("%f", &coordinates.x);
-    printf("Write Point Y: ");
+    printf("Enter Point Y: ");
     scanf("%f", &coordinates.y);
 
     printf("Point X: %.2f\n", coordinates.x);
     printf("Point Y: %.2f\n", coordinates.y);
 
-    
+
 }
