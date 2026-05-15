@@ -32,7 +32,6 @@ void valor_total_estoque(int tamanho, Estoque p[tamanho]){
     printf("Valor total do estoque: %.2f", total);
 }
 
-
 int main(){
 
     Estoque produtos[3] = {{"Escova", 5.50, 50}, {"Creme dental", 4.99, 100}, {"Fio dental", 3.99, 30}};
