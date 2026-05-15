@@ -62,7 +62,7 @@ int main(){
 
     Livro livro_antigo = livro_mais_antigo(3, livros);
 
-    printf("Livro mais antigo");
+    printf("Livro mais antigo\n");
     imprime_livro(livro_antigo);
 
 
