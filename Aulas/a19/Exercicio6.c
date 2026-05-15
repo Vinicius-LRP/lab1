@@ -8,20 +8,19 @@ typedef struct{
 }Livro;
 
 void le_titulo(int indice,Livro l[]){
-    int a = 0;
-    for(; ;){
+    int a;
+    for(a = 0; ; a++){
         scanf("%c", &l[indice].titulo[a]);
         if(l[indice].titulo[a] == '\n') break;
-        a++;
     }
     l[indice].titulo[a] = '\0';
 }
+
 void le_autor(int indice, Livro l[]){
-    int a = 0;
-    for(;; ){
+    int a;
+    for(a = 0; ; a++){
         scanf("%c", &l[indice].autor[a]);
         if(l[indice].autor[a] == '\n') break;
-        a++;
     }
     l[indice].autor[a] = '\0';
 }
@@ -34,15 +33,18 @@ void adicionar_livros(int num_livros, Livro l[num_livros]){
         le_autor(a, l);
         printf("Digite o ano de publicação: ");
         scanf("%d", &l[a].ano);
-        char c = getchar();
+        getchar();
     }
 }
 
 Livro livro_mais_antigo(int num_livros,Livro l[num_livros]){
     int mais_antigo = l[0].ano;
-    int indice;
+    int indice = 0;
     for(int a = 0; a < num_livros; a++){
-        if(l[a].ano < mais_antigo) indice = a;
+        if(l[a].ano < mais_antigo) {
+            indice = a;
+            mais_antigo = l[a].ano;
+        }
     }
     return l[indice];
 }
@@ -52,8 +54,6 @@ void imprime_livro(Livro l){
     printf("Autor: %s\n", l.autor);
     printf("Ano: %d\n", l.ano);
 }
-
-
 
 int main(){
     Livro livros[5];
