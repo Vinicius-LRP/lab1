@@ -61,4 +61,5 @@ int main(){
     Pedido pedidos[50] = {criarPedido("Otavio", "06029330404", "Escova", 9.99, 2)};
     
     consultarPedido(pedidos[0]);
+    
 }

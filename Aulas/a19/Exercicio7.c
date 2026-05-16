@@ -37,6 +37,7 @@ int main(){
     Estoque produtos[3] = {{"Escova", 5.50, 50}, {"Creme dental", 4.99, 100}, {"Fio dental", 3.99, 30}};
     
     produto_mais_caro(3,produtos);
+    
     valor_total_estoque(3,produtos);
 
 }

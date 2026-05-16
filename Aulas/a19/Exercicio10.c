@@ -47,7 +47,7 @@ float calculaMedia(Aluno a){
 }
 
 bool resultadoAprovadoOuReprovado(float m){
-    if(m > 7) return true;
+    if(m >= 6.0) return true;
     return false;
 }
 void alunoDetalhes(Aluno a){
@@ -101,7 +101,6 @@ int main(){
     Aluno alunos[50];
 
     menu(alunos);
-
 
     return 0;
 }

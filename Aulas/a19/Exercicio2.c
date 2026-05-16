@@ -17,5 +17,4 @@ int main(){
     printf("Point X: %.2f\n", coordinates.x);
     printf("Point Y: %.2f\n", coordinates.y);
 
-
 }

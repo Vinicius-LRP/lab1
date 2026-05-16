@@ -74,4 +74,5 @@ int main(){
     int numeroDePessoasAdicionadas = inserirVariasPessoas(pessoas);
     
     informacoesGrupoDePessoas(numeroDePessoasAdicionadas, pessoas);
+    
 }

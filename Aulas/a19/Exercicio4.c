@@ -47,6 +47,7 @@ int main(){
     Students class1[5] = {student1, student2, student3, student4, student5};
 
     class_information(class1);
+    
     student_best_average(class1);
 
 }

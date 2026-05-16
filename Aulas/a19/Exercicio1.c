@@ -17,4 +17,5 @@ int main(){
 
     printf("Name: %s\n", product1.name);
     printf("Value total in stock: %.2f$\n", product1.quantity * product1.price);
+    
 } 

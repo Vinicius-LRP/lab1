@@ -32,6 +32,7 @@ int main(){
 
     
     register_numbers(10,numbers);
+    
     show_numbers(10,numbers);
 
 }

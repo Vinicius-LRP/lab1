@@ -15,4 +15,5 @@ int main(){
     student1.grade2 = 9.5;
 
     printf("Average grade : %.2f\n", (student1.grade1 + student1.grade2) / 2);
+    
 }
