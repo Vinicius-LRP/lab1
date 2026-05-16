@@ -71,8 +71,7 @@ void informacoesGrupoDePessoas(int n, Pessoa p[]){
 int main(){
     Pessoa pessoas[50];
 
-    int numeroDePessoasAdicionadas= inserirVariasPessoas(pessoas);
+    int numeroDePessoasAdicionadas = inserirVariasPessoas(pessoas);
     
     informacoesGrupoDePessoas(numeroDePessoasAdicionadas, pessoas);
-    
 }
