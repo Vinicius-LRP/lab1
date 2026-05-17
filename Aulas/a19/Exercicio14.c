@@ -21,5 +21,4 @@ int main(){
     resetarPlacar(&p);
     imprimePlacar(&p);
 
-
 }
