@@ -10,9 +10,16 @@ void imprimePonto(Ponto *p){
     printf("Y: %d\n", p->y);
 }
 
+void movePonto(Ponto *p, int dx, int dy){
+    p->x += dx;
+    p->y += dy;
+}
+
 int main(){
     Ponto p = {2,4};
 
+    imprimePonto(&p);
+    movePonto(&p, 3,3);
     imprimePonto(&p);
 
 }
