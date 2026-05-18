@@ -26,5 +26,5 @@ int main(){
     imprimePonto(&p1);
     imprimePonto(&p2);
 
-
+    
 }
