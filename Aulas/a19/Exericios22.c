@@ -7,12 +7,10 @@ typedef struct{
 
 void imprimeLista(Produto **lista, int n){
     for(int a = 0; a < n ; a++){
-        printf("Nome: %s\n", (lista[a])->nome);
-        printf("Preço: %.2f\n", (lista[a])->preco);
+        printf("Nome: %s\n", lista[a]->nome);
+        printf("Preço: %.2f\n", lista[a]->preco);
     }
 }
-
-
 
 int main(){
     Produto p1 = {"Escova", 5.99};
