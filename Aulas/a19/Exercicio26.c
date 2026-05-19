@@ -29,6 +29,4 @@ int main(){
 
     inspecionarVeiculo(&v);
 
-
-
 }
