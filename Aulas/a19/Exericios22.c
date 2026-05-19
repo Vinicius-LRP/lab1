@@ -20,4 +20,5 @@ int main(){
     Produto *lista[3] = {&p1, &p2, &p3};
 
     imprimeLista(lista, 3);
+    
 }
