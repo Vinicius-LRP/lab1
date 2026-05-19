@@ -23,6 +23,7 @@ void inspecionarVeiculo(Veiculo *v){
 
 int main(){
     Motor m = {200};
+    
     Pneu p = {31};
     
     Veiculo v = {&m,&p};
