@@ -49,10 +49,11 @@ void imprimepostit(postit p){
 
 
 int main(){
+    
     postit postits[50] = {{"postit 1", { { 3 , 3 } , { 1 , 1 } } }, {"postit 2", { { 5 , 5 } , { 2 , 2 } } } };
     
     ponto p = {2,2};
 
     imprimepostit(postits[acha_postit(2, postits, p)]);
-    
+
 }
