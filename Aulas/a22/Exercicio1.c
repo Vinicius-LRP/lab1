@@ -8,13 +8,9 @@ bool estaNoVetor(int tam, int v[tam], int num){
     return false;
 }
 
-
-
-
 int main(){
     int vet[3] = {2, 3, 5};
 
     printf("%d", estaNoVetor(3, vet, 2));
-
 
 }
