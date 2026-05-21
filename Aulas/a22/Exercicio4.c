@@ -7,9 +7,6 @@ int ultimaPosicaoNoVetor(int tam, int v[tam], int num){
     return -1;
 }
 
-
-
-
 int main(){
     int vet[5] = {1 , 2, 3, 2, 4};
 
