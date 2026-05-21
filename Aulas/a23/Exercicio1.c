@@ -1,9 +1,5 @@
 #include <stdio.h>
 
-
-
-
-
 int main(){
 
     FILE *arq = fopen("arquivo.txt", "r");
@@ -14,5 +10,6 @@ int main(){
     }
 
     fclose(arq);
+
     return 0;
 }
