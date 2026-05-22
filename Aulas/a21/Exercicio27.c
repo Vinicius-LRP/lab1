@@ -18,13 +18,12 @@ bool comparaDatas(Data *d1, Data *d2){
     if(d1->dia > d2->dia) return false;
     if(d1->dia < d2->dia) return true;
 
-    printf("Dias iguais!");
-    return 1;
+    return false;
 }
 
 int main(){
-    Data data1 = {22, 05, 2026};
-    Data data2 = {10, 04, 2003};
+    Data data1 = {22, 5, 2026};
+    Data data2 = {10, 4, 2003};
 
     printf("%d\n", comparaDatas(&data2, &data1));
 
