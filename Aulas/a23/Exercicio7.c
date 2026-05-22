@@ -9,13 +9,11 @@ int existeArquivo(char nome[]){
     return 0;
 }
 
-
-
 int main(){
 
     if(existeArquivo("dados.txt"))
-        printf("Arquivo existe!");
+        printf("Arquivo existe!\n");
     else
-        printf("Arquivo não existe!");
+        printf("Arquivo não existe!\n");
 
 }
