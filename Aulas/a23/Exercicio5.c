@@ -1,28 +1,20 @@
 #include <stdio.h>
 
+FILE* abrirArquivo(){
+    FILE *dados = fopen("dados.txt", "r");
+    return dados;
+}
+
 int main(){
-    FILE *a;
-    FILE *b;
-    FILE *c;
+    FILE *arq = abrirArquivo();
 
-    a = fopen("a.txt", "r");
-    b = fopen("b.txt", "r");
-    c = fopen("c.txt", "r");
-
-    int arqAbertos = 0;
-
-    if(a != NULL) arqAbertos++;
-    if(b != NULL) arqAbertos++;
-    if(c != NULL) arqAbertos++;
-
-    if(arqAbertos)
-        printf("%d arquivo(s) aberto(s)!\n", arqAbertos);
-    else
-        printf("Nenhum arquivo aberto!");
-
-    if(a != NULL) fclose(a);
-    if(b != NULL) fclose(b);
-    if(c != NULL) fclose(c);
+    if(!arq){
+        printf("Arquivo não foi aberto!");
+        return 1;
+    }
+    
+    printf("Arquivo foi aberto!");
+    fclose(arq);
 
     return 0;
 
