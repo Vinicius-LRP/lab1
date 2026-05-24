@@ -3,7 +3,7 @@
 int maiorValor(FILE *a){
     int c;
     int num = 0;
-    int maior;
+    int maior = 0;
     while(!feof(a)){
         c = fgetc(a);
         if(c != EOF && c != '\n' && c != ' '){
@@ -16,7 +16,6 @@ int maiorValor(FILE *a){
     return maior;
 }
 
-
 int main(){
     FILE *arq = fopen("arquivo.txt", "r");
     if(arq == NULL){
@@ -25,8 +24,6 @@ int main(){
     }
 
     printf("Maior valor: %d\n", maiorValor(arq));
-
-
 
     fclose(arq);
     return 0;
