@@ -11,9 +11,6 @@ void adicionarNomes(FILE *arq){
     }
 }
 
-
-
-
 int main(){
     FILE *arq = fopen("arquivo.txt", "w");
     if(arq == NULL){
