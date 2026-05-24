@@ -16,7 +16,6 @@ int contarInteiros(char nome[]){
 
 }
 
-
 int main(){
     char arquivo[50] = "arquivo.txt";
     int resultado = contarInteiros(arquivo);
