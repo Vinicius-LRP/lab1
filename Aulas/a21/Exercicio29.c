@@ -20,6 +20,7 @@ void detalhesTurma(int t, Aluno al[]){
 }
 
 int main(){
+    
     Aluno a1 = {"Lucas", 'A'};
     Aluno a2 = {"Arthur", 'R'};
     Aluno a3 = {"Carlos", 'R'};
