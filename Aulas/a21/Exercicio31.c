@@ -14,6 +14,8 @@ int main(){
 
     Alvo a = {{10,20}, {5, 10, 15, 20, 25}};
 
+    Ponto p = {15,20};
+
     printf("Centro: (%d, %d)\n", a.centro.x, a.centro.y);
 
     for(int i = 0; i < 5; i++){
