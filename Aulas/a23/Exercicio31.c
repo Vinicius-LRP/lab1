@@ -8,9 +8,10 @@ void converterMaiuscula(char l[]){
 void copiaArquivo(FILE *a, FILE *n){
     char linha[100];
     while(!feof(a)){
-        fgets(linha , sizeof(linha), a);
-        converterMaiuscula(linha);
-        fputs(linha, n);
+        if(fgets(linha , sizeof(linha), a) != NULL){
+            converterMaiuscula(linha);
+            fputs(linha, n);
+        }
     }
 }
 
