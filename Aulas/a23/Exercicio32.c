@@ -4,7 +4,7 @@
 
 int main(){
     FILE *arq; 
-    arq = fopen("numero.txt", "wb");
+    arq = fopen("numero.bin", "wb");
     if(arq == NULL){
         printf("Erro ao abrir!");
         return 1;
@@ -14,17 +14,24 @@ int main(){
     printf("Digite um número: ");
     scanf("%d", &numero);
 
-    fwrite(&numero, sizeof(int), 1, arq);
+    if(fwrite(&numero, sizeof(int), 1, arq) != 1){
+        printf("Erro ao gravar! \n");
+        fclose(arq);
+    }
     fclose(arq);
 
-    arq = fopen("numero.txt", "rb");
+    arq = fopen("numero.bin", "rb");
     if(arq == NULL){
         printf("Erro ao abrir!");
         return 1;
     }
+    
     int numerobin;
-
-    fread(&numerobin, sizeof(int), 1, arq);
+    
+    if(fread(&numerobin, sizeof(int), 1, arq) != 1){
+        printf("Erro ao ler!");
+        fclose(arq);
+    }
 
     printf("%d", numerobin);
 
