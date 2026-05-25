@@ -18,6 +18,7 @@ void gravaNoArquivo(FILE *a){
 }
 
 int main(){
+    
     FILE *arq = fopen("arquivo.txt", "w");
     if(arq == NULL){
         printf("Erro ao abrir!");
