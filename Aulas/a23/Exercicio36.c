@@ -8,14 +8,14 @@ bool copiaInteiros(char n[], int v[], int t){
         return false;
     }
     int a;
+    int result;
     for(a = 0; a < t; a++){
-        fprintf(arq, "%d", v[a]);
-        fputs("\n", arq);
+        result = fprintf(arq, "%d\n", v[a]);
+        if(result < 0) return false;
     }
 
     fclose(arq);
-    if(a == t) return true;
-    return false;
+    return true;
 }
 
 int main(){
@@ -23,7 +23,6 @@ int main(){
     int vet[5] = {2, 3, 1, 4, 5};
 
     printf("Copia feita? %d\n", copiaInteiros(nome, vet, 5));
-
 
     return 0;
 }
