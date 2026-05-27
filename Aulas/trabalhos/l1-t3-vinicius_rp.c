@@ -91,6 +91,7 @@ void leNotas(Nota n[], int t, FILE *arq){
         n[a] = leNota(arq);
     }
 }
+
 void inserirNota(Nota n, FILE *a){
     if(fprintf(a, "%c%c%c", n.etiqueta[0], n.etiqueta[1], n.etiqueta[2]) < 0)
         printf("Erro ao inserir etiqueta!\n");
@@ -116,7 +117,6 @@ void inserirNotas(Nota n[], int t){
 
     fclose(novo);
 }
-
 
 int main(){
     FILE *arquivo = fopen("arquivo.txt", "r");
