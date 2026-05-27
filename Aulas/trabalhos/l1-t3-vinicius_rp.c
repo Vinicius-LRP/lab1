@@ -121,7 +121,7 @@ void inserirNotas(Nota n[], int t){
 int main(){
     FILE *arquivo = fopen("arquivo.txt", "r");
     if(arquivo == NULL){
-        printf("Erro ao abrir!\n");
+        aprintf("Erro ao abrir!\n");
         return 1;
     }
     Nota notas[3] = {0};
