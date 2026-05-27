@@ -7,8 +7,8 @@ typedef struct{
 }Cor;
 
 typedef struct{
-    int coluna;
-    int linha;
+    int x;
+    int y;
 }Ponto;
 
 typedef struct{
@@ -31,7 +31,6 @@ typedef struct{
 void leEtiqueta(FILE *a, char e[]){
     if(fscanf(a, "%c%c%c", &e[0], &e[1], &e[2]) != 3)
         printf("Erro ao ler etiqueta!\n");
-    
 }
 
 void leCor(FILE *a, Cor *c){
@@ -52,14 +51,18 @@ void leCor(FILE *a, Cor *c){
 }
 
 void leRetangulo(FILE *a, Retangulo *r){
-    if(fscanf(a, "%d %d %d %d", &r->ponto.coluna, &r->ponto.linha, &r->tamanho.largura, &r->tamanho.altura) != 4)
+    if(fscanf(a, "%d %d %d %d", &r->ponto.x, &r->ponto.y, &r->tamanho.largura, &r->tamanho.altura) != 4)
         printf("Erro ao ler Retangulo!\n");
-
 }
 
 void leTexto(FILE *a, char t[]){
-    if(fscanf(a, "%s", t) != 1)
-        printf("Erro ao ler Texto!\n");
+    char aspas = ' ';
+    while(aspas != '"'){
+        aspas = fgetc(a);
+    }
+    if(fscanf(a, "%99[^\"]", t) != 1){
+        printf("Erro ao ler texto!");
+    }
 }
 
 
@@ -80,6 +83,7 @@ Nota leArquivo(char nome[]){
 
 
 
+
     printf("%c\n", n.etiqueta[0]);
     printf("%c\n", n.etiqueta[1]);
     printf("%c\n", n.etiqueta[2]);
@@ -88,8 +92,8 @@ Nota leArquivo(char nome[]){
     printf("%d\n", n.cor.g);
     printf("%d\n", n.cor.b);
 
-    printf("%d\n",n.retangulo.ponto.coluna);
-    printf("%d\n",n.retangulo.ponto.linha);
+    printf("%d\n",n.retangulo.ponto.x);
+    printf("%d\n",n.retangulo.ponto.y);
     printf("%d\n",n.retangulo.tamanho.largura);
     printf("%d\n",n.retangulo.tamanho.altura); 
     printf("%s\n", n.texto);  
