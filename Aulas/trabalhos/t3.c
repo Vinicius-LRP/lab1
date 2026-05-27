@@ -68,7 +68,7 @@ Nota leArquivo(char nome[]){
     if(fscanf(arq, "%d", &i) == 1){
         n.retangulo.tamanho.altura = i;
     }
-    
+
     fscanf(arq, "%s", n.texto);
 
 
@@ -76,6 +76,7 @@ Nota leArquivo(char nome[]){
     printf("%c\n", n.etiqueta[0]);
     printf("%c\n", n.etiqueta[1]);
     printf("%c\n", n.etiqueta[2]);
+    
 
     printf("%d\n", n.cor.r);
     printf("%d\n", n.cor.g);
