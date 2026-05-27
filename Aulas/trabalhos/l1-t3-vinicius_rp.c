@@ -91,47 +91,45 @@ void leNotas(Nota n[], int t, FILE *arq){
         n[a] = leNota(arq);
     }
 }
+void inserirNota(Nota n, FILE *a){
+    if(fprintf(a, "%c%c%c", n.etiqueta[0], n.etiqueta[1], n.etiqueta[2]) < 0)
+        printf("Erro ao inserir etiqueta!\n");
+    if(fprintf(a, " %d %d %d",n.cor.r, n.cor.g, n.cor.b) < 0)
+        printf("Erro ao inserir cor!\n");
+    if(fprintf(a, " %d %d %d %d", n.retangulo.ponto.x, n.retangulo.ponto.y, n.retangulo.tamanho.largura, n.retangulo.tamanho.altura) <0)
+        printf("Erro ao inserir retangulo!");
+    if(fprintf(a, " \"%s\"", n.texto) < 0)
+        printf("Erro ao inserir texto!\n");
+    if(fprintf(a, " \n") < 0)
+        printf("Erro ao criar linha!");
+}
+
+void inserirNotas(Nota n[], int t){
+    FILE *novo = fopen("novo.txt", "w");
+    if(novo == NULL){
+        printf("Erro ao abrir!\n");
+        return;
+    }
+    for(int a = 0; a < t; a++){
+       inserirNota(n[a], novo);
+    }
+
+    fclose(novo);
+}
 
 
 int main(){
     FILE *arquivo = fopen("arquivo.txt", "r");
-
     if(arquivo == NULL){
         printf("Erro ao abrir!\n");
         return 1;
     }
-
     Nota notas[3] = {0};
 
-    leNotas(notas, 3, arquivo);
 
+    leNotas(notas,3, arquivo);
+    inserirNotas(notas, 3);
+    
     fclose(arquivo);
-
-    for(int i = 0; i < 3; i++){
-        printf("Nota %d\n", i + 1);
-
-        printf("Etiqueta: %c%c%c\n",
-               notas[i].etiqueta[0],
-               notas[i].etiqueta[1],
-               notas[i].etiqueta[2]);
-
-        printf("Cor: %d %d %d\n",
-               notas[i].cor.r,
-               notas[i].cor.g,
-               notas[i].cor.b);
-
-        printf("Posicao: (%d, %d)\n",
-               notas[i].retangulo.ponto.x,
-               notas[i].retangulo.ponto.y);
-
-        printf("Tamanho: %d x %d\n",
-               notas[i].retangulo.tamanho.largura,
-               notas[i].retangulo.tamanho.altura);
-
-        printf("Texto: %s\n", notas[i].texto);
-
-        printf("\n");
-    }
-
     return 0;
 }
