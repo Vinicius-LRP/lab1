@@ -56,17 +56,21 @@ void leRetangulo(FILE *a, Retangulo *r){
 }
 
 void leTexto(FILE *a, char t[]){
-    char aspas = ' ';
+    int aspas = ' ';
     while(aspas != '"'){
-        aspas = fgetc(a);
+        if((aspas = fgetc(a)) == EOF)
+            return;
     }
     if(fscanf(a, "%99[^\"]", t) != 1){
         printf("Erro ao ler texto!");
     }
 }
+void consumirLinha(FILE *a){
+    int c;
+    while((c = fgetc(a)) != '\n' && c != EOF);
+}
 
-
-Nota leArquivo(char nome[]){
+Nota leNota(char nome[]){
     FILE *arq = fopen(nome, "r");
     Nota n = {0};
 
@@ -78,28 +82,15 @@ Nota leArquivo(char nome[]){
     leCor(arq, &n.cor);
     leRetangulo(arq, &n.retangulo);
     leTexto(arq, n.texto);
+    consumirLinha(arq);
 
-
-
-
-
-
-    printf("%c\n", n.etiqueta[0]);
-    printf("%c\n", n.etiqueta[1]);
-    printf("%c\n", n.etiqueta[2]);
-    
-    printf("%d\n", n.cor.r);
-    printf("%d\n", n.cor.g);
-    printf("%d\n", n.cor.b);
-
-    printf("%d\n",n.retangulo.ponto.x);
-    printf("%d\n",n.retangulo.ponto.y);
-    printf("%d\n",n.retangulo.tamanho.largura);
-    printf("%d\n",n.retangulo.tamanho.altura); 
-    printf("%s\n", n.texto);  
-    
     fclose(arq);
     return n;
+}
+
+void leNotas(char n[]){
+    FILE *arq = fopen(n, "r");
+
 }
 
 
@@ -107,7 +98,7 @@ Nota leArquivo(char nome[]){
 int main(){
     char nome[] = "arquivo.txt";
 
-    leArquivo(nome);
+    leNota(nome);
 
     return 0;
 }
