@@ -77,7 +77,6 @@ Nota leArquivo(char nome[]){
     printf("%c\n", n.etiqueta[1]);
     printf("%c\n", n.etiqueta[2]);
     
-
     printf("%d\n", n.cor.r);
     printf("%d\n", n.cor.g);
     printf("%d\n", n.cor.b);
