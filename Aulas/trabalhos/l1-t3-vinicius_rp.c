@@ -7,12 +7,12 @@ typedef struct{
 }Cor;
 
 typedef struct{
-    int y;
     int x;
+    int y;
 }Ponto;
 
 typedef struct{
-    int comprimento;
+    int largura;
     int altura;
 }Tamanho;
 
@@ -21,7 +21,6 @@ typedef struct{
     Tamanho tamanho;
 }Retangulo;
 
-
 typedef struct{
     char texto[100];
     Cor cor;
@@ -29,6 +28,28 @@ typedef struct{
     char etiqueta[3];
 }Nota;
 
+void leEtiqueta(FILE *a, char e[]){
+    for(int i = 0; i < 3; i++){
+        if(fscanf(a, "%c", &e[i]) != 1){
+            printf("Erro ao ler etiqueta\n");
+            return;
+        }
+    }
+}
+
+void leCor(FILE *arq, Cor *c){
+    int i;
+    if(fscanf(arq, "%d", &i) == 1){
+        c->r = i;
+    }
+    if(fscanf(arq, "%d", &i) == 1){
+        c->g = i;
+    }
+    if(fscanf(arq, "%d", &i) == 1){
+        c->b = i;
+    }
+
+}
 
 Nota leArquivo(char nome[]){
     FILE *arq = fopen(nome, "r");
@@ -38,36 +59,9 @@ Nota leArquivo(char nome[]){
         printf("Erro!");
         return n;
     }
-    
-    char c;
-    for(int a = 0; a < 3; a++){
-        if(fscanf(arq, "%c", &c) == 1){
-            n.etiqueta[a] = c;
-        }
-    }
-    int i;
-    if(fscanf(arq, "%d", &i) == 1){
-        n.cor.r = i;
-    }
-    if(fscanf(arq, "%d", &i) == 1){
-        n.cor.g = i;
-    }
-    if(fscanf(arq, "%d", &i) == 1){
-        n.cor.b = i;
-    }
+    leEtiqueta(arq, n.etiqueta);
 
-    if(fscanf(arq, "%d", &i) == 1){
-        n.retangulo.ponto.y = i;
-    }
-    if(fscanf(arq, "%d", &i) == 1){
-        n.retangulo.ponto.x = i;
-    }
-    if(fscanf(arq, "%d", &i) == 1){
-        n.retangulo.tamanho.comprimento = i;
-    }
-    if(fscanf(arq, "%d", &i) == 1){
-        n.retangulo.tamanho.altura = i;
-    }
+
 
     fscanf(arq, "%s", n.texto);
 
@@ -83,7 +77,7 @@ Nota leArquivo(char nome[]){
 
     printf("%d\n",n.retangulo.ponto.y);
     printf("%d\n",n.retangulo.ponto.x);
-    printf("%d\n",n.retangulo.tamanho.comprimento);
+    printf("%d\n",n.retangulo.tamanho.largura);
     printf("%d\n",n.retangulo.tamanho.altura); 
     printf("%s\n", n.texto);  
     
