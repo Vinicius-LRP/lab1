@@ -31,37 +31,28 @@ typedef struct{
 void leEtiqueta(FILE *a, char e[]){
     for(int i = 0; i < 3; i++){
         if(fscanf(a, "%c", &e[i]) != 1){
-            printf("Erro ao ler etiqueta\n");
+            printf("Erro ao ler etiqueta!\n");
             return;
         }
     }
 }
 
 void leCor(FILE *arq, Cor *c){
-    int i;
-    if(fscanf(arq, "%d", &i) == 1){
-        c->r = i;
+    if(fscanf(arq, "%d %d %d", &c->r, &c->g, &c->b) != 3){
+        printf("Erro ao ler cor!\n");
     }
-    if(fscanf(arq, "%d", &i) == 1){
-        c->g = i;
-    }
-    if(fscanf(arq, "%d", &i) == 1){
-        c->b = i;
-    }
-
 }
 
 Nota leArquivo(char nome[]){
     FILE *arq = fopen(nome, "r");
-    Nota n;
+    Nota n = {0};
 
     if(arq == NULL){
         printf("Erro!");
         return n;
     }
     leEtiqueta(arq, n.etiqueta);
-
-
+    leCor(arq, &n.cor);
 
     fscanf(arq, "%s", n.texto);
 
