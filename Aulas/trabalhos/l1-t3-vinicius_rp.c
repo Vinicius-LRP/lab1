@@ -29,11 +29,8 @@ typedef struct{
 }Nota;
 
 void leEtiqueta(FILE *a, char e[]){
-    for(int i = 0; i < 3; i++){
-        if(fscanf(a, "%c", &e[i]) != 1){
-            printf("Erro ao ler etiqueta!\n");
-            return;
-        }
+    if(fscanf(a, "%c %c %c", &e[0], &e[1], &e[2]) != 3){
+        printf("Erro ao ler etiqueta!\n");
     }
 }
 
@@ -54,7 +51,10 @@ Nota leArquivo(char nome[]){
     leEtiqueta(arq, n.etiqueta);
     leCor(arq, &n.cor);
 
-    fscanf(arq, "%s", n.texto);
+    
+
+
+
 
 
 
