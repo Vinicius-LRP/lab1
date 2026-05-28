@@ -124,7 +124,7 @@ int inserirNotas(Nota n[], int t){
         return 0;
     }
     for(int a = 0; a < t; a++){
-       inserirNota(n[a], novo);
+        inserirNota(n[a], novo);
     }
     fclose(novo);
 }
@@ -141,8 +141,8 @@ void notaAnterior(Programa *p){
     }
 }
 
-void imprimeNotaAtual(){
-
+void imprimeNotaAtual(Programa *p){
+    printf("Texto: %s\n", p->notas[p->notaAtual].texto);
 }
 
 void inicializarPrograma(Programa *p){
@@ -154,8 +154,8 @@ void inicializarPrograma(Programa *p){
     p->quantidade = leNotas(p->notas, arq);
     p->notaAtual = 0;
     inserirNotas(p->notas, p->quantidade);
-    proximaNota(p);
-    
+    imprimeNotaAtual(p);
+
     
     fclose(arq);
 }
