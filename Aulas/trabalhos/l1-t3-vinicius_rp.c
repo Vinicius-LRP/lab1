@@ -117,11 +117,11 @@ void inserirNota(Nota n, FILE *a){
         printf("Erro ao criar linha!");
 }
 
-void inserirNotas(Nota n[], int t){
+int inserirNotas(Nota n[], int t){
     FILE *novo = fopen("novo.txt", "w");
     if(novo == NULL){
         printf("Erro ao abrir!\n");
-        return;
+        return 0;
     }
     for(int a = 0; a < t; a++){
        inserirNota(n[a], novo);
@@ -136,6 +136,7 @@ void inicializarPrograma(Programa *p){
         return;
     }
     p->quantidade = leNotas(p->notas, arq);
+    printf("%d", p->quantidade);
     p->notaAtual = 0;
     inserirNotas(p->notas, p->quantidade);
     
