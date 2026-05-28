@@ -129,6 +129,22 @@ int inserirNotas(Nota n[], int t){
     fclose(novo);
 }
 
+void proximaNota(Programa *p){
+    if(p->notaAtual < p->quantidade - 1){
+        p->notaAtual++;
+    }
+}
+
+void notaAnterior(Programa *p){
+    if(p->notaAtual > 0){
+        p->notaAtual--;
+    }
+}
+
+void imprimeNotaAtual(){
+
+}
+
 void inicializarPrograma(Programa *p){
     FILE *arq = fopen("arquivo.txt", "r");
     if(arq == NULL){
@@ -136,9 +152,10 @@ void inicializarPrograma(Programa *p){
         return;
     }
     p->quantidade = leNotas(p->notas, arq);
-    printf("%d", p->quantidade);
     p->notaAtual = 0;
     inserirNotas(p->notas, p->quantidade);
+    proximaNota(p);
+    
     
     fclose(arq);
 }
