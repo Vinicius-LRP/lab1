@@ -1,14 +1,6 @@
 #include <stdio.h>
 
 typedef struct{
-    Nota notas[100];
-    int quantidade;
-    int notaAtual;
-    char textoEditor[100];
-    int cursor;
-}Programa;
-
-typedef struct{
     int r;
     int g;
     int b;
@@ -35,6 +27,14 @@ typedef struct{
     Retangulo retangulo;
     char etiqueta[3];
 }Nota;
+
+typedef struct{
+    Nota notas[100];
+    int quantidade;
+    int notaAtual;
+    char textoEditor[100];
+    int cursor;
+}Programa;
 
 void leEtiqueta(FILE *a, char e[]){
     if(fscanf(a, " %c%c%c", &e[0], &e[1], &e[2]) != 3)
@@ -95,10 +95,13 @@ Nota leNota(FILE *arq){
     return n;
 }
 
-void leNotas(Nota n[], int t, FILE *arq){
-    for(int a = 0; a < t; a++){
+int leNotas(Nota n[], FILE *arq){
+    int a = 0;
+    while(!feof(arq)){
         n[a] = leNota(arq);
+        a++;
     }
+    return a;
 }
 
 void inserirNota(Nota n, FILE *a){
@@ -123,25 +126,17 @@ void inserirNotas(Nota n[], int t){
     for(int a = 0; a < t; a++){
        inserirNota(n[a], novo);
     }
-
     fclose(novo);
 }
 
-int quantidadeDeNotas(FILE *arq){
-    char linha[100];
-    
-
-}
-
 void inicializarPrograma(Programa *p){
-    p->quantidade = 3;
-    p->notaAtual = 0;
     FILE *arq = fopen("arquivo.txt", "r");
     if(arq == NULL){
         printf("Erro ao abrir!\n");
         return;
     }
-    leNotas(p->notas, p->quantidade, arq);
+    p->quantidade = leNotas(p->notas, arq);
+    p->notaAtual = 0;
     inserirNotas(p->notas, p->quantidade);
     
     fclose(arq);
