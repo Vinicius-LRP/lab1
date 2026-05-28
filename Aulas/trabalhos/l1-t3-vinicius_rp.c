@@ -1,6 +1,14 @@
 #include <stdio.h>
 
 typedef struct{
+    Nota notas[100];
+    int quantidade;
+    int notaAtual;
+    char textoEditor[100];
+    int cursor;
+}Programa;
+
+typedef struct{
     int r;
     int g;
     int b;
@@ -65,6 +73,7 @@ void leTexto(FILE *a, char t[]){
         printf("Erro ao ler texto!");
     }
 }
+
 void consumirLinha(FILE *a){
     int c;
     while((c = fgetc(a)) != '\n' && c != EOF);
@@ -118,18 +127,30 @@ void inserirNotas(Nota n[], int t){
     fclose(novo);
 }
 
-int main(){
-    FILE *arquivo = fopen("arquivo.txt", "r");
-    if(arquivo == NULL){
-        aprintf("Erro ao abrir!\n");
-        return 1;
-    }
-    Nota notas[3] = {0};
-
-
-    leNotas(notas,3, arquivo);
-    inserirNotas(notas, 3);
+int quantidadeDeNotas(FILE *arq){
+    char linha[100];
     
-    fclose(arquivo);
+
+}
+
+void inicializarPrograma(Programa *p){
+    p->quantidade = 3;
+    p->notaAtual = 0;
+    FILE *arq = fopen("arquivo.txt", "r");
+    if(arq == NULL){
+        printf("Erro ao abrir!\n");
+        return;
+    }
+    leNotas(p->notas, p->quantidade, arq);
+    inserirNotas(p->notas, p->quantidade);
+    
+    fclose(arq);
+}
+
+int main(){
+    Programa programa = {0};
+
+    inicializarPrograma(&programa);
+    
     return 0;
 }
