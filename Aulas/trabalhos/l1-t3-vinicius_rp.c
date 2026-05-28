@@ -145,6 +145,10 @@ void imprimeNotaAtual(Programa *p){
     printf("Texto: %s\n", p->notas[p->notaAtual].texto);
 }
 
+void desenhaPrincipal(Programa *p){
+    Nota *n = &
+}
+
 void inicializarPrograma(Programa *p){
     FILE *arq = fopen("arquivo.txt", "r");
     if(arq == NULL){
@@ -156,7 +160,6 @@ void inicializarPrograma(Programa *p){
     inserirNotas(p->notas, p->quantidade);
     imprimeNotaAtual(p);
 
-    
     fclose(arq);
 }
 
