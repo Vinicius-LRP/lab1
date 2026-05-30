@@ -158,10 +158,11 @@ void inicializarPrograma(Programa *p){
     imprimeNotaAtual(p);
 
     fclose(arq);
-    
+
 }
 
 int main(){
+
     Programa programa = {0};
 
     inicializarPrograma(&programa);
