@@ -146,6 +146,7 @@ void imprimeNotaAtual(Programa *p){
 }
 
 void inicializarPrograma(Programa *p){
+    
     FILE *arq = fopen("arquivo.txt", "r");
     if(arq == NULL){
         printf("Erro ao abrir!\n");
