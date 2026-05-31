@@ -29,12 +29,16 @@ typedef struct{
 }Nota;
 
 typedef struct{
-    Nota notas[100];
+    Nota notas[101];
     int quantidade;
     int notaAtual;
-    char textoEditor[100];
+    char textoEditor[101];
     int cursor;
 }Programa;
+
+int valido(char c){
+    return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
+}
 
 void leEtiqueta(FILE *a, char e[]){
     char e1;
@@ -44,13 +48,13 @@ void leEtiqueta(FILE *a, char e[]){
         printf("Erro ao ler etiqueta!\n");
         return;
     }
-    if(e1 >= 'A' || e1 <= 'Z' || e1 >= '0' || e1 <= '9' ||
-       e2 >= 'A' || e2 <= 'Z' || e2 >= '0' || e2 <= '9' ||
-       e3 >= 'A' || e3 <= 'Z' || e3 >= '0' || e3 <= '9'){
-        e[0] = e1;
-        e[1] = e2;
-        e[2] = e3;
+    if (!valido(e1) || !valido(e2) || !valido(e3)) {
+        printf("Etiqueta diferente da permitida!\n");
+        return;
     }
+    e[0] = e1;
+    e[1] = e2;
+    e[2] = e3;
 }
 
 void leCor(FILE *a, Cor *c){
@@ -109,7 +113,11 @@ Nota leNota(FILE *arq){
 
 int leNotas(Nota n[], FILE *arq){
     int a = 0;
-    while(!feof(arq)){
+    while(1){
+        int c = fgetc(arq);
+        if(c == EOF)
+            break;
+        ungetc(c, arq);
         n[a] = leNota(arq);
         a++;
     }
@@ -129,11 +137,11 @@ void inserirNota(Nota n, FILE *a){
         printf("Erro ao criar linha!");
 }
 
-int inserirNotas(Nota n[], int t){
+void inserirNotas(Nota n[], int t){
     FILE *novo = fopen("novo.txt", "w");
     if(novo == NULL){
         printf("Erro ao abrir!\n");
-        return 0;
+        return;
     }
     for(int a = 0; a < t; a++){
         inserirNota(n[a], novo);
@@ -167,6 +175,7 @@ void inicializarPrograma(Programa *p){
     p->quantidade = leNotas(p->notas, arq);
     p->notaAtual = 0;
     inserirNotas(p->notas, p->quantidade);
+    printf("%d\n", p->quantidade);
     imprimeNotaAtual(p);
 
     fclose(arq);
