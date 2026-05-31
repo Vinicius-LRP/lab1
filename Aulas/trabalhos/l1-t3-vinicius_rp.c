@@ -109,14 +109,27 @@ Nota leNota(FILE *arq){
         printf("Erro!");
         return n;
     }
-    
-
-    if(leEtiqueta(arq, n.etiqueta)) n.etiqueta[0] = 'x'; 
-    if(leCor(arq, &n.cor)) n.etiqueta[0] = 'x';
-    if(leRetangulo(arq, &n.retangulo)) n.etiqueta[0] = 'x';
-    if(leTexto(arq, n.texto)) n.etiqueta[0] = 'x';
+    if(leEtiqueta(arq, n.etiqueta)){
+        n.etiqueta[0] = 'x';
+        consumirLinha(arq);
+        return n;
+    } 
+    if(leCor(arq, &n.cor)){
+        n.etiqueta[0] = 'x';
+        consumirLinha(arq);
+        return n;
+    } 
+    if(leRetangulo(arq, &n.retangulo)){
+        n.etiqueta[0] = 'x';
+        consumirLinha(arq);
+        return n;
+    } 
+    if(leTexto(arq, n.texto)){
+        n.etiqueta[0] = 'x';
+        consumirLinha(arq);
+        return n;
+    } 
     consumirLinha(arq);
-
     return n;
 }
 
