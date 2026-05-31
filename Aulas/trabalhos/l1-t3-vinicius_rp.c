@@ -46,20 +46,14 @@ int valido(char c){
 }
 
 int leEtiqueta(FILE *a, char e[]){
-    char e1;
-    char e2;
-    char e3;
-    if(fscanf(a, " %c%c%c", &e1, &e2, &e3) != 3){
+    if(fscanf(a, " %c%c%c", &e[0], &e[1], &e[2]) != 3){
         printf("Erro ao ler etiqueta!\n");
         return 1;
     }
-    if (!valido(e1) || !valido(e2) || !valido(e3)) {
+    if (!valido(e[0]) || !valido(e[1]) || !valido(e[2])) {
         printf("Etiqueta diferente da permitida!\n");
         return 1;
     }
-    e[0] = e1;
-    e[1] = e2;
-    e[2] = e3;
     return 0;
 }
 
