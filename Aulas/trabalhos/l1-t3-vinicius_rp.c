@@ -58,21 +58,22 @@ int leEtiqueta(FILE *a, char e[]){
     return 0;
 }
 
-void leCor(FILE *a, Cor *c){
+int leCor(FILE *a, Cor *c){
     int vermelho;
     int verde;
     int azul;
     if(fscanf(a, "%d%d%d", &vermelho, &verde, &azul) != 3){
         printf("Erro ao ler cor!\n");
-        return;
+        return 1;
     }
     if(vermelho < 0 || vermelho > 255 || verde < 0 || verde > 255 || azul < 0 || azul > 255){
         printf("Cor invalida!\n");
-        return;
+        return 1;
     }
     c->r = vermelho;
     c->g = verde;
     c->b = azul;
+    return 0;
 }
 
 void leRetangulo(FILE *a, Retangulo *r){
@@ -103,8 +104,10 @@ Nota leNota(FILE *arq){
         printf("Erro!");
         return n;
     }
-    leEtiqueta(arq, n.etiqueta);
-    leCor(arq, &n.cor);
+    
+
+    if(leEtiqueta(arq, n.etiqueta)) n.etiqueta[0] = 'x'; 
+    if(leCor(arq, &n.cor)) n.etiqueta[0] = 'x';
     leRetangulo(arq, &n.retangulo);
     leTexto(arq, n.texto);
     consumirLinha(arq);
