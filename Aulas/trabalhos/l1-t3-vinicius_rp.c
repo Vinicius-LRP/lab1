@@ -52,26 +52,21 @@ int leEtiqueta(FILE *a, char e[]){
     }
     if (!valido(e[0]) || !valido(e[1]) || !valido(e[2])) {
         printf("Etiqueta diferente da permitida!\n");
+        printf("%c", e[2]);
         return 1;
     }
     return 0;
 }
 
 int leCor(FILE *a, Cor *c){
-    int vermelho;
-    int verde;
-    int azul;
-    if(fscanf(a, "%d%d%d", &vermelho, &verde, &azul) != 3){
+    if(fscanf(a, "%d%d%d", &c->r, &c->g, &c->b) != 3){
         printf("Erro ao ler cor!\n");
         return 1;
     }
-    if(vermelho < 0 || vermelho > 255 || verde < 0 || verde > 255 || azul < 0 || azul > 255){
+    if(c->r < 0 || c->r > 255 || c->g < 0 || c->g > 255 || c->b < 0 || c->b > 255){
         printf("Cor invalida!\n");
         return 1;
     }
-    c->r = vermelho;
-    c->g = verde;
-    c->b = azul;
     return 0;
 }
 
