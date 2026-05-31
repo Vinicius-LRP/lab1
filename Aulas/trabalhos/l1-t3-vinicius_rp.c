@@ -84,15 +84,17 @@ int leRetangulo(FILE *a, Retangulo *r){
     return 0;
 }
 
-void leTexto(FILE *a, char t[]){
+int leTexto(FILE *a, char t[]){
     int aspas = ' ';
     while(aspas != '"'){
         if((aspas = fgetc(a)) == EOF)
-            return;
+            return 1;
     }
     if(fscanf(a, "%100[^\"]", t) != 1){
         printf("Erro ao ler texto!");
+        return 1;
     }
+    return 0;
 }
 
 void consumirLinha(FILE *a){
@@ -119,13 +121,17 @@ Nota leNota(FILE *arq){
 }
 
 int leNotas(Nota n[], FILE *arq){
+    Nota nt;
     int a = 0;
     while(a < 100){
         int c = fgetc(arq);
         if(c == EOF)
             break;
         ungetc(c, arq);
-        n[a] = leNota(arq);
+        nt = leNota(arq);
+        if(nt.etiqueta[0] != 'x'){
+            n[a] = nt;
+        }
         a++;
     }
     return a;
