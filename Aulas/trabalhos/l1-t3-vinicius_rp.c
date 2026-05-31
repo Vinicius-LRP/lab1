@@ -193,27 +193,23 @@ void imprimeNotaAtual(Programa *p){
     printf("Texto: %s\n", p->notas[p->notaAtual].texto);
 }
 
-void inicializarPrograma(Programa *p){
+
+
+int main(){
+
+    Programa p = {0};
 
     FILE *arq = fopen("arquivo.txt", "r");
     if(arq == NULL){
         printf("Erro ao abrir!\n");
-        return;
+        return 1;
     }
-    p->quantidade = leNotas(p->notas, arq);
-    p->notaAtual = 0;
-    inserirNotas(p->notas, p->quantidade);
-    imprimeNotaAtual(p);
+    p.quantidade = leNotas(p.notas, arq);
+    p.notaAtual = 0;
+    inserirNotas(p.notas, p.quantidade);
+    imprimeNotaAtual(&p);
 
     fclose(arq);
-
-}
-
-int main(){
-
-    Programa programa = {0};
-
-    inicializarPrograma(&programa);
     
     return 0;
     
