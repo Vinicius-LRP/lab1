@@ -37,8 +37,20 @@ typedef struct{
 }Programa;
 
 void leEtiqueta(FILE *a, char e[]){
-    if(fscanf(a, " %c%c%c", &e[0], &e[1], &e[2]) != 3)
+    char e1;
+    char e2;
+    char e3;
+    if(fscanf(a, " %c%c%c", &e1, &e2, &e3) != 3){
         printf("Erro ao ler etiqueta!\n");
+        return;
+    }
+    if(e1 >= 'A' || e1 <= 'Z' || e1 >= '0' || e1 <= '9' ||
+       e2 >= 'A' || e2 <= 'Z' || e2 >= '0' || e2 <= '9' ||
+       e3 >= 'A' || e3 <= 'Z' || e3 >= '0' || e3 <= '9'){
+        e[0] = e1;
+        e[1] = e2;
+        e[2] = e3;
+    }
 }
 
 void leCor(FILE *a, Cor *c){
