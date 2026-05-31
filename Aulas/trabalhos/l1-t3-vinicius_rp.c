@@ -76,9 +76,12 @@ int leCor(FILE *a, Cor *c){
     return 0;
 }
 
-void leRetangulo(FILE *a, Retangulo *r){
-    if(fscanf(a, "%d%d%d%d", &r->ponto.x, &r->ponto.y, &r->tamanho.largura, &r->tamanho.altura) != 4)
+int leRetangulo(FILE *a, Retangulo *r){
+    if(fscanf(a, "%d%d%d%d", &r->ponto.x, &r->ponto.y, &r->tamanho.largura, &r->tamanho.altura) != 4){
         printf("Erro ao ler Retangulo!\n");
+        return 1;
+    }
+    return 0;
 }
 
 void leTexto(FILE *a, char t[]){
@@ -108,8 +111,8 @@ Nota leNota(FILE *arq){
 
     if(leEtiqueta(arq, n.etiqueta)) n.etiqueta[0] = 'x'; 
     if(leCor(arq, &n.cor)) n.etiqueta[0] = 'x';
-    leRetangulo(arq, &n.retangulo);
-    leTexto(arq, n.texto);
+    if(leRetangulo(arq, &n.retangulo)) n.etiqueta[0] = 'x';
+    if(leTexto(arq, n.texto)) n.etiqueta[0] = 'x';
     consumirLinha(arq);
 
     return n;
