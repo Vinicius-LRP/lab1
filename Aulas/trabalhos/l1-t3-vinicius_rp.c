@@ -26,6 +26,7 @@ typedef struct{
     Cor cor;
     Retangulo retangulo;
     char etiqueta[3];
+    int invalida;
 }Nota;
 
 typedef struct{
@@ -33,6 +34,12 @@ typedef struct{
     int quantidade;
     int notaAtual;
 }Programa;
+
+void inserirNotaComProblema(Nota n, FILE *a){
+    for(int i = 0; i < 3 ; i++){
+        fputc(n.etiqueta[i],a);
+    }
+}
 
 int valido(char c){
     return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
@@ -109,16 +116,16 @@ Nota leNota(FILE *arq){
         printf("Erro!");
         return n;
     }
-    if(leEtiqueta(arq, n.etiqueta)) n.etiqueta[0] = 'x';
-    if(leCor(arq, &n.cor)) n.etiqueta[0] = 'x';
-    if(leRetangulo(arq, &n.retangulo)) n.etiqueta[0] = 'x';
-    if(leTexto(arq, n.texto)) n.etiqueta[0] = 'x';
+    if(leEtiqueta(arq, n.etiqueta)) n.invalida = 1;
+    if(leCor(arq, &n.cor)) n.invalida = 1;
+    if(leRetangulo(arq, &n.retangulo)) n.invalida = 1;
+    if(leTexto(arq, n.texto)) n.invalida = 1;
         
     consumirLinha(arq);
     return n;
 }
 
-int leNotas(Nota n[], FILE *arq){
+int leNotas(Nota n[], FILE *arq, FILE *p){
     Nota nt = {0};
     int a = 0;
     while(a < 100){
@@ -126,7 +133,10 @@ int leNotas(Nota n[], FILE *arq){
         if(c == EOF) break;
         ungetc(c, arq);
         nt = leNota(arq);
-        if(nt.etiqueta[0] != 'x'){
+        if(nt.invalida == 1){
+            inserirNotaComProblema(nt, p);
+        }
+        if(nt.invalida != 1){
             n[a] = nt;
             printf("%d\n", a);
             a++;
@@ -184,13 +194,17 @@ int main(){
         printf("Erro ao abrir!\n");
         return 1;
     }
-    p.quantidade = leNotas(p.notas, arq);
+    FILE *problemas = fopen("problemas.txt", "w");
+    if(problemas == NULL){
+        printf("Erro ao abrir!\n");
+        return 1;
+    }
+    p.quantidade = leNotas(p.notas, arq, problemas);
     p.notaAtual = 0;
     inserirNotas(p.notas, p.quantidade);
     imprimeNotaAtual(&p);
 
     fclose(arq);
-    
+    fclose(problemas);
     return 0;
-    
 }
