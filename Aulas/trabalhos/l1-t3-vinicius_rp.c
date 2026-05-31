@@ -22,14 +22,14 @@ typedef struct{
 }Retangulo;
 
 typedef struct{
-    char texto[100];
+    char texto[101];
     Cor cor;
     Retangulo retangulo;
     char etiqueta[3];
 }Nota;
 
 typedef struct{
-    Nota notas[101];
+    Nota notas[100];
     int quantidade;
     int notaAtual;
     char textoEditor[101];
@@ -40,21 +40,22 @@ int valido(char c){
     return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 }
 
-void leEtiqueta(FILE *a, char e[]){
+int leEtiqueta(FILE *a, char e[]){
     char e1;
     char e2;
     char e3;
     if(fscanf(a, " %c%c%c", &e1, &e2, &e3) != 3){
         printf("Erro ao ler etiqueta!\n");
-        return;
+        return 1;
     }
     if (!valido(e1) || !valido(e2) || !valido(e3)) {
         printf("Etiqueta diferente da permitida!\n");
-        return;
+        return 1;
     }
     e[0] = e1;
     e[1] = e2;
     e[2] = e3;
+    return 0;
 }
 
 void leCor(FILE *a, Cor *c){
@@ -85,7 +86,7 @@ void leTexto(FILE *a, char t[]){
         if((aspas = fgetc(a)) == EOF)
             return;
     }
-    if(fscanf(a, "%99[^\"]", t) != 1){
+    if(fscanf(a, "%100[^\"]", t) != 1){
         printf("Erro ao ler texto!");
     }
 }
@@ -113,7 +114,7 @@ Nota leNota(FILE *arq){
 
 int leNotas(Nota n[], FILE *arq){
     int a = 0;
-    while(1){
+    while(a < 100){
         int c = fgetc(arq);
         if(c == EOF)
             break;
@@ -175,7 +176,6 @@ void inicializarPrograma(Programa *p){
     p->quantidade = leNotas(p->notas, arq);
     p->notaAtual = 0;
     inserirNotas(p->notas, p->quantidade);
-    printf("%d\n", p->quantidade);
     imprimeNotaAtual(p);
 
     fclose(arq);
