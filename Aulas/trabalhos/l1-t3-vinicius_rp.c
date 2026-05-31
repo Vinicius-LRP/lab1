@@ -32,8 +32,6 @@ typedef struct{
     Nota notas[100];
     int quantidade;
     int notaAtual;
-    char textoEditor[101];
-    int cursor;
 }Programa;
 
 int valido(char c){
@@ -111,26 +109,11 @@ Nota leNota(FILE *arq){
         printf("Erro!");
         return n;
     }
-    if(leEtiqueta(arq, n.etiqueta)){
-        n.etiqueta[0] = 'x';
-        consumirLinha(arq);
-        return n;
-    } 
-    if(leCor(arq, &n.cor)){
-        n.etiqueta[0] = 'x';
-        consumirLinha(arq);
-        return n;
-    } 
-    if(leRetangulo(arq, &n.retangulo)){
-        n.etiqueta[0] = 'x';
-        consumirLinha(arq);
-        return n;
-    } 
-    if(leTexto(arq, n.texto)){
-        n.etiqueta[0] = 'x';
-        consumirLinha(arq);
-        return n;
-    } 
+    if(leEtiqueta(arq, n.etiqueta)) n.etiqueta[0] = 'x';
+    if(leCor(arq, &n.cor)) n.etiqueta[0] = 'x';
+    if(leRetangulo(arq, &n.retangulo)) n.etiqueta[0] = 'x';
+    if(leTexto(arq, n.texto)) n.etiqueta[0] = 'x';
+        
     consumirLinha(arq);
     return n;
 }
@@ -193,12 +176,9 @@ void imprimeNotaAtual(Programa *p){
     printf("Texto: %s\n", p->notas[p->notaAtual].texto);
 }
 
-
-
 int main(){
 
     Programa p = {0};
-
     FILE *arq = fopen("arquivo.txt", "r");
     if(arq == NULL){
         printf("Erro ao abrir!\n");
