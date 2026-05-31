@@ -94,6 +94,8 @@ int leTexto(FILE *a, char t[]){
         printf("Erro ao ler texto!");
         return 1;
     }
+    aspas = fgetc(a);
+    if(aspas != '"') return 1;
     return 0;
 }
 
@@ -134,12 +136,11 @@ Nota leNota(FILE *arq){
 }
 
 int leNotas(Nota n[], FILE *arq){
-    Nota nt;
+    Nota nt = {0};
     int a = 0;
     while(a < 100){
         int c = fgetc(arq);
-        if(c == EOF)
-            break;
+        if(c == EOF) break;
         ungetc(c, arq);
         nt = leNota(arq);
         if(nt.etiqueta[0] != 'x'){
