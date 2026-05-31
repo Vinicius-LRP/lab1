@@ -131,8 +131,9 @@ int leNotas(Nota n[], FILE *arq){
         nt = leNota(arq);
         if(nt.etiqueta[0] != 'x'){
             n[a] = nt;
+            printf("%d\n", a);
+            a++;
         }
-        a++;
     }
     return a;
 }
