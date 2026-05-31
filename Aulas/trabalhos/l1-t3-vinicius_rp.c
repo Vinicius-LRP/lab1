@@ -74,7 +74,6 @@ int leCor(FILE *a, Cor *c){
         printf("Erro ao ler cor!\n");
         c->b = -1;
     }
-
     if(c->r < 0 || c->r > 255 || c->g < 0 || c->g > 255 || c->b < 0 || c->b > 255){
         printf("Cor invalida!\n");
         return 1;
