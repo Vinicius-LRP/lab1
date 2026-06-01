@@ -1,6 +1,2 @@
  XXX 5 4 2 3 4 7 9 "ola mnsdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaado"
-<<<<<<< HEAD
   XXX 5 4 2 3 4 7 9 "olando"
-=======
-  XXX 5 4  
->>>>>>> cc9c465977f3076b4fb2be5a00561280c1de18e6

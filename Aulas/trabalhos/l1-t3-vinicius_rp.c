@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 typedef struct{
     int r;
@@ -26,7 +27,6 @@ typedef struct{
     Cor cor;
     Retangulo retangulo;
     char etiqueta[3];
-    int invalida;
 }Nota;
 
 typedef struct{
@@ -35,8 +35,8 @@ typedef struct{
     int notaAtual;
 }Programa;
 
-void inserirNotaComProblema(Nota n, FILE *a){
-   
+void inserirNotaComProblema(char l[], FILE *a){
+    fprintf(a, l);
 }
 
 int valido(char c){
@@ -98,15 +98,25 @@ void consumirLinha(FILE *a){
     while((c = fgetc(a)) != '\n' && c != EOF);
 }
 
-Nota leNota(FILE *arq){
+Nota leNota(FILE *arq, FILE *p){
     Nota n = {0};
+    Nota np = {0};
+    char linha[300];
+    long pos = ftell(arq);
+    if(fgets(linha, sizeof(linha), arq) == NULL){
+        printf("Erro ao ler linha!\n");
+        return n;
+    }
+    fseek(arq, pos, SEEK_SET);
 
-    if(leEtiqueta(arq, n.etiqueta)) n.invalida = 1;
-    if(leCor(arq, &n.cor)) n.invalida = 1;
-    if(leRetangulo(arq, &n.retangulo)) n.invalida = 1;
-    if(leTexto(arq, n.texto)) n.invalida = 1;
-        
+    if(leEtiqueta(arq, n.etiqueta) || leCor(arq, &n.cor) || 
+    leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto)){
+        inserirNotaComProblema(linha, p);
+        return np;
+    }
+
     consumirLinha(arq);
+
     return n;
 }
 
@@ -117,11 +127,11 @@ int leNotas(Nota n[], FILE *arq, FILE *p){
         int c = fgetc(arq);
         if(c == EOF) break;
         ungetc(c, arq);
-        nt = leNota(arq);
-        if(nt.invalida == 1){
-            inserirNotaComProblema(nt, p);
-        }
-        if(nt.invalida != 1){
+        nt = leNota(arq, p);
+        if(nt.cor.r != 0 && nt.cor.g != 0 && nt.cor.b != 0 &&
+        nt.etiqueta[0] != 0 && nt.etiqueta[1] != 0 && nt.etiqueta[2] != 0 &&
+        nt.retangulo.ponto.x != 0 && nt.retangulo.ponto.y != 0 && nt.retangulo.tamanho.altura != 0 &&
+        nt.retangulo.tamanho.largura != 0 && strcmp(nt.texto, "") != 0)   {
             n[a] = nt;
             printf("%d\n", a);
             a++;
