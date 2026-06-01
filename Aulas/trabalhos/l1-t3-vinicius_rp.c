@@ -36,13 +36,7 @@ typedef struct{
 }Programa;
 
 void inserirNotaComProblema(Nota n, FILE *a){
-    for(int i = 0; i < 3 ; i++){
-        fputc(n.etiqueta[i],a);
-    }
-    if(fprintf(a, " %d %d %d", n.cor.r, n.cor.g, n.cor.b) != 3){
-        printf("Erro ao inserir nota com problema!\n");
-        return;
-    }
+    
 }
 
 int valido(char c){
@@ -62,17 +56,9 @@ int leEtiqueta(FILE *a, char e[]){
 }
 
 int leCor(FILE *a, Cor *c){
-    if(fscanf(a, "%d", &c->r) != 1){
+    if(fscanf(a, "%d %d %d", &c->r, &c->g, &c->b) != 3){
         printf("Erro ao ler cor!\n");
-        c->r = -1;
-    }
-    if(fscanf(a, "%d", &c->g) != 1){
-        printf("Erro ao ler cor!\n");
-        c->g = -1;
-    }
-    if(fscanf(a, "%d", &c->b) != 1){
-        printf("Erro ao ler cor!\n");
-        c->b = -1;
+        return 1;
     }
     if(c->r < 0 || c->r > 255 || c->g < 0 || c->g > 255 || c->b < 0 || c->b > 255){
         printf("Cor invalida!\n");
@@ -96,11 +82,14 @@ int leTexto(FILE *a, char t[]){
             return 1;
     }
     if(fscanf(a, "%100[^\"]", t) != 1){
-        printf("Erro ao ler texto!");
+        printf("Erro ao ler texto!\n");
         return 1;
     }
     aspas = fgetc(a);
-    if(aspas != '"') return 1;
+    if(aspas != '"') {
+        printf("Erro ao ler texto!\n");
+        return 1;
+    }
     return 0;
 }
 
