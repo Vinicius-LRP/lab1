@@ -36,7 +36,21 @@ typedef struct{
 }Programa;
 
 void inserirNotaComProblema(Nota n, FILE *a){
+<<<<<<< HEAD
     
+=======
+    for(int i = 0; i < 3 ; i++){
+        fputc(n.etiqueta[i],a);
+    }
+    if(fprintf(a, " %d %d %d", n.cor.r, n.cor.g, n.cor.b) < 3){
+        printf("Erro ao inserir nota com problema!\n");
+        return;
+    }
+    if(fprintf(a, " %d %d %d %d", n.retangulo.ponto.x, n.retangulo.ponto.y, n.retangulo.tamanho.largura, n.retangulo.tamanho.altura) < 4){
+        printf("Erro ao inserir nota com problema!\n");
+        return;
+    }
+>>>>>>> cc9c465977f3076b4fb2be5a00561280c1de18e6
 }
 
 int valido(char c){
@@ -100,7 +114,11 @@ void consumirLinha(FILE *a){
 
 Nota leNota(FILE *arq){
     Nota n = {0};
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cc9c465977f3076b4fb2be5a00561280c1de18e6
     if(leEtiqueta(arq, n.etiqueta)) n.invalida = 1;
     if(leCor(arq, &n.cor)) n.invalida = 1;
     if(leRetangulo(arq, &n.retangulo)) n.invalida = 1;
