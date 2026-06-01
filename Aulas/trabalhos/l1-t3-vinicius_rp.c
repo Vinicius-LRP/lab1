@@ -36,7 +36,7 @@ typedef struct{
 }Programa;
 
 void inserirNotaComProblema(char l[], FILE *a){
-    fprintf(a, l);
+    fprintf(a, "%s", l);
 }
 
 int valido(char c){
@@ -103,15 +103,22 @@ Nota leNota(FILE *arq, FILE *p){
     Nota np = {0};
     char linha[300];
     long pos = ftell(arq);
+
     if(fgets(linha, sizeof(linha), arq) == NULL){
         printf("Erro ao ler linha!\n");
+        n.cor.r = -2;
         return n;
     }
+
+    long posDepois = ftell(arq);
+    
     fseek(arq, pos, SEEK_SET);
 
     if(leEtiqueta(arq, n.etiqueta) || leCor(arq, &n.cor) || 
     leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto)){
         inserirNotaComProblema(linha, p);
+        fseek(arq, posDepois, SEEK_SET);
+        np.cor.r = -2; 
         return np;
     }
 
@@ -128,10 +135,7 @@ int leNotas(Nota n[], FILE *arq, FILE *p){
         if(c == EOF) break;
         ungetc(c, arq);
         nt = leNota(arq, p);
-        if(nt.cor.r != 0 && nt.cor.g != 0 && nt.cor.b != 0 &&
-        nt.etiqueta[0] != 0 && nt.etiqueta[1] != 0 && nt.etiqueta[2] != 0 &&
-        nt.retangulo.ponto.x != 0 && nt.retangulo.ponto.y != 0 && nt.retangulo.tamanho.altura != 0 &&
-        nt.retangulo.tamanho.largura != 0 && strcmp(nt.texto, "") != 0)   {
+        if(nt.cor.r != -2)   {
             n[a] = nt;
             printf("%d\n", a);
             a++;
