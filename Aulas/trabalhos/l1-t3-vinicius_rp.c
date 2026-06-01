@@ -105,7 +105,7 @@ Nota leNota(FILE *arq, FILE *p){
     long pos = ftell(arq);
 
     if(fgets(linha, sizeof(linha), arq) == NULL){
-        n.cor.r = -2;
+        n.cor.r = -3;
         return n;
     }
     fseek(arq, pos, SEEK_SET);
@@ -125,8 +125,9 @@ Nota leNota(FILE *arq, FILE *p){
 int leNotas(Nota n[], FILE *arq, FILE *p){
     Nota nt = {0};
     int a = 0;
-    while(a < 100 && !feof(arq)){
+    while(a < 100){
         nt = leNota(arq, p);
+        if(nt.cor.r == -3) break;
         if(nt.cor.r != -2)   {
             n[a] = nt;
             printf("%d\n", a);
