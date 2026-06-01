@@ -109,31 +109,24 @@ Nota leNota(FILE *arq, FILE *p){
         n.cor.r = -2;
         return n;
     }
-
-    long posDepois = ftell(arq);
-    
     fseek(arq, pos, SEEK_SET);
 
     if(leEtiqueta(arq, n.etiqueta) || leCor(arq, &n.cor) || 
     leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto)){
         inserirNotaComProblema(linha, p);
-        fseek(arq, posDepois, SEEK_SET);
+        consumirLinha(arq);
         np.cor.r = -2; 
         return np;
     }
-
+    
     consumirLinha(arq);
-
     return n;
 }
 
 int leNotas(Nota n[], FILE *arq, FILE *p){
     Nota nt = {0};
     int a = 0;
-    while(a < 100){
-        int c = fgetc(arq);
-        if(c == EOF) break;
-        ungetc(c, arq);
+    while(a < 100 && !feof(arq)){
         nt = leNota(arq, p);
         if(nt.cor.r != -2)   {
             n[a] = nt;
