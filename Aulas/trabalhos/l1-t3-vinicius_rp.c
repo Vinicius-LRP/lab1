@@ -100,11 +100,7 @@ void consumirLinha(FILE *a){
 
 Nota leNota(FILE *arq){
     Nota n = {0};
-
-    if(arq == NULL){
-        printf("Erro!");
-        return n;
-    }
+    
     if(leEtiqueta(arq, n.etiqueta)) n.invalida = 1;
     if(leCor(arq, &n.cor)) n.invalida = 1;
     if(leRetangulo(arq, &n.retangulo)) n.invalida = 1;
