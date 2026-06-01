@@ -105,7 +105,6 @@ Nota leNota(FILE *arq, FILE *p){
     long pos = ftell(arq);
 
     if(fgets(linha, sizeof(linha), arq) == NULL){
-        printf("Erro ao ler linha!\n");
         n.cor.r = -2;
         return n;
     }
