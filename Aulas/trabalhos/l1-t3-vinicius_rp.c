@@ -44,7 +44,7 @@ int valido(char c){
 }
 
 int leEtiqueta(FILE *a, char e[]){
-    if(fscanf(a, " %c%c%c", &e[0], &e[1], &e[2]) != 3){
+    if(fscanf(a, " %c %c %c", &e[0], &e[1], &e[2]) != 3){
         printf("Erro ao ler etiqueta!\n");
         return 1;
     }
@@ -75,24 +75,25 @@ int leRetangulo(FILE *a, Retangulo *r){
     return 0;
 }
 
-int leTexto(FILE *a, char t[]){
-    int aspas = ' ';
-    while(aspas != '"'){
-        if((aspas = fgetc(a)) == EOF)
-            return 1;
+int leTexto(FILE *a, char t[]) {
+    int c;
+    while ((c = fgetc(a)) != '"') {
+        if (c == EOF) return 1;
+        if (c == '\n') { 
+            ungetc(c, a); 
+            return 1; 
+        }
     }
-    if(fscanf(a, "%100[^\"\n]", t) != 1){
-        printf("Erro ao ler texto!\n");
-        return 1;
+    int i = 0;
+    while (i < 100 && (c = fgetc(a)) != '"') {
+        if (c == EOF) return 1;
+        if (c == '\n') { 
+            ungetc(c, a); 
+            return 1; 
+        } 
+        t[i++] = c;
     }
-    aspas = fgetc(a);
-
-    if(aspas != '"') {
-        if(aspas != EOF) ungetc(aspas, a);
-        printf("Erro ao ler texto!\n");
-        return 1;
-    }
-
+    t[i] = '\0';
     return 0;
 }
 
