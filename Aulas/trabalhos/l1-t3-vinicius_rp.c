@@ -81,16 +81,20 @@ int leTexto(FILE *a, char t[]){
         if((aspas = fgetc(a)) == EOF)
             return 1;
     }
-    if(fscanf(a, "%100[^\n\"]", t) != 1){
+    if(fscanf(a, "%100[^\"\n]", t) != 1){
         printf("Erro ao ler texto!\n");
         return 1;
     }
     aspas = fgetc(a);
+
     if(aspas != '"') {
+        if(aspas != EOF) ungetc(aspas, a);
         printf("Erro ao ler texto!\n");
         return 1;
     }
+
     return 0;
+    
 }
 
 void consumirLinha(FILE *a){
