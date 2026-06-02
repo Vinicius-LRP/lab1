@@ -43,35 +43,27 @@ int valido(char c){
     return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 }
 
-int leEtiqueta(FILE *a, char e[]){
-    char e1, e2, e3;
-    if(fscanf(a, " %c%c%c", &e1, &e2, &e3) != 3){
+int leEtiqueta(FILE *a, char e[], char l[]){
+    if(l[0] == '\n' || l[1] == '\n' || l[2] == '\n') {
+        printf("Etiqueta diferente da permitida!\n");
+        return 1;
+    }
+    if(fscanf(a, " %c%c%c", &e[0], &e[1], &e[2]) != 3){
         printf("Erro ao ler etiqueta!\n");
         return 1;
     }
-    if (!valido(e1)){
-        printf("Etiqueta diferente da permitida!\n");
-        return 1;
-    }
-    if (!valido(e2)){
-        printf("Etiqueta diferente da permitida!\n");
-        return 1;
-    }
-    if (!valido(e3)){
-        printf("Etiqueta diferente da permitida!\n");
-        return 1;
-    }
-    
-
-
     printf("Leu etiqueta: [%d][%d][%d] = [%c][%c][%c]\n", 
         e[0], e[1], e[2], e[0], e[1], e[2]);
-    
+
+    if (!valido(e[0]) || !valido(e[1]) || !valido(e[2])) {
+        printf("Etiqueta diferente da permitida!\n");
+        return 1;
+    }
     return 0;
 }
 
 int leCor(FILE *a, Cor *c){
-    if(fscanf(a, "%d %d %d", &c->r, &c->g, &c->b) != 3){
+    if(fscanf(a, "%d%d%d", &c->r, &c->g, &c->b) != 3){
         printf("Erro ao ler cor!\n");
         return 1;
     }
@@ -129,7 +121,7 @@ Nota leNota(FILE *arq, FILE *p){
     }
     fseek(arq, pos, SEEK_SET);
 
-    if(leEtiqueta(arq, n.etiqueta) || leCor(arq, &n.cor) || 
+    if(leEtiqueta(arq, n.etiqueta, linha) || leCor(arq, &n.cor) || 
     leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto)){
         inserirNotaComProblema(linha, p);
         consumirLinha(arq);  

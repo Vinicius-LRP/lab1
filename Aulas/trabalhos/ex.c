@@ -18,32 +18,45 @@ typedef struct{
 } Retangulo;
 
 typedef struct{
-    char etiqueta[3];
+    char etiqueta[3]; 
     Cor cor;
     Retangulo retangulo;
     char texto[100];
 } Nota;
 
 Nota leNota(FILE *arq){
-    Nota nota;
-    fscanf(arq, " %c %c %c", &nota.etiqueta[0], &nota.etiqueta[1], &nota.etiqueta[2]);
 
+    Nota nota;
+
+
+    fscanf(arq," %c %c %c", &nota.etiqueta[0], &nota.etiqueta[1], &nota.etiqueta[2]);
+    fscanf(arq,"%d%d%d", &nota.cor.r, &nota.cor.g, &nota.cor.b);
+    fscanf(arq,"%d%d%d%d", &nota.retangulo.ponto.x , &nota.retangulo.ponto.y , &nota.retangulo.altura , &nota.retangulo.largura );
+    fscanf(arq, " \"%100[^\"]\"", nota.texto);
+    
+    printf("%c%c%c\n", nota.etiqueta[0], nota.etiqueta[1], nota.etiqueta[2]);
+    printf("%d %d %d\n", nota.cor.r, nota.cor.g, nota.cor.b);
+    printf("%d %d %d %d\n", nota.retangulo.ponto.x , nota.retangulo.ponto.y , nota.retangulo.altura , nota.retangulo.largura);
+
+    int c;
+    while((c = getc(arq)) != '\n' && c != EOF);
+
+    printf("%s\n", nota.texto);
+    
     return nota;
 }
 
 int main(){
-    Nota n;
-    FILE *arquivo = fopen("arquivo.txt","r");
+    Nota notas[100];
+    FILE *arquivo = fopen("arquivo.txt", "r");
     if(arquivo == NULL){
-        printf("Erro ao abrir!\n");
+        printf("Erro!\n");
         return 1;
     }
 
-    n = leNota(arquivo);
-
-    printf("%c", n.etiqueta[0]);
-    printf("%c", n.etiqueta[1]);
-    printf("%c", n.etiqueta[2]);
+    notas[0] = leNota(arquivo);
+    notas[1] = leNota(arquivo);
+    notas[2] = leNota(arquivo);
 
     fclose(arquivo);
     return 0;
