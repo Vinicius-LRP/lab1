@@ -44,14 +44,29 @@ int valido(char c){
 }
 
 int leEtiqueta(FILE *a, char e[]){
-    if(fscanf(a, " %c %c %c", &e[0], &e[1], &e[2]) != 3){
+    char e1, e2, e3;
+    if(fscanf(a, " %c%c%c", &e1, &e2, &e3) != 3){
         printf("Erro ao ler etiqueta!\n");
         return 1;
     }
-    if (!valido(e[0]) || !valido(e[1]) || !valido(e[2])) {
+    if (!valido(e1)){
         printf("Etiqueta diferente da permitida!\n");
         return 1;
     }
+    if (!valido(e2)){
+        printf("Etiqueta diferente da permitida!\n");
+        return 1;
+    }
+    if (!valido(e3)){
+        printf("Etiqueta diferente da permitida!\n");
+        return 1;
+    }
+    
+
+
+    printf("Leu etiqueta: [%d][%d][%d] = [%c][%c][%c]\n", 
+        e[0], e[1], e[2], e[0], e[1], e[2]);
+    
     return 0;
 }
 
@@ -117,11 +132,10 @@ Nota leNota(FILE *arq, FILE *p){
     if(leEtiqueta(arq, n.etiqueta) || leCor(arq, &n.cor) || 
     leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto)){
         inserirNotaComProblema(linha, p);
-        consumirLinha(arq);
+        consumirLinha(arq);  
         np.cor.r = -2; 
         return np;
     }
-    
     consumirLinha(arq);
     return n;
 }
@@ -131,8 +145,8 @@ int leNotas(Nota n[], FILE *arq, FILE *p){
     int a = 0;
     while(a < 100){
         nt = leNota(arq, p);
-        if(nt.cor.r == -3) break;
-        if(nt.cor.r != -2)   {
+        if(nt.cor.r == -3) break;   
+        if(nt.cor.r != -2){         
             n[a] = nt;
             printf("%d\n", a);
             a++;
