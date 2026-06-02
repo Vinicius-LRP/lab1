@@ -94,7 +94,6 @@ int leTexto(FILE *a, char t[]){
     }
 
     return 0;
-    
 }
 
 void consumirLinha(FILE *a){
