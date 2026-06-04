@@ -52,8 +52,6 @@ int leEtiqueta(FILE *a, char e[], char l[]){
         printf("Erro ao ler etiqueta!\n");
         return 1;
     }
-    printf("Leu etiqueta: [%d][%d][%d] = [%c][%c][%c]\n", 
-        e[0], e[1], e[2], e[0], e[1], e[2]);
 
     if (!valido(e[0]) || !valido(e[1]) || !valido(e[2])) {
         printf("Etiqueta diferente da permitida!\n");
