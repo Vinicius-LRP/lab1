@@ -65,7 +65,6 @@ int leCor(FILE *a, Cor *c){
     int r = -1;
     int g = -1;
     int b = -1;
-
     while((ch = fgetc(a)) != '\n' && ch != EOF){
         if(ch >= '0' && ch <= '9'){
             ungetc(ch, a);
@@ -79,9 +78,10 @@ int leCor(FILE *a, Cor *c){
             }
         }
     }
-    printf("%d", r);
-    printf("%d", g);
-    printf("%d", b);
+    if(ch == '\n'){
+        ungetc(ch, a);
+        return 1;
+    }
     c->r = r;
     c->g = g;
     c->b = b;
@@ -93,8 +93,32 @@ int leCor(FILE *a, Cor *c){
 }
 
 int leRetangulo(FILE *a, Retangulo *r){
-    if(fscanf(a, "%d%d%d%d", &r->ponto.x, &r->ponto.y, &r->tamanho.largura, &r->tamanho.altura) != 4){
-        printf("Erro ao ler Retangulo!\n");
+    int c;
+    int x = -999;
+    int y = -999;
+    int largura = -999;
+    int altura = -999;
+    while((c = fgetc(a)) != '\n' && c != EOF){
+        if(c >= '0' && c <= '9'){
+            ungetc(c, a);
+            if(x == -999){
+                if(fscanf(a, "%d", &x) != 1)
+                    return 1;
+            }else if(y == -999){
+                if(fscanf(a, "%d", &y) != 1)
+                    return 1;
+            }else if(largura == -999){
+                if(fscanf(a, "%d", &largura) != 1)
+                    return 1;
+            } else if(altura == -999){
+                if(fscanf(a, "%d", &altura) != 1)
+                    return 1;
+                break;
+            }
+        }
+    }
+    if(c == '\n'){
+        ungetc(c, a);
         return 1;
     }
     return 0;
