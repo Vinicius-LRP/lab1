@@ -43,20 +43,43 @@ int valido(char c){
     return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 }
 
-int leEtiqueta(FILE *a, char e[], char l[]){
-    if(l[0] == '\n' || l[1] == '\n' || l[2] == '\n') {
-        printf("Etiqueta diferente da permitida!\n");
+int verificaQuebraDeLinha(int c, FILE *a){
+    if(c == '\n'){
+        ungetc(c, a);
         return 1;
     }
-    if(fscanf(a, " %c%c%c", &e[0], &e[1], &e[2]) != 3){
-        printf("Erro ao ler etiqueta!\n");
-        return 1;
-    }
+    return 0;
+}
 
-    if (!valido(e[0]) || !valido(e[1]) || !valido(e[2])) {
-        printf("Etiqueta diferente da permitida!\n");
+int leEtiqueta(FILE *a, char e[], char l[]){
+    int c;
+    int e0 = 'x';
+    int e1 = 'x';
+    int e2 = 'x';
+    while((c = fgetc(a)) != '\n' && c != EOF){
+        if(c != ' '){
+            if(e0 == 'x'){
+                e0 = c;
+                c = fgetc(a);
+                if(verificaQuebraDeLinha(c, a))
+                    return 1;
+                e1 = c;
+                c = fgetc(a);
+                if(verificaQuebraDeLinha(c, a))
+                    return 1;
+                e2 = c;
+                break;
+            }
+        }
+    }
+    printf(" %c%c%c ", e0, e1, e2);
+    if(!valido(e0) || !valido(e1) || !valido(e2)){
+        printf("Etiqueta invalida!\n");
         return 1;
     }
+    e[0] = e0;
+    e[1] = e1;
+    e[2] = e2;
     return 0;
 }
 
@@ -66,6 +89,7 @@ int leCor(FILE *a, Cor *c){
     int g = -1;
     int b = -1;
     while((ch = fgetc(a)) != '\n' && ch != EOF){
+        if((ch != ' ') )
         if(ch >= '0' && ch <= '9'){
             ungetc(ch, a);
             if(r == -1){
@@ -81,8 +105,7 @@ int leCor(FILE *a, Cor *c){
             }
         }
     }
-    if(ch == '\n'){
-        ungetc(ch, a);
+    if(verificaQuebraDeLinha(ch, a)){
         return 1;
     }
     c->r = r;
@@ -120,8 +143,7 @@ int leRetangulo(FILE *a, Retangulo *r){
             }
         }
     }
-    if(c == '\n'){
-        ungetc(c, a);
+    if(verificaQuebraDeLinha(c, a)){
         return 1;
     }
     r->ponto.x = x;
