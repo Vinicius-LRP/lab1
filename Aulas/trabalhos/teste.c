@@ -69,11 +69,14 @@ int leCor(FILE *a, Cor *c){
         if(ch >= '0' && ch <= '9'){
             ungetc(ch, a);
             if(r == -1){
-                fscanf(a, "%d", &r);
+                if(fscanf(a, "%d", &r) != 1)
+                    return 1;
             }else if(g == -1){
-                fscanf(a, "%d", &g);
+                if(fscanf(a, "%d", &g) != 1)
+                    return 1;
             }else if(b == -1){
-                fscanf(a, "%d", &b);
+                if(fscanf(a, "%d", &b) != 1)
+                    return 1;
                 break;
             }
         }
@@ -121,6 +124,10 @@ int leRetangulo(FILE *a, Retangulo *r){
         ungetc(c, a);
         return 1;
     }
+    r->ponto.x = x;
+    r->ponto.y = y;
+    r->tamanho.largura = largura;
+    r->tamanho.altura = altura;
     return 0;
 }
 
