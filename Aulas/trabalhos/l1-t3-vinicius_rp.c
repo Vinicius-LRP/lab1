@@ -405,6 +405,9 @@ void encontrarValidos(Sistema *s){
         }
     }
     s->validos[0] = a - 1; 
+    for(int b = 0; b < s->capacidade; b++){
+        s->validos[a + b] = -1;
+    }
 }
 
 void desenhaModoPrincipal(Sistema *s){
@@ -504,6 +507,13 @@ void modoPrincipal(Sistema *s){
             s->modo = EDITAR_COR;
         }
         if(c == ','){
+            printf("Nota corrente: %d", s->notaCorrente);
+            for(int i = 1; i <= s->validos[0] + 1 ; i++){
+                if(s->validos[i] == s->notaCorrente){
+                    if(i > 1) s->notaCorrente = s->validos[i - 1];
+                    break;
+                }
+            }
 
         }
         if(c == '.'){
