@@ -428,7 +428,31 @@ int main(){
         return 1;
     }
     inicializaSistema(&s, arq, problemas);
-    modoPrincipal(&s);
+    
+    while(s.modo != TERMINAR){ 
+        switch(s.modo){ 
+            case 0: 
+                modoPrincipal(&s); 
+                break; 
+            case 1: 
+                modoEditarTexto(&s); 
+                break; 
+            case 2: 
+                modoEditarEtiqueta(&s); 
+                break; 
+            case 3: 
+                modoEditarCor(&s); 
+                break; 
+            case 4: 
+                modoEditarTextoBusca(&s); 
+                break; 
+            case 5: 
+                modoEditarEtiquetaBusca(&s); 
+                break; 
+            default: 
+                s.modo = TERMINAR; 
+        } 
+    }
 
     fclose(arq);
     fclose(problemas);
