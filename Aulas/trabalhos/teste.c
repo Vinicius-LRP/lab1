@@ -38,6 +38,10 @@ typedef struct{
     char etiqueta[3];
 }Nota;
 
+typedef struct{
+    int x;
+    int y;
+} Cursor;
 
 void inserirNotaComProblema(char l[], FILE *a){
     fprintf(a, "%s", l);
@@ -280,8 +284,8 @@ typedef struct{
     int capacidade;
 
     int modo;
-
     int notaCorrente;
+    Cursor cursor;
 
     Nota ultimaRemovida;
     int existeUltimaRemovida;
@@ -290,24 +294,60 @@ typedef struct{
     char etiquetaBusca[3];
 } Sistema;
 
-int modos(int m){
-    switch (m){
-        case 1:
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-        case 5:
-            break;
-        case 6:
-            break;
+void trocaPosicaoNota(Sistema *s, int a, int b){
+    if(a < b){
+        for(int i = a; i < b ; i++){
+            Nota troca = s->notas[b];
+            s->notas[b] = s->notas[i];
+            s->notas[i] = troca;
+        }
+    }
+    if(a > b){
+        for(int i = a; i > b; i--){
+            Nota troca = s->notas[b];
+            s->notas[b] = s->notas[i];
+            s->notas[i] = troca;
+        }
     }
 }
 
+void modoEditarTexto(Sistema *s){
+    char c;
+
+    if(c == 'i'){
+        trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
+    }
+    if(c == 'f'){
+        trocaPosicaoNota(s, 0, s->notaCorrente);
+    }
+    s->modo = PRINCIPAL;
+}
+
+void modoEditarEtiqueta(Sistema *s){
+    s->modo = PRINCIPAL;
+}
+
+void modoEditarCor(Sistema *s){
+    s->modo = PRINCIPAL;
+}
+
+void modoEditarTextoBusca(Sistema *s){
+    s->modo = PRINCIPAL;
+}
+
+void modoEditarEtiquetaBusca(Sistema *s){
+    s->modo = PRINCIPAL;
+}
+
+void modoPrincipal(Sistema *s){
+
+    
+}
+
+
 void inicializaSistema(Sistema *s){
+    s->cursor.x = 0;
+    s->cursor.y = 0;
     s->capacidade = 10;
     s->quantidade = 0;
     s->notaCorrente = 0;
@@ -319,24 +359,29 @@ void inicializaSistema(Sistema *s){
         printf("Erro de memoria!\n");
         exit(1);
     }
-
-
 }
-
-
 int main(){
-    Nota notas[100];
+    Sistema s;
+    inicializaSistema(&s);
+
     FILE *arq = fopen("arquivo.txt", "r");
     FILE *problemas = fopen("problemas.txt", "w");
+
     if(arq == NULL || problemas == NULL){
         printf("Erro ao abrir!\n");
 
-        if(arq != NULL) fclose(arq);
-        if(problemas != NULL) fclose(arq);
+        if(arq != NULL)
+            fclose(arq);
+
+        if(problemas != NULL)
+            fclose(problemas);
+
+        free(s.notas);
         return 1;
     }
-    int quantidade = leNotas(notas, arq, problemas);
-    inserirNotas(notas, quantidade);
+    int quantidade = leNotas(s.notas,arq, problemas);
+    trocaPosicaoNota(&s, quantidade - 1, 1);
+    inserirNotas(s.notas, quantidade);
 
     fclose(arq);
     fclose(problemas);
