@@ -403,6 +403,8 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->capacidade = 10;
     s->notaCorrente = 2;
     s->modo = PRINCIPAL;
+    s->textoBusca[0] = '\0';
+    s->etiquetaBusca[0] = '\0';
     s->notas = malloc(s->capacidade * sizeof(Nota));
     if(s->notas == NULL){
         printf("Erro de memoria!\n");
