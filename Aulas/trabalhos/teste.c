@@ -1,5 +1,8 @@
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
+
+
+
 
 typedef struct{
     int r;
@@ -280,6 +283,23 @@ typedef struct{
     char textoBusca[101];
     char etiquetaBusca[3];
 } Sistema;
+
+int modos(int m){
+    switch (m){
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+    }
+}
 
 void inicializaSistema(Sistema *s){
     s->capacidade = 10;
