@@ -351,6 +351,7 @@ void trocaPosicaoNota(Sistema *s, int a, int b){
 
 void modoPrincipal(Sistema *s){
     while(s->modo == PRINCIPAL){
+        Nota n = {0};
         char c;
         scanf("%c", &c);
         if(c == 'i'){
@@ -358,6 +359,28 @@ void modoPrincipal(Sistema *s){
         }
         if(c == 'f'){
             trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
+        }
+        if(c == 'd'){
+            if(s->quantidade == 0){
+                printf("Sem nota corrente para remover!\n");
+            } else{
+                s->ultimaRemovida = s->notas[s->notaCorrente];
+                s->notas[s->notaCorrente] = n;
+                trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
+                s->quantidade--;
+            }
+        }
+        if(c == 'i'){
+            if(s->ultimaRemovida.cor.r == -1){
+                printf("Não existe ultima nota removida!\n");
+            } else{
+                if(s->quantidade == s->capacidade){
+                    if(!aumentaCapacidade(s)){
+                        printf("Sem memoria\n");
+                        return;
+                    }
+                }    
+            }
         }
         if(c == 'n'){
             if(s->quantidade == s->capacidade){
@@ -368,6 +391,7 @@ void modoPrincipal(Sistema *s){
             }
             s->notas[s->quantidade] = notaDefault();
             s->quantidade++;
+            s->notaCorrente = s->quantidade - 1;
         }
         if(c == 'g'){
             inserirNotas(s->notas,  s->quantidade);
@@ -413,6 +437,7 @@ void modoEditarEtiquetaBusca(Sistema *s){
 
 
 void inicializaSistema(Sistema *s, FILE *a, FILE *p){
+    Nota n = {0};
     s->cursor.x = 0;
     s->cursor.y = 0;
     s->capacidade = 10;
@@ -426,6 +451,8 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
         exit(1);
     }
     s->quantidade = leNotas(a, p, s);
+    s->ultimaRemovida = n;
+    s->ultimaRemovida.cor.r = -1;
 }
 int main(){
 
