@@ -345,25 +345,21 @@ void modoPrincipal(Sistema *s){
 }
 
 
-void inicializaSistema(Sistema *s){
+void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->cursor.x = 0;
     s->cursor.y = 0;
     s->capacidade = 10;
-    s->quantidade = 0;
     s->notaCorrente = 0;
     s->modo = PRINCIPAL;
-
     s->notas = malloc(s->capacidade * sizeof(Nota));
-
     if(s->notas == NULL){
         printf("Erro de memoria!\n");
         exit(1);
     }
+    s->quantidade = leNotas(s->notas, a, p);
 }
 int main(){
     Sistema s;
-    inicializaSistema(&s);
-
     FILE *arq = fopen("arquivo.txt", "r");
     FILE *problemas = fopen("problemas.txt", "w");
 
@@ -379,9 +375,9 @@ int main(){
         free(s.notas);
         return 1;
     }
-    int quantidade = leNotas(s.notas,arq, problemas);
-    trocaPosicaoNota(&s, quantidade - 1, 1);
-    inserirNotas(s.notas, quantidade);
+    inicializaSistema(&s, arq, problemas);
+    trocaPosicaoNota(&s, s.quantidade - 1, 1);
+    inserirNotas(s.notas, s.quantidade);
 
     fclose(arq);
     fclose(problemas);
