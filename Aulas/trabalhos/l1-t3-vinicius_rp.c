@@ -370,63 +370,87 @@ void desenhaNota(Nota n){
     printf("NOTA %c%c%c %s\n",n.etiqueta[0], n.etiqueta[1], n.etiqueta[2], n.texto);
 }
 
-void desenhaModoPrincipal(Sistema *s){
-    printf("MENU PRINCIPAL\n");
+int encontraPrimeiraValida(Sistema *s){
     int a = 0;
     int primeiraNotaValida = -1;
     for(int i = 0; i < s->quantidade; i++){
         if(strcmp("\0", s->textoBusca) != 0 && s->etiquetaBusca[0] != '\0'){
             if(!strcmp(s->notas[i].texto, s->textoBusca) && s->etiquetaBusca[0] == s->notas[i].etiqueta[0] &&
                 s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
-                printf("Posição: %d\n", i);
-                desenhaNota(s->notas[i]);
                 if(primeiraNotaValida == -1){
                     primeiraNotaValida = i;
                 }
                 a++;
+            }
+        } else if(strcmp("\0", s->textoBusca) != 0){
+            if(!strcmp(s->notas[i].texto, s->textoBusca)){
+                if(primeiraNotaValida == -1){
+                    primeiraNotaValida = i;
+                }
+                a++;
+            }
+        } else if(s->etiquetaBusca[0] != '\0'){
+            if(s->etiquetaBusca[0] == s->notas[i].etiqueta[0] && s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && 
+                s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
+                if(primeiraNotaValida == -1){
+                    primeiraNotaValida = i;
+                }
+                a++;
+            }
+        } else if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
+            if(primeiraNotaValida == -1){
+                primeiraNotaValida = i;
+            }
+            a++;
+        }
+    }
+    return primeiraNotaValida;
+}
+
+void desenhaModoPrincipal(Sistema *s){
+    printf("MENU PRINCIPAL\n");
+    int a = 0;
+    for(int i = 0; i < s->quantidade; i++){
+        if(strcmp("\0", s->textoBusca) != 0 && s->etiquetaBusca[0] != '\0'){
+            if(!strcmp(s->notas[i].texto, s->textoBusca) && s->etiquetaBusca[0] == s->notas[i].etiqueta[0] &&
+                s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
+                printf("Posição: %d\n", i);
+                desenhaNota(s->notas[i]);
                 printf("\n");
+                a++;
             }
         } else if(strcmp("\0", s->textoBusca) != 0){
             if(!strcmp(s->notas[i].texto, s->textoBusca)){
                 printf("Posição: %d\n", i);
                 desenhaNota(s->notas[i]);
-                if(primeiraNotaValida == -1){
-                    primeiraNotaValida = i;
-                }
-                a++;
                 printf("\n");
+                a++;
             }
         } else if(s->etiquetaBusca[0] != '\0'){
             if(s->etiquetaBusca[0] == s->notas[i].etiqueta[0] && s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && 
                 s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
                 printf("Posição: %d\n", i);
                 desenhaNota(s->notas[i]);
-                if(primeiraNotaValida == -1){
-                    primeiraNotaValida = i;
-                }
-                a++;
                 printf("\n");
+                a++;
             }
         } else if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
                 printf("Posição: %d\n", i);
                 desenhaNota(s->notas[i]);
-                if(primeiraNotaValida == -1){
-                    primeiraNotaValida = i;
-                }
-                a++;
                 printf("\n");
+                a++;
         }
-        if(a == 0) s->notaCorrente = -1;
-        s->notaCorrente = primeiraNotaValida;
     }
     printf("Notas encontradas: %d\n", a);
-    printf("Nota corrente: %d\n", s->notaCorrente);
-    printf("\n");
 }
 
 void modoPrincipal(Sistema *s){
+    s->notaCorrente = encontraPrimeiraValida(s);
     while(s->modo == PRINCIPAL){
         desenhaModoPrincipal(s);
+        printf("Nota corrente: %d", s->notaCorrente);
+        printf("\n");
+        printf("\n");
         char c;
         scanf(" %c", &c);
         if(c == 'i'){
@@ -448,8 +472,9 @@ void modoPrincipal(Sistema *s){
                 s->ultimaRemovida = s->notas[s->notaCorrente];
                 s->notas[s->notaCorrente] = notaVazia();
                 trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
+                s->notaCorrente = encontraPrimeiraValida(s);
                 if(s->notaCorrente == s->quantidade - 1){
-                    s->notaCorrente--;    
+                    s->notaCorrente--;
                 }
                 s->quantidade--;
                 if(s->quantidade * 100 < s->capacidade * 30){
@@ -483,7 +508,11 @@ void modoPrincipal(Sistema *s){
             }
             s->notas[s->quantidade] = notaDefault();
             s->quantidade++;
-            s->notaCorrente = s->quantidade - 1;
+            if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
+                s->notaCorrente = s->quantidade - 1;
+            } else {
+                s->notaCorrente = encontraPrimeiraValida(s);
+            }
         }
         if(c == 'g'){
             inserirNotas(s->notas,  s->quantidade);
@@ -496,6 +525,9 @@ void modoPrincipal(Sistema *s){
         }
         if(c == 'c'){
             s->modo = EDITAR_COR;
+        }
+        if(c == '.'){
+            
         }
         if(c == 't'){
             s->modo = EDITAR_ETIQUETA;
