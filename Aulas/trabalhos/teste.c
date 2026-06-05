@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 static int PRINCIPAL = 0;
 static int EDITAR_TEXTO = 1;
@@ -42,6 +43,26 @@ typedef struct{
     int x;
     int y;
 } Cursor;
+
+Nota notaDefault(){
+    Nota n;
+    n.etiqueta[0] = 'A';
+    n.etiqueta[1] = 'A';
+    n.etiqueta[2] = 'A';
+
+    n.cor.r = 0;
+    n.cor.g = 0;
+    n.cor.b = 0;
+
+    n.retangulo.ponto.x = 0;
+    n.retangulo.ponto.y = 0;
+    n.retangulo.tamanho.largura = 0;
+    n.retangulo.tamanho.altura = 0;
+
+    strcpy(n.texto, "");
+
+    return n;
+}
 
 void inserirNotaComProblema(char l[], FILE *a){
     fprintf(a, "%s", l);
@@ -294,6 +315,17 @@ typedef struct{
     char etiquetaBusca[3];
 } Sistema;
 
+int aumentaCapacidade(Sistema *s){
+    Nota *novaCapacidade = realloc(s->notas, s->capacidade * 2 * sizeof(Nota));
+
+    if(novaCapacidade == NULL) return 0;
+
+    s->notas = novaCapacidade;
+    s->capacidade *= 2;
+
+    return 1;
+}
+
 void trocaPosicaoNota(Sistema *s, int a, int b){
     if(a < b){
         for(int i = a; i < b ; i++){
@@ -312,14 +344,7 @@ void trocaPosicaoNota(Sistema *s, int a, int b){
 }
 
 void modoEditarTexto(Sistema *s){
-    char c;
-
-    if(c == 'i'){
-        trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
-    }
-    if(c == 'f'){
-        trocaPosicaoNota(s, 0, s->notaCorrente);
-    }
+    
     s->modo = PRINCIPAL;
 }
 
@@ -340,7 +365,24 @@ void modoEditarEtiquetaBusca(Sistema *s){
 }
 
 void modoPrincipal(Sistema *s){
-
+    char c;
+    scanf("%c", &c);
+    if(c == 'n'){
+        if(s->quantidade == s->capacidade){
+            if(!aumentaCapacidade(s)){
+                printf("Sem memoria\n");
+                return;
+            }
+        }
+        s->notas[s->quantidade] = notaDefault();
+        s->quantidade++;
+    }
+    if(c == 'i'){
+        trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
+    }
+    if(c == 'f'){
+        trocaPosicaoNota(s, 0, s->notaCorrente);
+    }
     
 }
 
@@ -376,7 +418,7 @@ int main(){
         return 1;
     }
     inicializaSistema(&s, arq, problemas);
-    trocaPosicaoNota(&s, s.quantidade - 1, 1);
+    modoPrincipal(&s);
     inserirNotas(s.notas, s.quantidade);
 
     fclose(arq);
