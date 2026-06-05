@@ -92,6 +92,18 @@ int aumentaCapacidade(Sistema *s){
     return 1;
 }
 
+int diminuiCapacidade(Sistema *s){
+    if(s->capacidade <= 1) return 1; 
+
+    Nota *novaCapacidade = realloc(s->notas,(s->capacidade / 2) * sizeof(Nota));
+    if(novaCapacidade == NULL) return 0;
+
+    s->notas = novaCapacidade;
+    s->capacidade /= 2;
+
+    return 1;
+}
+
 void inserirNotaComProblema(char l[], FILE *a){
     fprintf(a, "%s", l);
 }
@@ -365,18 +377,6 @@ void desenhaModoPrincipal(Sistema *s){
     }
 }
 
-int diminuiCapacidade(Sistema *s){
-    if(s->capacidade <= 1) return 1; 
-
-    Nota *novaCapacidade = realloc(s->notas,(s->capacidade / 2) * sizeof(Nota));
-    if(novaCapacidade == NULL) return 0;
-
-    s->notas = novaCapacidade;
-    s->capacidade /= 2;
-
-    return 1;
-}
-
 void modoPrincipal(Sistema *s){
     while(s->modo == PRINCIPAL){
         desenhaModoPrincipal(s);
@@ -494,8 +494,8 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->quantidade = leNotas(a, p, s);
     s->ultimaRemovida = notaVazia();
 }
-int main(){
 
+int main(){
     Sistema s;
     FILE *arq = fopen("arquivo.txt", "r");
     FILE *problemas = fopen("problemas.txt", "w");
