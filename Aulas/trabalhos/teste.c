@@ -129,8 +129,8 @@ int leRetangulo(FILE *a, Retangulo *r){
     int c;
     int x = -999;
     int y = -999;
-    int largura = -999;
-    int altura = -999;
+    int largura = -1;
+    int altura = -1;
     while((c = fgetc(a)) != '\n' && c != EOF){
         if((c != ' ') && (c < '0' || c > '9')){
             printf("Erro na formatação do retangulo!\n");
@@ -144,10 +144,10 @@ int leRetangulo(FILE *a, Retangulo *r){
             }else if(y == -999){
                 if(fscanf(a, "%d", &y) != 1)
                     return 1;
-            }else if(largura == -999){
+            }else if(largura == -1){
                 if(fscanf(a, "%d", &largura) != 1)
                     return 1;
-            }else if(altura == -999){
+            }else if(altura == -1){
                 if(fscanf(a, "%d", &altura) != 1)
                     return 1;
                 break;
@@ -264,17 +264,48 @@ void inserirNotas(Nota n[], int t){
     fclose(novo);
 }
 
+typedef struct{
+    Nota *notas;
+
+    int quantidade;
+    int capacidade;
+
+    int modo;
+
+    int notaCorrente;
+
+    Nota ultimaRemovida;
+    int existeUltimaRemovida;
+
+    char textoBusca[101];
+    char etiquetaBusca[3];
+} Sistema;
+
+void inicializaSistema(Sistema *s){
+    s->capacidade = 10;
+    s->quantidade = 0;
+    s->notaCorrente = 0;
+
+    s->notas = malloc(s->capacidade * sizeof(Nota));
+
+    if(s->notas == NULL){
+        printf("Erro de memoria!\n");
+        exit(1);
+    }
+
+
+}
+
 
 int main(){
     Nota notas[100];
     FILE *arq = fopen("arquivo.txt", "r");
-    if(arq == NULL){
-        printf("Erro ao abrir!\n");
-        return 1;
-    }
     FILE *problemas = fopen("problemas.txt", "w");
-    if(problemas == NULL){
+    if(arq == NULL || problemas == NULL){
         printf("Erro ao abrir!\n");
+
+        if(arq != NULL) fclose(arq);
+        if(problemas != NULL) fclose(arq);
         return 1;
     }
     int quantidade = leNotas(notas, arq, problemas);
