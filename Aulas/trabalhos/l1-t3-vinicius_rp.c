@@ -510,8 +510,6 @@ void modoPrincipal(Sistema *s){
             s->quantidade++;
             if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
                 s->notaCorrente = s->quantidade - 1;
-            } else {
-                s->notaCorrente = encontraPrimeiraValida(s);
             }
         }
         if(c == 'g'){
@@ -525,6 +523,9 @@ void modoPrincipal(Sistema *s){
         }
         if(c == 'c'){
             s->modo = EDITAR_COR;
+        }
+        if(c == ','){
+            
         }
         if(c == '.'){
             
@@ -575,6 +576,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
         printf("Erro de memoria!\n");
         exit(1);
     }
+
     s->quantidade = leNotas(a, p, s);
     s->ultimaRemovida = notaVazia();
 }
