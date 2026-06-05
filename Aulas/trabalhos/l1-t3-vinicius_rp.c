@@ -372,6 +372,9 @@ void modoPrincipal(Sistema *s){
         if(c == 'b'){
             s->modo = EDITAR_TEXTO_BUSCA;
         }
+        if(c == 'c'){
+            s->modo = EDITAR_COR;
+        }
     }
 }
 
@@ -412,7 +415,8 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     }
     s->quantidade = leNotas(s->notas, a, p);
 }
-int main(){
+int main(){c — muda o modo de operação para edição de cor;
+
     Sistema s;
     FILE *arq = fopen("arquivo.txt", "r");
     FILE *problemas = fopen("problemas.txt", "w");
