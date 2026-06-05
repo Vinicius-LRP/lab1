@@ -118,7 +118,7 @@ int leEtiqueta(FILE *a, char e[]){
                 }
                 e1 = c;
                 printf("%c", c);
-                c = fgetc(modoEditarTexto(s);a);
+                c = fgetc(a);
                 if(verificaQuebraDeLinha(c, a) || !valido(c) || c == EOF){
                     printf("Etiqueta invalida!\n");
                     return 1;
@@ -428,7 +428,6 @@ int main(){
         return 1;
     }
     inicializaSistema(&s, arq, problemas);
-    
     while(s.modo != TERMINAR){ 
         switch(s.modo){ 
             case 0: 
