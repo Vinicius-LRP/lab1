@@ -46,14 +46,14 @@ int verificaQuebraDeLinha(int c, FILE *a){
     return 0;
 }
 
-int leEtiqueta(FILE *a, char e[], char l[]){
+int leEtiqueta(FILE *a, char e[]){
     int c;
-    int e0 = -999;
-    int e1 = -999;
-    int e2 = -999;
+    int e0 = -1;
+    int e1;
+    int e2;
     while((c = fgetc(a)) != '\n' && c != EOF){
         if(c != ' '){
-            if(e0 == -999){
+            if(e0 == -1){
                 if(!valido(c)){
                     printf("Etiqueta invalida!\n");
                     return 1;
@@ -214,7 +214,7 @@ Nota leNota(FILE *arq, FILE *p){
     }
     fseek(arq, pos, SEEK_SET);
 
-    if(leEtiqueta(arq, n.etiqueta, linha) || leCor(arq, &n.cor) || 
+    if(leEtiqueta(arq, n.etiqueta) || leCor(arq, &n.cor) || 
     leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto, linha, p)){
         inserirNotaComProblema(linha, p);
         consumirLinha(arq);  
