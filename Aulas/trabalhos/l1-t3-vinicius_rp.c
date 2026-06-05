@@ -376,6 +376,9 @@ void modoPrincipal(Sistema *s){
                 s->notas[s->notaCorrente] = n;
                 trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
                 s->quantidade--;
+                if(s->notaCorrente == s->quantidade){
+
+                }
             }
         }
         if(c == '0'){
