@@ -355,6 +355,8 @@ Nota notaVazia(){
     return n;
 }
 
+
+
 void modoPrincipal(Sistema *s){
     while(s->modo == PRINCIPAL){
         Nota n = {0};
@@ -376,9 +378,9 @@ void modoPrincipal(Sistema *s){
                 s->quantidade--;
             }
         }
-        if(c == 'i'){
+        if(c == '0'){
             if(s->ultimaRemovida.cor.r == -1){
-                printf("Não existe ultima nota removida!\n");
+                printf("Não existe ultima nota removida para inserir!\n");
             } else{
                 if(s->quantidade == s->capacidade){
                     if(!aumentaCapacidade(s)){
