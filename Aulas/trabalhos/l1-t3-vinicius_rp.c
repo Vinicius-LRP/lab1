@@ -81,6 +81,17 @@ Nota notaDefault(){
     return n;
 }
 
+int aumentaCapacidade(Sistema *s){
+    Nota *novaCapacidade = realloc(s->notas, s->capacidade * 2 * sizeof(Nota));
+
+    if(novaCapacidade == NULL) return 0;
+
+    s->notas = novaCapacidade;
+    s->capacidade *= 2;
+
+    return 1;
+}
+
 void inserirNotaComProblema(char l[], FILE *a){
     fprintf(a, "%s", l);
 }
@@ -276,15 +287,21 @@ Nota leNota(FILE *arq, FILE *p){
     return n;
 }
 
-int leNotas(Nota n[], FILE *arq, FILE *p){
+int leNotas(FILE *arq, FILE *p, Sistema *s){
     Nota nt = {0};
     int a = 0;
-    while(a < 100){
+    while(1){
         nt = leNota(arq, p);
-        if(nt.cor.r == -3) break;   
-        if(nt.cor.r != -2){         
-            n[a] = nt;
-            a++;
+        if(nt.cor.r == -3) break;
+        if(nt.cor.r != -2){
+            if(a == s->capacidade){
+                if(!aumentaCapacidade(s)){
+                    printf("Sem memoria\n");
+                    return a;
+                }
+            }
+        s->notas[a] = nt;
+        a++;
         }
     }
     return a;
@@ -313,17 +330,6 @@ void inserirNotas(Nota n[], int t){
         inserirNota(n[a], novo);
     }
     fclose(novo);
-}
-
-int aumentaCapacidade(Sistema *s){
-    Nota *novaCapacidade = realloc(s->notas, s->capacidade * 2 * sizeof(Nota));
-
-    if(novaCapacidade == NULL) return 0;
-
-    s->notas = novaCapacidade;
-    s->capacidade *= 2;
-
-    return 1;
 }
 
 void trocaPosicaoNota(Sistema *s, int a, int b){
@@ -375,6 +381,12 @@ void modoPrincipal(Sistema *s){
         if(c == 'c'){
             s->modo = EDITAR_COR;
         }
+        if(c == 't'){
+            s->modo = EDITAR_ETIQUETA;
+        }
+        if(c == 'B'){
+            s->modo = EDITAR_ETIQUETA_BUSCA;
+        }
     }
 }
 
@@ -413,9 +425,9 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
         printf("Erro de memoria!\n");
         exit(1);
     }
-    s->quantidade = leNotas(s->notas, a, p);
+    s->quantidade = leNotas(a, p, s);
 }
-int main(){c — muda o modo de operação para edição de cor;
+int main(){
 
     Sistema s;
     FILE *arq = fopen("arquivo.txt", "r");
@@ -424,13 +436,9 @@ int main(){c — muda o modo de operação para edição de cor;
     if(arq == NULL || problemas == NULL){
         printf("Erro ao abrir!\n");
 
-        if(arq != NULL)
-            fclose(arq);
-
-        if(problemas != NULL)
-            fclose(problemas);
-
-        free(s.notas);
+        if(arq != NULL) fclose(arq);
+        if(problemas != NULL) fclose(problemas);
+        
         return 1;
     }
     inicializaSistema(&s, arq, problemas);
@@ -458,7 +466,8 @@ int main(){c — muda o modo de operação para edição de cor;
                 s.modo = TERMINAR; 
         } 
     }
-
+    
+    free(s.notas);
     fclose(arq);
     fclose(problemas);
     return 0;
