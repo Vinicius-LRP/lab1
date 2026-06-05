@@ -506,7 +506,7 @@ void modoPrincipal(Sistema *s){
         if(c == 'c'){
             s->modo = EDITAR_COR;
         }
-        if(c == ','){
+        if(c == 'A'){
             for(int i = 1; i < s->validos[0] + 1 ; i++){
                 if(s->validos[i] == s->notaCorrente){
                     if(i > 1) s->notaCorrente = s->validos[i - 1];
@@ -514,13 +514,16 @@ void modoPrincipal(Sistema *s){
                 }
             }
         }
-        if(c == '.'){
+        if(c == 'D'){
             for(int i = 1; i < s->validos[0] + 1 ; i++){
                 if(s->validos[i] == s->notaCorrente){
                     if(i < s->validos[0]) s->notaCorrente = s->validos[i + 1];
                     break;
                 } 
             }
+        }
+        if(c == 'h'){
+            
         }
         if(c == 't'){
             s->modo = EDITAR_ETIQUETA;
@@ -566,7 +569,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->notaCorrente = -1;
     s->modo = PRINCIPAL;
     strcpy(s->textoBusca, "\0");
-    s->etiquetaBusca[0] = 'X';
+    s->etiquetaBusca[0] = '\0';
     s->etiquetaBusca[1] = 'X';
     s->etiquetaBusca[2] = 'X';
     s->notas = malloc(s->capacidade * sizeof(Nota));
