@@ -365,6 +365,18 @@ void desenhaModoPrincipal(Sistema *s){
     }
 }
 
+int diminuiCapacidade(Sistema *s){
+    if(s->capacidade <= 1) return 1; 
+
+    Nota *novaCapacidade = realloc(s->notas,(s->capacidade / 2) * sizeof(Nota));
+    if(novaCapacidade == NULL) return 0;
+
+    s->notas = novaCapacidade;
+    s->capacidade /= 2;
+
+    return 1;
+}
+
 void modoPrincipal(Sistema *s){
     while(s->modo == PRINCIPAL){
         desenhaModoPrincipal(s);
@@ -390,6 +402,12 @@ void modoPrincipal(Sistema *s){
                     s->notaCorrente--;    
                 }
                 s->quantidade--;
+                if(s->quantidade * 100 < s->capacidade * 30){
+                    if(!diminuiCapacidade(s)){
+                        printf("Erro ao diminuir capacidade!\n");
+                        return;
+                    }
+                }
             }
         }
         if(c == '0'){
@@ -397,15 +415,13 @@ void modoPrincipal(Sistema *s){
                 printf("Não existe ultima nota removida para inserir!\n");
             } else{
                 if(s->quantidade == s->capacidade){
-                    if(!aumentaCapacidade(s)){
+                    if(!aumentaCapacidade(s))
                         printf("Sem memoria\n");
-                        return;
                     }
-                }
                 s->notas[s->quantidade] = s->ultimaRemovida;
                 s->quantidade++;
                 s->notaCorrente = s->quantidade - 1;
-                s->ultimaRemovida = notaVazia();    
+                s->ultimaRemovida = notaVazia();  
             }
         }
         if(c == 'n'){
