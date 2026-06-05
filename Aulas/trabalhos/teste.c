@@ -378,12 +378,11 @@ void modoPrincipal(Sistema *s){
         s->quantidade++;
     }
     if(c == 'i'){
-        trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
-    }
-    if(c == 'f'){
         trocaPosicaoNota(s, 0, s->notaCorrente);
     }
-    
+    if(c == 'f'){
+        trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
+    } 
 }
 
 
@@ -391,7 +390,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->cursor.x = 0;
     s->cursor.y = 0;
     s->capacidade = 10;
-    s->notaCorrente = 0;
+    s->notaCorrente = 2;
     s->modo = PRINCIPAL;
     s->notas = malloc(s->capacidade * sizeof(Nota));
     if(s->notas == NULL){
