@@ -195,6 +195,10 @@ int leTexto(FILE *a, char t[]) {
         t[i++] = c;
     }
     t[i] = '\0';
+    if(i == 100){
+        printf("Texto maior que o suportado!\n");
+        return 1;
+    }
     return 0;
 }
 
