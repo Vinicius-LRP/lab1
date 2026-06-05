@@ -254,7 +254,7 @@ int leTexto(FILE *a, char t[], char l[], FILE *p) {
     t[i] = '\0';
     if(i == 101){
         printf("Texto maior que o suportado!\n");
-        inserirNotaComProblema(l,p);
+        inserirNotaComProblema(l,p); //refazer essa parte
     }
     return 0;
 }
@@ -466,7 +466,7 @@ int main(){
                 s.modo = TERMINAR; 
         } 
     }
-    
+
     free(s.notas);
     fclose(arq);
     fclose(problemas);
