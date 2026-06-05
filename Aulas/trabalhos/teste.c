@@ -170,18 +170,32 @@ int leRetangulo(FILE *a, Retangulo *r){
 
 int leTexto(FILE *a, char t[]) {
     int c;
-    while((c = fgetc(a)) != '\n' && c != EOF){
-        if(c != ' ' && c != '"'){
+    while ((c = fgetc(a)) != '"') {
+        if (c == EOF){
             printf("Erro na formatação do texto!\n");
             return 1;
         }
-        if(c == '"'){
-            c = fgetc(a);
-            if(c == EOF) break;
-            if(verificaQuebraDeLinha(c, a))
-                return 1;
+        if (c == '\n') {
+            printf("Erro na formatação do texto!\n"); 
+            ungetc(c, a); 
+            return 1; 
+        }
+        if(c != ' '){
+            printf("Erro na formatação do texto!\n");
+            return 1;
         }
     }
+    int i = 0;
+    while (i < 100 && (c = fgetc(a)) != '"') {
+        if (c == EOF) return 1;
+        if (c == '\n') { 
+            ungetc(c, a); 
+            return 1; 
+        } 
+        t[i++] = c;
+    }
+    t[i] = '\0';
+    return 0;
 }
 
 void consumirLinha(FILE *a){
