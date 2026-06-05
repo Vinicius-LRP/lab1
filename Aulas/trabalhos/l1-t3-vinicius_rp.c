@@ -507,17 +507,20 @@ void modoPrincipal(Sistema *s){
             s->modo = EDITAR_COR;
         }
         if(c == ','){
-            printf("Nota corrente: %d", s->notaCorrente);
-            for(int i = 1; i <= s->validos[0] + 1 ; i++){
+            for(int i = 1; i < s->validos[0] + 1 ; i++){
                 if(s->validos[i] == s->notaCorrente){
                     if(i > 1) s->notaCorrente = s->validos[i - 1];
                     break;
                 }
             }
-
         }
         if(c == '.'){
-            
+            for(int i = 1; i < s->validos[0] + 1 ; i++){
+                if(s->validos[i] == s->notaCorrente){
+                    if(i < s->validos[0]) s->notaCorrente = s->validos[i + 1];
+                    break;
+                } 
+            }
         }
         if(c == 't'){
             s->modo = EDITAR_ETIQUETA;
