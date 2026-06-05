@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+static int PRINCIPAL = 0;
+static int EDITAR_TEXTO = 1;
+static int EDITAR_ETIQUETA = 2;
+static int EDITAR_COR = 3;
+static int EDITAR_TEXTO_BUSCA = 4;
+static int EDITAR_ETIQUETA_BUSCA = 5;
+static int TERMINAR = 6;
 
 
 typedef struct{
@@ -305,6 +311,7 @@ void inicializaSistema(Sistema *s){
     s->capacidade = 10;
     s->quantidade = 0;
     s->notaCorrente = 0;
+    s->modo = PRINCIPAL;
 
     s->notas = malloc(s->capacidade * sizeof(Nota));
 
