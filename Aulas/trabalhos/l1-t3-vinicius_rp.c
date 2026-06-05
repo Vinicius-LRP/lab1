@@ -349,6 +349,12 @@ void trocaPosicaoNota(Sistema *s, int a, int b){
     }
 }
 
+Nota notaVazia(){
+    Nota n = {0};
+    n.cor.r = -1;
+    return n;
+}
+
 void modoPrincipal(Sistema *s){
     while(s->modo == PRINCIPAL){
         Nota n = {0};
@@ -379,7 +385,11 @@ void modoPrincipal(Sistema *s){
                         printf("Sem memoria\n");
                         return;
                     }
-                }    
+                }
+                s->notas[s->quantidade] = s->ultimaRemovida;
+                s->quantidade++;
+                s->notaCorrente = s->quantidade - 1;
+                s->ultimaRemovida = notaVazia();    
             }
         }
         if(c == 'n'){
@@ -437,7 +447,6 @@ void modoEditarEtiquetaBusca(Sistema *s){
 
 
 void inicializaSistema(Sistema *s, FILE *a, FILE *p){
-    Nota n = {0};
     s->cursor.x = 0;
     s->cursor.y = 0;
     s->capacidade = 10;
@@ -451,8 +460,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
         exit(1);
     }
     s->quantidade = leNotas(a, p, s);
-    s->ultimaRemovida = n;
-    s->ultimaRemovida.cor.r = -1;
+    s->ultimaRemovida = notaVazia();
 }
 int main(){
 
