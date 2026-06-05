@@ -409,39 +409,14 @@ void encontrarValidos(Sistema *s){
 
 void desenhaModoPrincipal(Sistema *s){
     printf("MENU PRINCIPAL\n");
-    int a = 0;
-    for(int i = 0; i < s->quantidade; i++){
-        if(strcmp("\0", s->textoBusca) != 0 && s->etiquetaBusca[0] != '\0'){
-            if(!strcmp(s->notas[i].texto, s->textoBusca) && s->etiquetaBusca[0] == s->notas[i].etiqueta[0] &&
-                s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
-                printf("Posição: %d\n", i);
-                desenhaNota(s->notas[i]);
-                printf("\n");
-                a++;
-            }
-        } else if(strcmp("\0", s->textoBusca) != 0){
-            if(!strcmp(s->notas[i].texto, s->textoBusca)){
-                printf("Posição: %d\n", i);
-                desenhaNota(s->notas[i]);
-                printf("\n");
-                a++;
-            }
-        } else if(s->etiquetaBusca[0] != '\0'){
-            if(s->etiquetaBusca[0] == s->notas[i].etiqueta[0] && s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && 
-                s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
-                printf("Posição: %d\n", i);
-                desenhaNota(s->notas[i]);
-                printf("\n");
-                a++;
-            }
-        } else if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
-                printf("Posição: %d\n", i);
-                desenhaNota(s->notas[i]);
-                printf("\n");
-                a++;
-        }
+    printf("\n");
+    for(int i = 1; i < s->validos[0] + 1; i++){
+        desenhaNota(s->notas[s->validos[i]]);
+        printf("Posição: %d\n", s->validos[i]);
+        printf("\n");
     }
-    printf("Notas encontradas: %d\n", a);
+    printf("\n");
+    printf("Notas encontradas: %d\n", s->validos[0]);
 }
 
 void modoPrincipal(Sistema *s){
@@ -529,7 +504,7 @@ void modoPrincipal(Sistema *s){
             s->modo = EDITAR_COR;
         }
         if(c == ','){
-            s->notaCorrente;
+
         }
         if(c == '.'){
             
