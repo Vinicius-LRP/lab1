@@ -1,5 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+static int PRINCIPAL = 0;
+static int EDITAR_TEXTO = 1;
+static int EDITAR_ETIQUETA = 2;
+static int EDITAR_COR = 3;
+static int EDITAR_TEXTO_BUSCA = 4;
+static int EDITAR_ETIQUETA_BUSCA = 5;
+static int TERMINAR = 6;
+
 
 typedef struct{
     int r;
@@ -30,10 +40,46 @@ typedef struct{
 }Nota;
 
 typedef struct{
-    Nota notas[100];
+    int x;
+    int y;
+} Cursor;
+
+typedef struct{
+    Nota *notas;
+
     int quantidade;
-    int notaAtual;
-}Programa;
+    int capacidade;
+
+    int modo;
+    int notaCorrente;
+    Cursor cursor;
+
+    Nota ultimaRemovida;
+    int existeUltimaRemovida;
+
+    char textoBusca[101];
+    char etiquetaBusca[3];
+} Sistema;
+
+Nota notaDefault(){
+    Nota n;
+    n.etiqueta[0] = 'A';
+    n.etiqueta[1] = 'A';
+    n.etiqueta[2] = 'A';
+
+    n.cor.r = 0;
+    n.cor.g = 0;
+    n.cor.b = 0;
+
+    n.retangulo.ponto.x = 0;
+    n.retangulo.ponto.y = 0;
+    n.retangulo.tamanho.largura = 0;
+    n.retangulo.tamanho.altura = 0;
+
+    strcpy(n.texto, "");
+
+    return n;
+}
 
 void inserirNotaComProblema(char l[], FILE *a){
     fprintf(a, "%s", l);
@@ -51,14 +97,14 @@ int verificaQuebraDeLinha(int c, FILE *a){
     return 0;
 }
 
-int leEtiqueta(FILE *a, char e[], char l[]){
+int leEtiqueta(FILE *a, char e[]){
     int c;
-    int e0 = -999;
-    int e1 = -999;
-    int e2 = -999;
+    int e0 = -1;
+    int e1;
+    int e2;
     while((c = fgetc(a)) != '\n' && c != EOF){
         if(c != ' '){
-            if(e0 == -999){
+            if(e0 == -1){
                 if(!valido(c)){
                     printf("Etiqueta invalida!\n");
                     return 1;
@@ -134,8 +180,8 @@ int leRetangulo(FILE *a, Retangulo *r){
     int c;
     int x = -999;
     int y = -999;
-    int largura = -999;
-    int altura = -999;
+    int largura = -1;
+    int altura = -1;
     while((c = fgetc(a)) != '\n' && c != EOF){
         if((c != ' ') && (c < '0' || c > '9')){
             printf("Erro na formatação do retangulo!\n");
@@ -149,10 +195,10 @@ int leRetangulo(FILE *a, Retangulo *r){
             }else if(y == -999){
                 if(fscanf(a, "%d", &y) != 1)
                     return 1;
-            }else if(largura == -999){
+            }else if(largura == -1){
                 if(fscanf(a, "%d", &largura) != 1)
                     return 1;
-            }else if(altura == -999){
+            }else if(altura == -1){
                 if(fscanf(a, "%d", &altura) != 1)
                     return 1;
                 break;
@@ -168,7 +214,7 @@ int leRetangulo(FILE *a, Retangulo *r){
     return 0;
 }
 
-int leTexto(FILE *a, char t[]) {
+int leTexto(FILE *a, char t[], char l[], FILE *p) {
     int c;
     while ((c = fgetc(a)) != '"') {
         if (c == EOF){
@@ -186,7 +232,7 @@ int leTexto(FILE *a, char t[]) {
         }
     }
     int i = 0;
-    while (i < 100 && (c = fgetc(a)) != '"') {
+    while (i < 101 && (c = fgetc(a)) != '"') {
         if (c == EOF) return 1;
         if (c == '\n') { 
             ungetc(c, a); 
@@ -195,9 +241,9 @@ int leTexto(FILE *a, char t[]) {
         t[i++] = c;
     }
     t[i] = '\0';
-    if(i == 100){
+    if(i == 101){
         printf("Texto maior que o suportado!\n");
-        return 1;
+        inserirNotaComProblema(l,p);
     }
     return 0;
 }
@@ -219,8 +265,8 @@ Nota leNota(FILE *arq, FILE *p){
     }
     fseek(arq, pos, SEEK_SET);
 
-    if(leEtiqueta(arq, n.etiqueta, linha) || leCor(arq, &n.cor) || 
-    leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto)){
+    if(leEtiqueta(arq, n.etiqueta) || leCor(arq, &n.cor) || 
+    leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto, linha, p)){
         inserirNotaComProblema(linha, p);
         consumirLinha(arq);  
         np.cor.r = -2; 
@@ -269,39 +315,113 @@ void inserirNotas(Nota n[], int t){
     fclose(novo);
 }
 
-void proximaNota(Programa *p){
-    if(p->notaAtual < p->quantidade - 1){
-        p->notaAtual++;
+int aumentaCapacidade(Sistema *s){
+    Nota *novaCapacidade = realloc(s->notas, s->capacidade * 2 * sizeof(Nota));
+
+    if(novaCapacidade == NULL) return 0;
+
+    s->notas = novaCapacidade;
+    s->capacidade *= 2;
+
+    return 1;
+}
+
+void trocaPosicaoNota(Sistema *s, int a, int b){
+    if(a < b){
+        for(int i = a; i < b ; i++){
+            Nota troca = s->notas[b];
+            s->notas[b] = s->notas[i];
+            s->notas[i] = troca;
+        }
+    }
+    if(a > b){
+        for(int i = a; i > b; i--){
+            Nota troca = s->notas[b];
+            s->notas[b] = s->notas[i];
+            s->notas[i] = troca;
+        }
     }
 }
 
-void notaAnterior(Programa *p){
-    if(p->notaAtual > 0){
-        p->notaAtual--;
+void modoEditarTexto(Sistema *s){
+    
+    s->modo = PRINCIPAL;
+}
+
+void modoEditarEtiqueta(Sistema *s){
+    s->modo = PRINCIPAL;
+}
+
+void modoEditarCor(Sistema *s){
+    s->modo = PRINCIPAL;
+}
+
+void modoEditarTextoBusca(Sistema *s){
+    s->modo = PRINCIPAL;
+}
+
+void modoEditarEtiquetaBusca(Sistema *s){
+    s->modo = PRINCIPAL;
+}
+
+void modoPrincipal(Sistema *s){
+    char c;
+    scanf("%c", &c);
+    if(c == 'i'){
+        trocaPosicaoNota(s, 0, s->notaCorrente);
     }
+    if(c == 'f'){
+        trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
+    }
+    if(c == 'n'){
+        if(s->quantidade == s->capacidade){
+            if(!aumentaCapacidade(s)){
+                printf("Sem memoria\n");
+                return;
+            }
+        }
+        s->notas[s->quantidade] = notaDefault();
+        s->quantidade++;
+    }
+    if(c == 'g'){
+        inserirNotas(s->notas,  s->quantidade);
+    }
+
 }
 
-void imprimeNotaAtual(Programa *p){
-    printf("Texto: %s\n", p->notas[p->notaAtual].texto);
-}
 
+void inicializaSistema(Sistema *s, FILE *a, FILE *p){
+    s->cursor.x = 0;
+    s->cursor.y = 0;
+    s->capacidade = 10;
+    s->notaCorrente = 2;
+    s->modo = PRINCIPAL;
+    s->notas = malloc(s->capacidade * sizeof(Nota));
+    if(s->notas == NULL){
+        printf("Erro de memoria!\n");
+        exit(1);
+    }
+    s->quantidade = leNotas(s->notas, a, p);
+}
 int main(){
-
-    Programa p = {0};
+    Sistema s;
     FILE *arq = fopen("arquivo.txt", "r");
-    if(arq == NULL){
-        printf("Erro ao abrir!\n");
-        return 1;
-    }
     FILE *problemas = fopen("problemas.txt", "w");
-    if(problemas == NULL){
+
+    if(arq == NULL || problemas == NULL){
         printf("Erro ao abrir!\n");
+
+        if(arq != NULL)
+            fclose(arq);
+
+        if(problemas != NULL)
+            fclose(problemas);
+
+        free(s.notas);
         return 1;
     }
-    p.quantidade = leNotas(p.notas, arq, problemas);
-    p.notaAtual = 0;
-    inserirNotas(p.notas, p.quantidade);
-    imprimeNotaAtual(&p);
+    inicializaSistema(&s, arq, problemas);
+    modoPrincipal(&s);
 
     fclose(arq);
     fclose(problemas);
