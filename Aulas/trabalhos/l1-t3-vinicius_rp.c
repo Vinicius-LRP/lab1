@@ -76,7 +76,7 @@ Nota notaDefault(){
     n.retangulo.tamanho.largura = 0;
     n.retangulo.tamanho.altura = 0;
 
-    strcpy(n.texto, "");
+    strcpy(n.texto, "Default");
 
     return n;
 }
@@ -104,8 +104,9 @@ int diminuiCapacidade(Sistema *s){
     return 1;
 }
 
-void inserirNotaComProblema(char l[], FILE *a){
-    fprintf(a, "%s", l);
+void inserirNotaComProblema(char l[], FILE *p){
+    fprintf(p, "%s", l);
+    fflush(p); // rever
 }
 
 int valido(char c){
@@ -527,17 +528,17 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
 int main(){
     Sistema s;
     FILE *arq = fopen("arquivo.txt", "r");
-    FILE *problemas = fopen("problemas.txt", "w");
+    FILE *p = fopen("problemas.txt", "w");
 
-    if(arq == NULL || problemas == NULL){
+    if(arq == NULL || p == NULL){
         printf("Erro ao abrir!\n");
 
         if(arq != NULL) fclose(arq);
-        if(problemas != NULL) fclose(problemas);
+        if(p != NULL) fclose(p);
         
         return 1;
     }
-    inicializaSistema(&s, arq, problemas);
+    inicializaSistema(&s, arq, p);
     while(s.modo != TERMINAR){ 
         switch(s.modo){ 
             case 0: 
@@ -565,6 +566,7 @@ int main(){
 
     free(s.notas);
     fclose(arq);
-    fclose(problemas);
+    fclose(p);
     return 0;
 }
+
