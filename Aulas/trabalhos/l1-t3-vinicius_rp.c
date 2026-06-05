@@ -523,7 +523,14 @@ void modoPrincipal(Sistema *s){
             }
         }
         if(c == 'h'){
-            
+            if(s->validos[0] != 0){
+                s->notaCorrente = s->validos[1];
+            }
+        }
+        if(c == 'E'){
+            if(s->validos[0] != 0){
+                s->notaCorrente = s->validos[s->validos[0]];
+            }
         }
         if(c == 't'){
             s->modo = EDITAR_ETIQUETA;
