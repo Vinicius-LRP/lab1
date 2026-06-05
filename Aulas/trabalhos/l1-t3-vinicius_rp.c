@@ -364,34 +364,51 @@ Nota notaVazia(){
     return n;
 }
 
+void desenhaNota(Nota n){
+    printf("NOTA %c%c%c %s\n",n.etiqueta[0], n.etiqueta[1], n.etiqueta[2], n.texto);
+}
+
 void desenhaModoPrincipal(Sistema *s){
     printf("MENU PRINCIPAL\n");
-    printf("NOTAS\n");
     for(int i = 0; i < s->quantidade; i++){
         if(strcmp("\0", s->textoBusca) != 0 && s->etiquetaBusca[0] != '\0'){
             if(!strcmp(s->notas[i].texto, s->textoBusca) && s->etiquetaBusca[0] == s->notas[i].etiqueta[0] &&
                 s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
-                printf("NOTA:\n");
                 printf("Posição: %d\n", i);
-                printf("Etiqueta: %c%c%c\n", s->notas[i].etiqueta[0], s->notas[i].etiqueta[1], s->notas[i].etiqueta[2]);
-                printf("Texto: %s\n", s->notas[i].texto);
+                desenhaNota(s->notas[i]);
+                s->notaCorrente = i;
+                printf("\n");
             }
         } else if(strcmp("\0", s->textoBusca) != 0){
             if(!strcmp(s->notas[i].texto, s->textoBusca)){
-                printf("NOTA:\n");
                 printf("Posição: %d\n", i);
-                printf("Etiqueta: %c%c%c\n", s->notas[i].etiqueta[0], s->notas[i].etiqueta[1], s->notas[i].etiqueta[2]);
-                printf("Texto: %s\n", s->notas[i].texto);
+                desenhaNota(s->notas[i]);
+                s->notaCorrente = i;
+                printf("\n");
             }
+        } else if(s->etiquetaBusca[0] != '\0'){
+            if(s->etiquetaBusca[0] == s->notas[i].etiqueta[0] && s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && 
+                s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
+                printf("Posição: %d\n", i);
+                desenhaNota(s->notas[i]);
+                s->notaCorrente = i;
+                printf("\n");
+            }
+        } else if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
+                printf("Posição: %d\n", i);
+                desenhaNota(s->notas[i]);
+                s->notaCorrente = i;
+                printf("\n");
         }
     }
+    printf("Nota corrente: %d\n", s->notaCorrente);
 }
 
 void modoPrincipal(Sistema *s){
     while(s->modo == PRINCIPAL){
         desenhaModoPrincipal(s);
         char c;
-        scanf("%c", &c);
+        scanf(" %c", &c);
         if(c == 'i'){
             trocaPosicaoNota(s, 0, s->notaCorrente);
         }
@@ -494,10 +511,10 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->capacidade = 10;
     s->notaCorrente = 2;
     s->modo = PRINCIPAL;
-    strcpy(s->textoBusca, "Louco");
+    strcpy(s->textoBusca, "\0");
     s->etiquetaBusca[0] = '\0';
     s->etiquetaBusca[1] = 'X';
-    s->etiquetaBusca[2] = 'Y';
+    s->etiquetaBusca[2] = 'X';
     s->notas = malloc(s->capacidade * sizeof(Nota));
     if(s->notas == NULL){
         printf("Erro de memoria!\n");
