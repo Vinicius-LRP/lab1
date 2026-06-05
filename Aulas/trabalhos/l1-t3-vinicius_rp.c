@@ -43,20 +43,53 @@ int valido(char c){
     return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 }
 
-int leEtiqueta(FILE *a, char e[], char l[]){
-    if(l[0] == '\n' || l[1] == '\n' || l[2] == '\n') {
-        printf("Etiqueta diferente da permitida!\n");
+int verificaQuebraDeLinha(int c, FILE *a){
+    if(c == '\n'){
+        ungetc(c, a);
         return 1;
     }
-    if(fscanf(a, " %c%c%c", &e[0], &e[1], &e[2]) != 3){
-        printf("Erro ao ler etiqueta!\n");
-        return 1;
-    }
+    return 0;
+}
 
-    if (!valido(e[0]) || !valido(e[1]) || !valido(e[2])) {
-        printf("Etiqueta diferente da permitida!\n");
+int leEtiqueta(FILE *a, char e[], char l[]){
+    int c;
+    int e0 = -999;
+    int e1 = -999;
+    int e2 = -999;
+    while((c = fgetc(a)) != '\n' && c != EOF){
+        if(c != ' '){
+            if(e0 == -999){
+                if(!valido(c)){
+                    printf("Etiqueta invalida!\n");
+                    return 1;
+                }
+                e0 = c;
+                printf("%c", c);
+                c = fgetc(a);
+                if(verificaQuebraDeLinha(c, a) || !valido(c) || c == EOF){
+                    printf("Etiqueta invalida!\n");
+                    return 1;
+                }
+                e1 = c;
+                printf("%c", c);
+                c = fgetc(a);
+                if(verificaQuebraDeLinha(c, a) || !valido(c) || c == EOF){
+                    printf("Etiqueta invalida!\n");
+                    return 1;
+                }
+                e2 = c;
+                printf("%c\n", c);
+                break;
+            }
+        }
+    }
+    if(verificaQuebraDeLinha(c, a)){
+        printf("Etiqueta invalida!\n");
         return 1;
     }
+    e[0] = e0;
+    e[1] = e1;
+    e[2] = e2;
     return 0;
 }
 
@@ -65,48 +98,91 @@ int leCor(FILE *a, Cor *c){
     int r = -1;
     int g = -1;
     int b = -1;
-
     while((ch = fgetc(a)) != '\n' && ch != EOF){
+        if((ch != ' ') && (ch < '0' || ch > '9')){
+            printf("Erro na formatação da cor!\n");
+            return 1;
+        }
         if(ch >= '0' && ch <= '9'){
             ungetc(ch, a);
             if(r == -1){
-                fscanf(a, "%d", &r);
+                if(fscanf(a, "%d", &r) != 1)
+                    return 1;
             }else if(g == -1){
-                fscanf(a, "%d", &g);
+                if(fscanf(a, "%d", &g) != 1)
+                    return 1;
             }else if(b == -1){
-                fscanf(a, "%d", &b);
+                if(fscanf(a, "%d", &b) != 1)
+                    return 1;
                 break;
             }
         }
     }
-    printf("%d", r);
-    printf("%d", g);
-    printf("%d", b);
-    c->r = r;
-    c->g = g;
-    c->b = b;
-    if(c->r < 0 || c->r > 255 || c->g < 0 || c->g > 255 || c->b < 0 || c->b > 255){
+    if(verificaQuebraDeLinha(ch, a))
+        return 1;
+    if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255){
         printf("Cor invalida!\n");
         return 1;
     }
+    c->r = r;
+    c->g = g;
+    c->b = b;
     return 0;
 }
 
 int leRetangulo(FILE *a, Retangulo *r){
-    if(fscanf(a, "%d%d%d%d", &r->ponto.x, &r->ponto.y, &r->tamanho.largura, &r->tamanho.altura) != 4){
-        printf("Erro ao ler Retangulo!\n");
-        return 1;
+    int c;
+    int x = -999;
+    int y = -999;
+    int largura = -999;
+    int altura = -999;
+    while((c = fgetc(a)) != '\n' && c != EOF){
+        if((c != ' ') && (c < '0' || c > '9')){
+            printf("Erro na formatação do retangulo!\n");
+            return 1;
+        }
+        if(c >= '0' && c <= '9'){ 
+            ungetc(c, a);
+            if(x == -999){
+                if(fscanf(a, "%d", &x) != 1)
+                    return 1;
+            }else if(y == -999){
+                if(fscanf(a, "%d", &y) != 1)
+                    return 1;
+            }else if(largura == -999){
+                if(fscanf(a, "%d", &largura) != 1)
+                    return 1;
+            }else if(altura == -999){
+                if(fscanf(a, "%d", &altura) != 1)
+                    return 1;
+                break;
+            }
+        }
     }
+    if(verificaQuebraDeLinha(c, a))
+        return 1;
+    r->ponto.x = x;
+    r->ponto.y = y;
+    r->tamanho.largura = largura;
+    r->tamanho.altura = altura;
     return 0;
 }
 
 int leTexto(FILE *a, char t[]) {
     int c;
     while ((c = fgetc(a)) != '"') {
-        if (c == EOF) return 1;
-        if (c == '\n') { 
+        if (c == EOF){
+            printf("Erro na formatação do texto!\n");
+            return 1;
+        }
+        if (c == '\n') {
+            printf("Erro na formatação do texto!\n"); 
             ungetc(c, a); 
             return 1; 
+        }
+        if(c != ' '){
+            printf("Erro na formatação do texto!\n");
+            return 1;
         }
     }
     int i = 0;
@@ -119,6 +195,10 @@ int leTexto(FILE *a, char t[]) {
         t[i++] = c;
     }
     t[i] = '\0';
+    if(i == 100){
+        printf("Texto maior que o suportado!\n");
+        return 1;
+    }
     return 0;
 }
 
@@ -158,7 +238,6 @@ int leNotas(Nota n[], FILE *arq, FILE *p){
         if(nt.cor.r == -3) break;   
         if(nt.cor.r != -2){         
             n[a] = nt;
-            printf("%d\n", a);
             a++;
         }
     }
