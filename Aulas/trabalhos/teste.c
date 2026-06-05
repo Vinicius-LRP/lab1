@@ -29,11 +29,6 @@ typedef struct{
     char etiqueta[3];
 }Nota;
 
-typedef struct{
-    Nota notas[100];
-    int quantidade;
-    int notaAtual;
-}Programa;
 
 void inserirNotaComProblema(char l[], FILE *a){
     fprintf(a, "%s", l);
@@ -168,7 +163,7 @@ int leRetangulo(FILE *a, Retangulo *r){
     return 0;
 }
 
-int leTexto(FILE *a, char t[]) {
+int leTexto(FILE *a, char t[], char l[], FILE *p) {
     int c;
     while ((c = fgetc(a)) != '"') {
         if (c == EOF){
@@ -186,7 +181,7 @@ int leTexto(FILE *a, char t[]) {
         }
     }
     int i = 0;
-    while (i < 100 && (c = fgetc(a)) != '"') {
+    while (i < 101 && (c = fgetc(a)) != '"') {
         if (c == EOF) return 1;
         if (c == '\n') { 
             ungetc(c, a); 
@@ -195,9 +190,9 @@ int leTexto(FILE *a, char t[]) {
         t[i++] = c;
     }
     t[i] = '\0';
-    if(i == 100){
+    if(i == 101){
         printf("Texto maior que o suportado!\n");
-        return 1;
+        inserirNotaComProblema(l,p);
     }
     return 0;
 }
@@ -220,7 +215,7 @@ Nota leNota(FILE *arq, FILE *p){
     fseek(arq, pos, SEEK_SET);
 
     if(leEtiqueta(arq, n.etiqueta, linha) || leCor(arq, &n.cor) || 
-    leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto)){
+    leRetangulo(arq, &n.retangulo) || leTexto(arq, n.texto, linha, p)){
         inserirNotaComProblema(linha, p);
         consumirLinha(arq);  
         np.cor.r = -2; 
@@ -269,25 +264,9 @@ void inserirNotas(Nota n[], int t){
     fclose(novo);
 }
 
-void proximaNota(Programa *p){
-    if(p->notaAtual < p->quantidade - 1){
-        p->notaAtual++;
-    }
-}
-
-void notaAnterior(Programa *p){
-    if(p->notaAtual > 0){
-        p->notaAtual--;
-    }
-}
-
-void imprimeNotaAtual(Programa *p){
-    printf("Texto: %s\n", p->notas[p->notaAtual].texto);
-}
 
 int main(){
-
-    Programa p = {0};
+    Nota notas[100];
     FILE *arq = fopen("arquivo.txt", "r");
     if(arq == NULL){
         printf("Erro ao abrir!\n");
@@ -298,10 +277,8 @@ int main(){
         printf("Erro ao abrir!\n");
         return 1;
     }
-    p.quantidade = leNotas(p.notas, arq, problemas);
-    p.notaAtual = 0;
-    inserirNotas(p.notas, p.quantidade);
-    imprimeNotaAtual(&p);
+    int quantidade = leNotas(notas, arq, problemas);
+    inserirNotas(notas, quantidade);
 
     fclose(arq);
     fclose(problemas);
