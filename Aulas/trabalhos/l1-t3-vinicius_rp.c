@@ -55,6 +55,8 @@ typedef struct{
     int notaCorrente;
     Cursor cursor;
 
+    int *validos;
+
     Nota ultimaRemovida;
     int existeUltimaRemovida;
 
@@ -370,41 +372,39 @@ void desenhaNota(Nota n){
     printf("NOTA %c%c%c %s\n",n.etiqueta[0], n.etiqueta[1], n.etiqueta[2], n.texto);
 }
 
-int encontraPrimeiraValida(Sistema *s){
-    int a = 0;
-    int primeiraNotaValida = -1;
+void imprimeVet(int v[]){
+    for(int i = 0; v[i] != -1; i++){
+        printf("%d ", v[i]);
+    }
+    printf("\n");
+}
+
+void encontrarValidos(Sistema *s){
+    int a = 1;
     for(int i = 0; i < s->quantidade; i++){
         if(strcmp("\0", s->textoBusca) != 0 && s->etiquetaBusca[0] != '\0'){
             if(!strcmp(s->notas[i].texto, s->textoBusca) && s->etiquetaBusca[0] == s->notas[i].etiqueta[0] &&
                 s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
-                if(primeiraNotaValida == -1){
-                    primeiraNotaValida = i;
-                }
+                s->validos[a] = i;
                 a++;
             }
         } else if(strcmp("\0", s->textoBusca) != 0){
             if(!strcmp(s->notas[i].texto, s->textoBusca)){
-                if(primeiraNotaValida == -1){
-                    primeiraNotaValida = i;
-                }
+                s->validos[a] = i;
                 a++;
             }
         } else if(s->etiquetaBusca[0] != '\0'){
             if(s->etiquetaBusca[0] == s->notas[i].etiqueta[0] && s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && 
                 s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
-                if(primeiraNotaValida == -1){
-                    primeiraNotaValida = i;
-                }
+                s->validos[a] = i;
                 a++;
             }
         } else if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
-            if(primeiraNotaValida == -1){
-                primeiraNotaValida = i;
-            }
+            s->validos[a] = i;
             a++;
         }
     }
-    return primeiraNotaValida;
+    s->validos[0] = a - 1; 
 }
 
 void desenhaModoPrincipal(Sistema *s){
@@ -445,8 +445,10 @@ void desenhaModoPrincipal(Sistema *s){
 }
 
 void modoPrincipal(Sistema *s){
-    s->notaCorrente = encontraPrimeiraValida(s);
+    encontrarValidos(s);
+    s->notaCorrente = s->validos[1];
     while(s->modo == PRINCIPAL){
+        encontrarValidos(s);
         desenhaModoPrincipal(s);
         printf("Nota corrente: %d", s->notaCorrente);
         printf("\n");
@@ -472,9 +474,11 @@ void modoPrincipal(Sistema *s){
                 s->ultimaRemovida = s->notas[s->notaCorrente];
                 s->notas[s->notaCorrente] = notaVazia();
                 trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
-                s->notaCorrente = encontraPrimeiraValida(s);
-                if(s->notaCorrente == s->quantidade - 1){
-                    s->notaCorrente--;
+                encontrarValidos(s);
+                if(s->validos[0] != 0){
+                    s->notaCorrente = s->validos[1];
+                } else {
+                    s->notaCorrente = -1;
                 }
                 s->quantidade--;
                 if(s->quantidade * 100 < s->capacidade * 30){
@@ -525,7 +529,7 @@ void modoPrincipal(Sistema *s){
             s->modo = EDITAR_COR;
         }
         if(c == ','){
-            
+            s->notaCorrente;
         }
         if(c == '.'){
             
@@ -560,6 +564,12 @@ void modoEditarEtiquetaBusca(Sistema *s){
     s->modo = PRINCIPAL;
 }
 
+void incializarVetorValidos(Sistema *s){
+    for(int i = 0; i < s->capacidade; i++){
+        s->validos[i] = -1;
+    }
+}
+
 
 void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->cursor.x = 0;
@@ -576,6 +586,12 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
         printf("Erro de memoria!\n");
         exit(1);
     }
+    s->validos = malloc(s->capacidade * sizeof(Nota));
+    if(s->validos == NULL){
+        printf("Erro de memoria!\n");
+        exit(1);
+    }    
+    incializarVetorValidos(s);
 
     s->quantidade = leNotas(a, p, s);
     s->ultimaRemovida = notaVazia();
