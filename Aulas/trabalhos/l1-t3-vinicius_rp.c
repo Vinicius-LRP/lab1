@@ -118,7 +118,7 @@ int leEtiqueta(FILE *a, char e[]){
                 }
                 e1 = c;
                 printf("%c", c);
-                c = fgetc(a);
+                c = fgetc(modoEditarTexto(s);a);
                 if(verificaQuebraDeLinha(c, a) || !valido(c) || c == EOF){
                     printf("Etiqueta invalida!\n");
                     return 1;
@@ -343,6 +343,38 @@ void trocaPosicaoNota(Sistema *s, int a, int b){
     }
 }
 
+void modoPrincipal(Sistema *s){
+    while(s->modo == PRINCIPAL){
+        char c;
+        scanf("%c", &c);
+        if(c == 'i'){
+            trocaPosicaoNota(s, 0, s->notaCorrente);
+        }
+        if(c == 'f'){
+            trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
+        }
+        if(c == 'n'){
+            if(s->quantidade == s->capacidade){
+                if(!aumentaCapacidade(s)){
+                    printf("Sem memoria\n");
+                    return;
+                }
+            }
+            s->notas[s->quantidade] = notaDefault();
+            s->quantidade++;
+        }
+        if(c == 'g'){
+            inserirNotas(s->notas,  s->quantidade);
+        }
+        if(c == 'e'){
+            s->modo = EDITAR_TEXTO;
+        }
+        if(c == 'b'){
+            s->modo = EDITAR_TEXTO_BUSCA;
+        }
+    }
+}
+
 void modoEditarTexto(Sistema *s){
     
     s->modo = PRINCIPAL;
@@ -362,31 +394,6 @@ void modoEditarTextoBusca(Sistema *s){
 
 void modoEditarEtiquetaBusca(Sistema *s){
     s->modo = PRINCIPAL;
-}
-
-void modoPrincipal(Sistema *s){
-    char c;
-    scanf("%c", &c);
-    if(c == 'i'){
-        trocaPosicaoNota(s, 0, s->notaCorrente);
-    }
-    if(c == 'f'){
-        trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
-    }
-    if(c == 'n'){
-        if(s->quantidade == s->capacidade){
-            if(!aumentaCapacidade(s)){
-                printf("Sem memoria\n");
-                return;
-            }
-        }
-        s->notas[s->quantidade] = notaDefault();
-        s->quantidade++;
-    }
-    if(c == 'g'){
-        inserirNotas(s->notas,  s->quantidade);
-    }
-
 }
 
 
