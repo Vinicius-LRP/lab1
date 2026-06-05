@@ -121,21 +121,18 @@ int leEtiqueta(FILE *a, char e[]){
                     return 1;
                 }
                 e0 = c;
-                printf("%c", c);
                 c = fgetc(a);
                 if(verificaQuebraDeLinha(c, a) || !valido(c) || c == EOF){
                     printf("Etiqueta invalida!\n");
                     return 1;
                 }
                 e1 = c;
-                printf("%c", c);
                 c = fgetc(a);
                 if(verificaQuebraDeLinha(c, a) || !valido(c) || c == EOF){
                     printf("Etiqueta invalida!\n");
                     return 1;
                 }
                 e2 = c;
-                printf("%c\n", c);
                 break;
             }
         }
@@ -355,11 +352,22 @@ Nota notaVazia(){
     return n;
 }
 
-
+void desenhaModoPrincipal(Sistema *s){
+    printf("MENU PRINCIPAL\n");
+    printf("NOTAS\n");
+    for(int i = 0; i < s->quantidade; i++){
+        if(!strcmp(s->notas[i].texto, s->textoBusca)){
+            printf("NOTA:\n");
+            printf("Posição: %d\n", i);
+            printf("Etiqueta: %c%c%c\n", s->notas[i].etiqueta[0], s->notas[i].etiqueta[1], s->notas[i].etiqueta[2]);
+            printf("Texto: %s", s->notas[i].texto);
+        }
+    }
+}
 
 void modoPrincipal(Sistema *s){
     while(s->modo == PRINCIPAL){
-        Nota n = {0};
+        desenhaModoPrincipal(s);
         char c;
         scanf("%c", &c);
         if(c == 'i'){
@@ -373,7 +381,7 @@ void modoPrincipal(Sistema *s){
                 printf("Sem nota corrente para remover!\n");
             } else{
                 s->ultimaRemovida = s->notas[s->notaCorrente];
-                s->notas[s->notaCorrente] = n;
+                s->notas[s->notaCorrente] = notaVazia();
                 trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
                 printf("%s\n", s->ultimaRemovida.texto);
                 printf("%d\n", s->notaCorrente);
@@ -460,7 +468,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->capacidade = 10;
     s->notaCorrente = 2;
     s->modo = PRINCIPAL;
-    s->textoBusca[0] = '\0';
+    strcpy(s->textoBusca, "Louco");
     s->etiquetaBusca[0] = '\0';
     s->notas = malloc(s->capacidade * sizeof(Nota));
     if(s->notas == NULL){
