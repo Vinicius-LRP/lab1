@@ -375,10 +375,13 @@ void modoPrincipal(Sistema *s){
                 s->ultimaRemovida = s->notas[s->notaCorrente];
                 s->notas[s->notaCorrente] = n;
                 trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
-                s->quantidade--;
-                if(s->notaCorrente == s->quantidade){
-
+                printf("%s\n", s->ultimaRemovida.texto);
+                printf("%d\n", s->notaCorrente);
+                printf("%d\n", s->quantidade);
+                if(s->notaCorrente == s->quantidade - 1){
+                    s->notaCorrente--;    
                 }
+                s->quantidade--;
             }
         }
         if(c == '0'){
