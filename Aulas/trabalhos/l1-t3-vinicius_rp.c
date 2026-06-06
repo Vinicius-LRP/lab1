@@ -592,7 +592,7 @@ void desenhaModoEditarTexto(char t[], int c){
 void modoEditarTexto(Sistema *s){
     char texto[101];
     strcpy(texto, s->notas[s->notaCorrente].texto);
-    int cursor = 100;
+    int cursor = strlen(texto);
     while(s->modo == EDITAR_TEXTO){
         if(s->notaCorrente != -1){
             desenhaModoEditarTexto(texto, cursor);
