@@ -649,7 +649,7 @@ void desenhaModoEditarEtiqueta(char e[],int c){
 void modoEditarEtiqueta(Sistema *s){
     char etiqueta[4];
     int i;
-    for(i = 0; i < 4; i++){
+    for(i = 0; i < 3; i++){
         etiqueta[i] = s->notas[s->notaCorrente].etiqueta[i];
     }
     etiqueta[i] = '\0';
@@ -668,8 +668,8 @@ void modoEditarEtiqueta(Sistema *s){
                     for(int i = 0; i < 3; i++){
                         s->notas[s->notaCorrente].etiqueta[i] = etiqueta[i];
                     }
+                    s->modo = PRINCIPAL;
                 }
-                s->modo = PRINCIPAL;
             } else if(t == T_ESC){
                 s->modo = PRINCIPAL;
             } else if(t == T_BACKSPACE){
@@ -678,14 +678,16 @@ void modoEditarEtiqueta(Sistema *s){
                     etiqueta[cursor] = '\0';
                 }
             } else if(t == 's'){
-                encontrarValidos(s);
-                for(int i = 1; i < s->validos[0] + 1; i++){
-                    for(int j = 0; j < 3; j++){
-                        s->notas[s->validos[i]].etiqueta[j] = etiqueta[j];
+                int tam = strlen(etiqueta);
+                if(tam == 3){
+                    encontrarValidos(s);
+                    for(int i = 1; i < s->validos[0] + 1; i++){
+                        for(int j = 0; j < 3; j++){
+                            s->notas[s->validos[i]].etiqueta[j] = etiqueta[j];
+                        }
                     }
+                    s->modo = PRINCIPAL;
                 }
-                s->modo = PRINCIPAL;
-
             } else if(t >= 32 && t <= 126){
                 int tam = strlen(etiqueta);
                 if(tam < 3){
