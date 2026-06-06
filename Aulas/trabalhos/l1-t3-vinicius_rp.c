@@ -644,6 +644,12 @@ void desenhaModoEditarEtiqueta(char t[],int c){
     t_limpa();
     t_lincol(1, 1);
     printf("=== EDITAR ETIQUETA ===");
+    t_lincol(2, 1);
+    printf("Enter confirmar | Esc sair");
+    t_lincol(4,1);
+    printf("%s", t);
+    t_lincol(4, c + 1);
+    fflush(stdout);
 }
 
 void modoEditarEtiqueta(Sistema *s){
@@ -664,6 +670,13 @@ void modoEditarEtiqueta(Sistema *s){
 
             if(t == T_ESC){
                 s->modo = PRINCIPAL;
+            }
+
+            if(t == T_BACKSPACE){
+                if(cursor > 0){
+                    cursor--;
+                    etiqueta[cursor] = '\0';
+                }
             }
 
         } else{
