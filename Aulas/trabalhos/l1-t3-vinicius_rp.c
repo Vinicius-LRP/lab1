@@ -706,12 +706,65 @@ void modoEditarEtiqueta(Sistema *s){
     }
 }
 
+void desenhaModoEditarCor(int r, int g, int b, int s){
+    t_limpa();
+    t_lincol(1,1);
+    printf("== EDITAR COR == ");
+    t_lincol(2, 1);
+    printf("Enter confirmar | Esc sair");
+    t_lincol(4, 1);
+    if(s == 0){
+        printf("r:%d<", r);
+    } else{
+        printf("r:%d", r);
+    }
+    t_lincol(5, 1);
+    if(s == 1){
+        printf("g:%d<", g);
+    } else{
+        printf("g:%d", g);
+    }
+    t_lincol(6, 1);
+    if(s == 2){
+        printf("b:%d<", b);
+    } else{
+        printf("b:%d", b);
+    }
+    t_lincol(7, 1);
+    if(s == -1){
+        printf("Selecione a cor: ");
+    }
+
+    fflush(stdout);
+
+}
+
 void modoEditarCor(Sistema *s){
+    int r;
+    int g;
+    int b;
+    int selecionado = -1;
+    if(s->notaCorrente != 1){
+        r = s->notas[s->notaCorrente].cor.r;
+        g = s->notas[s->notaCorrente].cor.g;
+        b = s->notas[s->notaCorrente].cor.b;
+    }
 
     while(s->modo = EDITAR_COR){
         if(s->notaCorrente != -1){
-            
+            desenhaModoEditarCor(r, g , b, selecionado);
+            tecla_t t;
 
+            do{
+                t = t_tecla();
+            } while(t == T_NADA);
+            
+            if(t == 'e' || t == 'r'){
+                selecionado = 0;
+            }
+            if(t == T_ESC){
+                s->modo = PRINCIPAL;
+            }
 
         } else{
             s->modo = PRINCIPAL;
@@ -741,7 +794,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->notaCorrente = -1;
     s->modo = PRINCIPAL;
     strcpy(s->textoBusca, "\0");
-    s->etiquetaBusca[0] = 'X';
+    s->etiquetaBusca[0] = '\0';
     s->etiquetaBusca[1] = 'X';
     s->etiquetaBusca[2] = 'X';
     s->notas = malloc(s->capacidade * sizeof(Nota));
