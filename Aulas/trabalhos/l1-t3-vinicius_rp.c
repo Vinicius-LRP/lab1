@@ -623,6 +623,8 @@ void modoEditarTexto(Sistema *s){
                     }
                 }
 
+            } else if(t == T_ESQUERDA){
+                if(cursor > 0) cursor--;
             } 
         } else {
             s->modo = PRINCIPAL;
