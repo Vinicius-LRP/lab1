@@ -590,8 +590,35 @@ void modoEditarTexto(Sistema *s){
             do {
                 t = t_tecla();
             } while(t == T_NADA);
+            
+            if(t == T_ENTER){
+                strcpy(s->notas[s->notaCorrente].texto, texto);
+                s->modo = PRINCIPAL;
+            } else if(t == T_ESC){
+                s->modo = PRINCIPAL;
+            } else if(t == T_BS){
+                if(cursor > 0){
+                    cursor--;
+                    int tam = strlen(texto);
+                    for(int i = cursor; i < tam; i++){
+                        texto[i] = texto[i + 1];
+                    }
+                }
+            } else if(t == '.'){
+                int tam = strlen(texto);
+                if(cursor < tam){
+                    for(int i = cursor; i < tam; i++){
+                        texto[i] = texto[i + 1];
+                    }
+                }
 
-            if(t >= 32 && t <= 126){ 
+            } else if(t == T_ESQUERDA){
+                if(cursor > 0) cursor--;
+
+            } else if(t == T_DIREITA){
+                if(cursor < strlen(texto)) cursor++;
+
+            } else if(t >= 32 && t <= 126){ 
                 int tam = strlen(texto);
                 if(tam < 100){
                     for(int i = tam; i > cursor; i--){
@@ -600,39 +627,6 @@ void modoEditarTexto(Sistema *s){
                     texto[cursor] = t;
                     cursor++;
                 }
-            }
-            if(t == T_ENTER){
-                strcpy(s->notas[s->notaCorrente].texto, texto);
-                s->modo = PRINCIPAL;
-            }
-            if(t == T_ESC){
-                s->modo = PRINCIPAL;
-            }
-            if(t == T_BS){
-                if(cursor > 0){
-                    cursor--;
-                    int tam = strlen(texto);
-                    for(int i = cursor; i < tam; i++){
-                        texto[i] = texto[i + 1];
-                    }
-                }
-            }
-            if(t == 'D'){
-                int tam = strlen(texto);
-                if(cursor < tam){
-                    for(int i = cursor; i < tam; i++){
-                        texto[i] = texto[i + 1];
-                    }
-                }
-
-            }
-            if(t == T_ESQUERDA){
-                if(cursor > 0) cursor--;
-
-            }
-            if(t == T_DIREITA){
-                if(cursor < strlen(texto)) cursor++;
-
             }
         } else {
             s->modo = PRINCIPAL;
@@ -685,8 +679,6 @@ void modoEditarEtiqueta(Sistema *s){
                 }
                 s->modo = PRINCIPAL;
             }
-
-
             if(t == T_ESC){
                 s->modo = PRINCIPAL;
             }
@@ -696,6 +688,8 @@ void modoEditarEtiqueta(Sistema *s){
                     etiqueta[cursor] = '\0';
                 }
             }
+            if(t == 's'){}
+            
 
         } else{
             s->modo = PRINCIPAL;
