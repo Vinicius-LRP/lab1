@@ -592,7 +592,7 @@ void desenhaModoEditarTexto(char t[], int c){
 void modoEditarTexto(Sistema *s){
     char texto[101];
     strcpy(texto, s->notas[s->notaCorrente].texto);
-    int cursor = strlen(texto);
+    int cursor = 100;
     while(s->modo == EDITAR_TEXTO){
         if(s->notaCorrente != -1){
             desenhaModoEditarTexto(texto, cursor);
@@ -601,44 +601,7 @@ void modoEditarTexto(Sistema *s){
                 t = t_tecla();
             } while(t == T_NADA);
             
-            if(t == T_ENTER){
-                strcpy(s->notas[s->notaCorrente].texto, texto);
-                s->modo = PRINCIPAL;
-            }
-            if(t == T_ESC){
-                s->modo = PRINCIPAL;
-            } else if(t == T_BS){
-                if(cursor > 0){
-                    cursor--;
-                    int tam = strlen(texto);
-                    for(int i = cursor; i < tam; i++){
-                        texto[i] = texto[i + 1];
-                    }
-                }
-            } else if(t == T_DEL){
-                int tam = strlen(texto);
-                if(cursor < tam){
-                    for(int i = cursor; i < tam; i++){
-                        texto[i] = texto[i + 1];
-                    }
-                }
-
-            } else if(t == T_ESQUERDA){
-                if(cursor > 0) cursor--;
-
-            } else if(t == T_DIREITA){
-                if(cursor < strlen(texto)) cursor++;
-
-            } else if(t >= 32 && t <= 126){ 
-                int tam = strlen(texto);
-                if(tam < 100){
-                    for(int i = tam; i > cursor; i--){
-                        texto[i] = texto[i - 1];
-                    }
-                    texto[cursor] = t;
-                    cursor++;
-                }
-            }
+             
         } else {
             s->modo = PRINCIPAL;
         }
