@@ -526,6 +526,7 @@ void modoPrincipal(Sistema *s){
             if(s->validos[0] != 0){
                 s->notaCorrente = s->validos[1];
             }
+            
         }
         if(c == 'E'){
             if(s->validos[0] != 0){
