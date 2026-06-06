@@ -607,7 +607,8 @@ void modoEditarTexto(Sistema *s){
             }
             if(t == T_ESC){
                 s->modo = PRINCIPAL;
-            } else if(t == T_BS){
+            }
+            if(t == T_BS){
                 if(cursor > 0){
                     cursor--;
                     int tam = strlen(texto);
@@ -615,7 +616,8 @@ void modoEditarTexto(Sistema *s){
                         texto[i] = texto[i + 1];
                     }
                 }
-            } else if(t == T_DEL){
+            }
+            if(t == 'D'){
                 int tam = strlen(texto);
                 if(cursor < tam){
                     for(int i = cursor; i < tam; i++){
@@ -623,13 +625,16 @@ void modoEditarTexto(Sistema *s){
                     }
                 }
 
-            } else if(t == T_ESQUERDA){
+            }
+            if(t == T_ESQUERDA){
                 if(cursor > 0) cursor--;
 
-            } else if(t == T_DIREITA){
+            }
+            if(t == T_DIREITA){
                 if(cursor < strlen(texto)) cursor++;
 
-            } else if(t >= 32 && t <= 126){ 
+            }
+            if(t >= 32 && t <= 126){ 
                 int tam = strlen(texto);
                 if(tam < 100){
                     for(int i = tam; i > cursor; i--){
