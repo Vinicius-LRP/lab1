@@ -640,14 +640,14 @@ void modoEditarTexto(Sistema *s){
     }
 }
 
-void desenhaModoEditarEtiqueta(char t[],int c){
+void desenhaModoEditarEtiqueta(char e[],int c){
     t_limpa();
     t_lincol(1, 1);
     printf("=== EDITAR ETIQUETA ===");
     t_lincol(2, 1);
     printf("Enter confirmar | Esc sair");
     t_lincol(4,1);
-    printf("%s", t);
+    printf("%s", e);
     t_lincol(4, c + 1);
     fflush(stdout);
 }
@@ -668,10 +668,28 @@ void modoEditarEtiqueta(Sistema *s){
                 t = t_tecla();
             } while(t == T_NADA);
 
-            if(t == T_ESC){
+            if(t >= 32 && t <= 126){
+                int tam = strlen(etiqueta);
+                if(tam < 3){
+                    etiqueta[tam] = t;
+                    etiqueta[tam + 1] = '\0';
+                    cursor++;
+                }
+            }
+            if(t == T_ENTER){
+                int tam = strlen(etiqueta);
+                if(tam == 3){
+                    for(int i = 0; i < 3; i++){
+                        s->notas[s->notaCorrente].etiqueta[i] = etiqueta[i];
+                    }
+                }
                 s->modo = PRINCIPAL;
             }
 
+
+            if(t == T_ESC){
+                s->modo = PRINCIPAL;
+            }
             if(t == T_BACKSPACE){
                 if(cursor > 0){
                     cursor--;
