@@ -625,6 +625,10 @@ void modoEditarTexto(Sistema *s){
 
             } else if(t == T_ESQUERDA){
                 if(cursor > 0) cursor--;
+
+            } else if(t == T_DIREITA){
+                if(cursor < strlen(texto)) cursor++;
+
             } 
         } else {
             s->modo = PRINCIPAL;
