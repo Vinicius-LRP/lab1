@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "tela.h"
 
 static int PRINCIPAL = 0;
 static int EDITAR_TEXTO = 1;
@@ -444,21 +445,23 @@ void modoPrincipal(Sistema *s){
         printf("Nota corrente: %d", s->notaCorrente);
         printf("\n");
         printf("\n");
-        char c;
-        scanf(" %c", &c);
-        if(c == 'i'){
+        tecla_t t;
+        do {
+            t = t_tecla();
+        } while(t == T_NADA);
+        if(t == 'i'){
             if(s->quantidade != 0 && s->notaCorrente != -1){
                 trocaPosicaoNota(s, 0, s->notaCorrente);
                 s->notaCorrente = 0;
             }
         }
-        if(c == 'f'){
+        if(t == 'f'){
             if(s->quantidade != 0 && s->notaCorrente != -1){
                 trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
                 s->notaCorrente = s->quantidade - 1;
             }
         }
-        if(c == 'd'){
+        if(t == T_DEL){
             if(s->quantidade == 0 || s->notaCorrente == -1){
                 printf("Sem nota corrente para remover!\n");
             } else{
@@ -480,7 +483,7 @@ void modoPrincipal(Sistema *s){
                 }
             }
         }
-        if(c == '0'){
+        if(t == T_INS){
             if(s->ultimaRemovida.cor.r == -1){
                 printf("Não existe ultima nota removida para inserir!\n");
             } else{
@@ -494,7 +497,7 @@ void modoPrincipal(Sistema *s){
                 s->ultimaRemovida = notaVazia();  
             }
         }
-        if(c == 'n'){
+        if(t == 'n'){
             if(s->quantidade == s->capacidade){
                 if(!aumentaCapacidade(s)){
                     printf("Sem memoria\n");
@@ -507,19 +510,19 @@ void modoPrincipal(Sistema *s){
                 s->notaCorrente = s->quantidade - 1;
             }
         }
-        if(c == 'g'){
+        if(t == 'g'){
             inserirNotas(s->notas,  s->quantidade);
         }
-        if(c == 'e'){
+        if(t == 'e'){
             s->modo = EDITAR_TEXTO;
         }
-        if(c == 'b'){
+        if(t == 'b'){
             s->modo = EDITAR_TEXTO_BUSCA;
         }
-        if(c == 'c'){
+        if(t == 'c'){
             s->modo = EDITAR_COR;
         }
-        if(c == 'A'){
+        if(t == T_ESQUERDA){
             for(int i = 1; i < s->validos[0] + 1 ; i++){
                 if(s->validos[i] == s->notaCorrente){
                     if(i > 1) s->notaCorrente = s->validos[i - 1];
@@ -527,7 +530,7 @@ void modoPrincipal(Sistema *s){
                 }
             }
         }
-        if(c == 'D'){
+        if(t == T_DIREITA){
             for(int i = 1; i < s->validos[0] + 1 ; i++){
                 if(s->validos[i] == s->notaCorrente){
                     if(i < s->validos[0]) s->notaCorrente = s->validos[i + 1];
@@ -535,20 +538,20 @@ void modoPrincipal(Sistema *s){
                 } 
             }
         }
-        if(c == 'h'){
+        if(t == T_HOME){
             if(s->validos[0] != 0){
                 s->notaCorrente = s->validos[1];
             }
         }
-        if(c == 'E'){
+        if(t == T_END){
             if(s->validos[0] != 0){
                 s->notaCorrente = s->validos[s->validos[0]];
             }
         }
-        if(c == 't'){
+        if(t == 't'){
             s->modo = EDITAR_ETIQUETA;
         }
-        if(c == 'B'){
+        if(t == 'B'){
             s->modo = EDITAR_ETIQUETA_BUSCA;
         }
     }
@@ -559,21 +562,13 @@ void modoPrincipal(Sistema *s){
 void modoEditarTexto(Sistema *s){
     while(s->modo == EDITAR_TEXTO){
         if(s->notaCorrente != -1){
-
-
-
-
+        
+        
+        
+        } else {
+            s->modo = PRINCIPAL;
         }
-
-
-
-    
-    
-    
-    
     }
-    
-    s->modo = PRINCIPAL;
 }
 
 void modoEditarEtiqueta(Sistema *s){
@@ -626,6 +621,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
 }
 
 int main(){
+    t_inicia();
     Sistema s;
     FILE *arq = fopen("arquivo.txt", "r");
     FILE *p = fopen("problemas.txt", "w");
@@ -668,5 +664,6 @@ int main(){
     fclose(arq);
     fclose(p);
     return 0;
+    t_fim();
 }
 
