@@ -369,10 +369,6 @@ Nota notaVazia(){
     return n;
 }
 
-void desenhaNota(Nota n){
-    printf("NOTA %c%c%c %s\n",n.etiqueta[0], n.etiqueta[1], n.etiqueta[2], n.texto);
-}
-
 void imprimeVet(int v[]){
     for(int i = 0; v[i] != -1; i++){
         printf("%d ", v[i]);
@@ -447,20 +443,6 @@ void desenhaModoPrincipal(Sistema *s){
     }
 
     fflush(stdout);
-}
-
-
-bool cursorDentroDaNota(Cursor *c, Nota *n){
-    return c->x >= n->retangulo.ponto.x && c->x <  n->retangulo.ponto.x + n->retangulo.tamanho.largura &&
-           c->y >= n->retangulo.ponto.y && c->y <  n->retangulo.ponto.y + n->retangulo.tamanho.altura;
-}
-
-int encontraNotaCorrente(Sistema *s){
-    for(int i = s->quantidade - 1; i >= 0; i--){
-        Nota *n = &s->notas[i];
-        if(cursorDentroDaNota(&s->cursor, n)) return i;
-    }
-    return -1;
 }
 
 void modoPrincipal(Sistema *s){
@@ -658,8 +640,36 @@ void modoEditarTexto(Sistema *s){
     }
 }
 
+void desenhaModoEditarEtiqueta(char t[],int c){
+    t_limpa();
+    t_lincol(1, 1);
+    printf("=== EDITAR ETIQUETA ===");
+}
+
 void modoEditarEtiqueta(Sistema *s){
-    s->modo = PRINCIPAL;
+    char etiqueta[4];
+    int i;
+    for(i = 0; i < 4; i++){
+        etiqueta[i] = s->notas[s->notaCorrente].etiqueta[i];
+    }
+    etiqueta[i] = '\0';
+    int cursor = strlen(etiqueta);
+    while(s->modo == EDITAR_ETIQUETA){
+        if(s->notaCorrente != -1){
+            desenhaModoEditarEtiqueta(etiqueta, cursor);
+            tecla_t t;
+            do{
+                t = t_tecla();
+            } while(t == T_NADA);
+
+            if(t == T_ESC){
+                s->modo = PRINCIPAL;
+            }
+
+        } else{
+            s->modo = PRINCIPAL;
+        }
+    }
 }
 
 void modoEditarCor(Sistema *s){
