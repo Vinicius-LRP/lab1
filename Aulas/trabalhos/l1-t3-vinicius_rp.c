@@ -577,14 +577,68 @@ void modoPrincipal(Sistema *s){
     }
 }
 
-
+void desenhaModoEditarTexto(char t[], int c){
+    t_limpa();
+    t_lincol(1, 1);
+    printf("=== EDITAR TEXTO ===");
+    t_lincol(2, 1);
+    printf("Enter confirma | Esc cancela");
+    t_lincol(4, 1);
+    printf("%s", t);
+    t_lincol(4, c+ 1); 
+    fflush(stdout);
+}
 
 void modoEditarTexto(Sistema *s){
+    char texto[101];
+    strcpy(texto, s->notas[s->notaCorrente].texto);
+    int cursor = strlen(texto);
     while(s->modo == EDITAR_TEXTO){
         if(s->notaCorrente != -1){
-        
-        
-        
+            desenhaModoEditarTexto(texto, cursor);
+            tecla_t t;
+            do {
+                t = t_tecla();
+            } while(t == T_NADA);
+            
+            if(t == T_ENTER){
+                strcpy(s->notas[s->notaCorrente].texto, texto);
+                s->modo = PRINCIPAL;
+            }
+            if(t == T_ESC){
+                s->modo = PRINCIPAL;
+            } else if(t == T_BS){
+                if(cursor > 0){
+                    cursor--;
+                    int tam = strlen(texto);
+                    for(int i = cursor; i < tam; i++){
+                        texto[i] = texto[i + 1];
+                    }
+                }
+            } else if(t == T_DEL){
+                int tam = strlen(texto);
+                if(cursor < tam){
+                    for(int i = cursor; i < tam; i++){
+                        texto[i] = texto[i + 1];
+                    }
+                }
+
+            } else if(t == T_ESQUERDA){
+                if(cursor > 0) cursor--;
+
+            } else if(t == T_DIREITA){
+                if(cursor < strlen(texto)) cursor++;
+
+            } else if(t >= 32 && t <= 126){ 
+                int tam = strlen(texto);
+                if(tam < 100){
+                    for(int i = tam; i > cursor; i--){
+                        texto[i] = texto[i - 1];
+                    }
+                    texto[cursor] = t;
+                    cursor++;
+                }
+            }
         } else {
             s->modo = PRINCIPAL;
         }
