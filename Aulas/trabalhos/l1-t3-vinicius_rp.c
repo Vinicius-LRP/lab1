@@ -629,7 +629,16 @@ void modoEditarTexto(Sistema *s){
             } else if(t == T_DIREITA){
                 if(cursor < strlen(texto)) cursor++;
 
-            } 
+            } else if(t >= 32 && t <= 126){ 
+                int tam = strlen(texto);
+                if(tam < 100){
+                    for(int i = tam; i > cursor; i--){
+                        texto[i] = texto[i - 1];
+                    }
+                    texto[cursor] = t;
+                    cursor++;
+                }
+            }
         } else {
             s->modo = PRINCIPAL;
         }
