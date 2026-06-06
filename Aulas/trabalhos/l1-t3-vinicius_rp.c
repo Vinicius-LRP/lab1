@@ -605,7 +605,9 @@ void modoEditarTexto(Sistema *s){
                 strcpy(s->notas[s->notaCorrente].texto, texto);
                 s->modo = PRINCIPAL;
             }
-              
+            if(t == T_ESC){
+                s->modo = PRINCIPAL;
+            }  
         } else {
             s->modo = PRINCIPAL;
         }
