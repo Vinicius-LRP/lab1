@@ -581,7 +581,9 @@ void desenhaModoEditarTexto(char t[], int c){
 
 void modoEditarTexto(Sistema *s){
     char texto[101];
-    strcpy(texto, s->notas[s->notaCorrente].texto);
+    if(s->notaCorrente != -1){
+        strcpy(texto, s->notas[s->notaCorrente].texto);
+    }
     int cursor = strlen(texto);
     while(s->modo == EDITAR_TEXTO){
         if(s->notaCorrente != -1){
@@ -649,10 +651,12 @@ void desenhaModoEditarEtiqueta(char e[],int c){
 void modoEditarEtiqueta(Sistema *s){
     char etiqueta[4];
     int i;
-    for(i = 0; i < 3; i++){
-        etiqueta[i] = s->notas[s->notaCorrente].etiqueta[i];
+    if(s->notaCorrente != -1){
+        for(i = 0; i < 3; i++){
+            etiqueta[i] = s->notas[s->notaCorrente].etiqueta[i];
+        }
+        etiqueta[i] = '\0';
     }
-    etiqueta[i] = '\0';
     int cursor = strlen(etiqueta);
     while(s->modo == EDITAR_ETIQUETA){
         if(s->notaCorrente != -1){
@@ -703,7 +707,16 @@ void modoEditarEtiqueta(Sistema *s){
 }
 
 void modoEditarCor(Sistema *s){
-    s->modo = PRINCIPAL;
+
+    while(s->modo = EDITAR_COR){
+        if(s->notaCorrente != -1){
+            
+
+
+        } else{
+            s->modo = PRINCIPAL;
+        }
+    }
 }
 
 void modoEditarTextoBusca(Sistema *s){
@@ -728,7 +741,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->notaCorrente = -1;
     s->modo = PRINCIPAL;
     strcpy(s->textoBusca, "\0");
-    s->etiquetaBusca[0] = '\0';
+    s->etiquetaBusca[0] = 'X';
     s->etiquetaBusca[1] = 'X';
     s->etiquetaBusca[2] = 'X';
     s->notas = malloc(s->capacidade * sizeof(Nota));
