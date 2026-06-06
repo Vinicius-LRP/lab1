@@ -411,6 +411,7 @@ void encontrarValidos(Sistema *s){
     }
 }
 
+
 void desenhaModoPrincipal(Sistema *s){
     t_limpa();
     int lin = 1;
@@ -419,6 +420,10 @@ void desenhaModoPrincipal(Sistema *s){
     printf("=== MENU PRINCIPAL ===");
     t_lincol(lin++, 1);
     printf("Notas encontradas: %d", s->validos[0]);
+    t_lincol(lin++, 1);
+    printf("Nota corrente = %d", s->notaCorrente);
+    t_lincol(lin++, 1);
+    imprimeVet(s->validos);
 
     lin++;
     for(int i = 1; i < s->validos[0] + 1; i++){
@@ -437,14 +442,13 @@ void desenhaModoPrincipal(Sistema *s){
         }
         t_lincol(lin++, 1);
         printf("   Cor: (%d,%d,%d)  Posicao: %d", n->cor.r, n->cor.g, n->cor.b, s->validos[i]);
-
         if(corrente) t_cornormal();
-
         lin++;
     }
 
     fflush(stdout);
 }
+
 
 bool cursorDentroDaNota(Cursor *c, Nota *n){
     return c->x >= n->retangulo.ponto.x && c->x <  n->retangulo.ponto.x + n->retangulo.tamanho.largura &&
@@ -464,6 +468,9 @@ void modoPrincipal(Sistema *s){
     s->notaCorrente = s->validos[1];
     while(s->modo == PRINCIPAL){
         encontrarValidos(s);
+        if(s->validos[0] == 0){
+            s->notaCorrente = -1; 
+        }
         desenhaModoPrincipal(s);
         tecla_t t;
         do {
@@ -490,9 +497,7 @@ void modoPrincipal(Sistema *s){
                 trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
                 encontrarValidos(s);
                 if(s->validos[0] != 0){
-                    s->notaCorrente = s->validos[1];
-                } else {
-                    s->notaCorrente = -1;
+                    s->notaCorrente = s->validos[1]; 
                 }
                 s->quantidade--;
                 if(s->quantidade * 100 < s->capacidade * 30){
@@ -574,6 +579,9 @@ void modoPrincipal(Sistema *s){
         if(t == 'B'){
             s->modo = EDITAR_ETIQUETA_BUSCA;
         }
+        if(t == T_ESC){
+            s->modo = TERMINAR;
+        }
     }
 }
 
@@ -600,7 +608,17 @@ void modoEditarTexto(Sistema *s){
             do {
                 t = t_tecla();
             } while(t == T_NADA);
-            
+
+            if(t >= 32 && t <= 126){ 
+                int tam = strlen(texto);
+                if(tam < 100){
+                    for(int i = tam; i > cursor; i--){
+                        texto[i] = texto[i - 1];
+                    }
+                    texto[cursor] = t;
+                    cursor++;
+                }
+            }
             if(t == T_ENTER){
                 strcpy(s->notas[s->notaCorrente].texto, texto);
                 s->modo = PRINCIPAL;
@@ -633,16 +651,6 @@ void modoEditarTexto(Sistema *s){
             if(t == T_DIREITA){
                 if(cursor < strlen(texto)) cursor++;
 
-            }
-            if(t >= 32 && t <= 126){ 
-                int tam = strlen(texto);
-                if(tam < 100){
-                    for(int i = tam; i > cursor; i--){
-                        texto[i] = texto[i - 1];
-                    }
-                    texto[cursor] = t;
-                    cursor++;
-                }
             }
         } else {
             s->modo = PRINCIPAL;
@@ -734,8 +742,9 @@ int main(){
             case 5: 
                 modoEditarEtiquetaBusca(&s); 
                 break; 
-            default: 
-                s.modo = TERMINAR; 
+            case 6: 
+                s.modo = TERMINAR;
+                break; 
         } 
     }
 
