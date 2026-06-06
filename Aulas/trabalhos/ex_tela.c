@@ -60,9 +60,9 @@ int main()
     if (tec == T_ESC) break;
     switch (tec) {
       case 'a': case T_ESQUERDA:      x--; break;
-      case 'd': case T_SHIFT_DIREITA: x++; break;
-      case 'x': case T_CTRL_BAIXO:    y++; break;
-      case 'w': case T_ALT_CIMA:      y--; break;
+      case 'd': case T_SACM_DIREITA: x++; break;
+      case 'x': case T_CM_BAIXO:    y++; break;
+      case 'w': case T_ACM_CIMA:      y--; break;
       case 'b': t_cursor(c_bloco, c_pisca); break;
       case 's': t_cursor(c_sublinha, c_pisca); break;
       case 'l': t_cursor(c_barra, c_naopisca); break;

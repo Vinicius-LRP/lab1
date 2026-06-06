@@ -412,15 +412,43 @@ void encontrarValidos(Sistema *s){
 }
 
 void desenhaModoPrincipal(Sistema *s){
-    printf("MENU PRINCIPAL\n");
-    printf("\n");
+    t_limpa();
+    int lin = 1;
+
+    t_lincol(lin++, 1);
+    printf("=== MENU PRINCIPAL ===");
+
+    t_lincol(lin++, 1);
+    printf("Notas encontradas: %d", s->validos[0]);
+
+    lin++; // linha em branco
+
     for(int i = 1; i < s->validos[0] + 1; i++){
-        desenhaNota(s->notas[s->validos[i]]);
-        printf("Posição: %d\n", s->validos[i]);
-        printf("\n");
+        Nota *n = &s->notas[s->validos[i]];
+        bool corrente = s->validos[i] == s->notaCorrente;
+
+        if(corrente){
+            t_corfundo(80, 80, 180); // fundo azul na nota selecionada
+            t_cortexto(255, 255, 255);
+        }
+
+        t_lincol(lin++, 1);
+        printf(" %s NOTA %c%c%c  |  %s",
+            corrente ? ">" : " ",
+            n->etiqueta[0], n->etiqueta[1], n->etiqueta[2],
+            n->texto);
+
+        t_lincol(lin++, 1);
+        printf("   Cor: (%d,%d,%d)  Posicao: %d",
+            n->cor.r, n->cor.g, n->cor.b,
+            s->validos[i]);
+
+        if(corrente) t_cornormal();
+
+        lin++; // espaço entre notas
     }
-    printf("\n");
-    printf("Notas encontradas: %d\n", s->validos[0]);
+
+    fflush(stdout);
 }
 
 bool cursorDentroDaNota(Cursor *c, Nota *n){
@@ -442,9 +470,6 @@ void modoPrincipal(Sistema *s){
     while(s->modo == PRINCIPAL){
         encontrarValidos(s);
         desenhaModoPrincipal(s);
-        printf("Nota corrente: %d", s->notaCorrente);
-        printf("\n");
-        printf("\n");
         tecla_t t;
         do {
             t = t_tecla();
@@ -461,7 +486,7 @@ void modoPrincipal(Sistema *s){
                 s->notaCorrente = s->quantidade - 1;
             }
         }
-        if(t == T_DEL){
+        if(t == 'D'){
             if(s->quantidade == 0 || s->notaCorrente == -1){
                 printf("Sem nota corrente para remover!\n");
             } else{
@@ -483,7 +508,7 @@ void modoPrincipal(Sistema *s){
                 }
             }
         }
-        if(t == T_INS){
+        if(t == 'I'){
             if(s->ultimaRemovida.cor.r == -1){
                 printf("Não existe ultima nota removida para inserir!\n");
             } else{
