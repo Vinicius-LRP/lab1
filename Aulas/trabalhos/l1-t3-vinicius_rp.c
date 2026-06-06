@@ -688,7 +688,7 @@ void modoEditarEtiqueta(Sistema *s){
                     }
                     s->modo = PRINCIPAL;
                 }
-            } else if(t >= 32 && t <= 126){
+            } else if((t >= 'A' && t <= 'Z') || (t >= '0' && t <= '9')){
                 int tam = strlen(etiqueta);
                 if(tam < 3){
                     etiqueta[tam] = t;
