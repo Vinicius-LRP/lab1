@@ -615,6 +615,14 @@ void modoEditarTexto(Sistema *s){
                         texto[i] = texto[i + 1];
                     }
                 }
+            } else if(t == T_DEL){
+                int tam = strlen(texto);
+                if(cursor < tam){
+                    for(int i = cursor; i < tam; i++){
+                        texto[i] = texto[i + 1];
+                    }
+                }
+
             } 
         } else {
             s->modo = PRINCIPAL;
