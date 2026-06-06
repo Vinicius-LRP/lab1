@@ -601,7 +601,11 @@ void modoEditarTexto(Sistema *s){
                 t = t_tecla();
             } while(t == T_NADA);
             
-             
+            if(t == T_ENTER){
+                strcpy(s->notas[s->notaCorrente].texto, texto);
+                s->modo = PRINCIPAL;
+            }
+              
         } else {
             s->modo = PRINCIPAL;
         }
