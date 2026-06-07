@@ -978,7 +978,6 @@ void incializarVetorValidos(Sistema *s){
     }
 }
 
-
 void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->cursor.x = 0;
     s->cursor.y = 0;
