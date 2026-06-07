@@ -709,7 +709,7 @@ void modoEditarEtiqueta(Sistema *s){
     }
 }
 
-void desenhaModoEditarCor(int r, int g, int b, int s){
+void desenhaModoEditarCor(int r, int g, int b, int s, Sistema *p){
     int l = 1;
     t_limpa();
     t_corfundo(255,255,255);
@@ -719,7 +719,34 @@ void desenhaModoEditarCor(int r, int g, int b, int s){
     t_lincol(l++,1);
     printf("                              ");
     t_lincol(l++,1);
+    printf("         Etiqueta: %c%c%c        ", p->notas[p->notaCorrente].etiqueta[0], p->notas[p->notaCorrente].etiqueta[1],
+    p->notas[p->notaCorrente].etiqueta[2]);
+    t_lincol(l++,1);
     printf("          EDITAR COR          ");
+    t_lincol(l++,1);
+    printf("          ");
+    t_corfundo(r, g, b);
+    printf("          ");
+    t_corfundo(255, 255, 255);
+    printf("          ");
+    t_lincol(l++,1);
+    printf("          ");
+    t_corfundo(r, g, b);
+    printf("          ");
+    t_corfundo(255, 255, 255);
+    printf("          ");
+    t_lincol(l++,1);
+    printf("          ");
+    t_corfundo(r, g, b);
+    printf("          ");
+    t_corfundo(255, 255, 255);
+    printf("          ");
+    t_lincol(l++,1);
+    printf("          ");
+    t_corfundo(r, g, b);
+    printf("          ");
+    t_corfundo(255, 255, 255);
+    printf("          ");
     t_lincol(l++,1);
     printf("                              ");
     t_lincol(l++, 1);
@@ -791,7 +818,7 @@ void modoEditarCor(Sistema *s){
     int selecionado = -1;
     while(s->modo == EDITAR_COR){
         if(s->notaCorrente != -1){
-            desenhaModoEditarCor(r, g , b, selecionado);
+            desenhaModoEditarCor(r, g , b, selecionado, s);
             tecla_t t;
 
             do{
