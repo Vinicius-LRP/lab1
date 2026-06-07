@@ -740,9 +740,9 @@ void desenhaModoEditarCor(int r, int g, int b, int s){
 }
 
 void modoEditarCor(Sistema *s){
-    int r = s->notas[s->notaCorrente].cor.r;;
-    int g = s->notas[s->notaCorrente].cor.g;;
-    int b = s->notas[s->notaCorrente].cor.b;;
+    int r = s->notas[s->notaCorrente].cor.r;
+    int g = s->notas[s->notaCorrente].cor.g;
+    int b = s->notas[s->notaCorrente].cor.b;
     int selecionado = -1;
     while(s->modo == EDITAR_COR){
         if(s->notaCorrente != -1){
@@ -828,8 +828,14 @@ void modoEditarCor(Sistema *s){
                 if(selecionado > 0){
                     selecionado--;
                 }
-            } 
-            if(t == T_ESC){
+            } else if(t == T_ENTER){
+                s->notas[s->notaCorrente].cor.r = r;
+                s->notas[s->notaCorrente].cor.g = g;
+                s->notas[s->notaCorrente].cor.b = b;
+                s->modo = PRINCIPAL;
+            } else if(t == 's'){
+
+            }else if(t == T_ESC){
                 s->modo = PRINCIPAL;
             }
 
