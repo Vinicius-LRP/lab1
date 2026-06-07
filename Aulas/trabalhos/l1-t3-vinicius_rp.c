@@ -876,8 +876,13 @@ void modoEditarTextoBusca(Sistema *s){
             t = t_tecla();
         }while(t == T_NADA);
 
+        if(t == T_ENTER){
+            strcpy(s->textoBusca, texto);
+            s->modo = PRINCIPAL;
+        }
         if(t == T_ESC){
             strcpy(s->textoBusca, "\0");
+            s->modo = PRINCIPAL;
         }
 
     }
