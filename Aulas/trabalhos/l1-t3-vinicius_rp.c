@@ -710,56 +710,76 @@ void modoEditarEtiqueta(Sistema *s){
 }
 
 void desenhaModoEditarCor(int r, int g, int b, int s){
+    int l = 1;
     t_limpa();
     t_corfundo(255,255,255);
     t_cortexto(0,0,0);
-    t_lincol(1,1);
-    printf("     == EDITAR COR ==    ");
-    t_lincol(2, 1);
-    printf("Enter confirmar | Esc sair");
-    t_lincol(4, 5);
+    t_lincol(l,1);
+    printf("                              ");
+    t_lincol(l++,1);
+    printf("                              ");
+    t_lincol(l++,1);
+    printf("          EDITAR COR          ");
+    t_lincol(l++,1);
+    printf("                              ");
+    t_lincol(l++, 1);
+    printf("  Enter confirmar | Esc sair  ");
+    t_lincol(l++, 1);
+    printf("                              ");
+    t_lincol(l++, 1);
+    printf("      ");
     if(s == 0){
         printf("Vermelho : %3d ", r);
         t_corfundo(r, 0, 0); 
         printf("  ");
-        t_cornormal();
-        printf(" <(Editando...)");
+        t_corfundo(255,255,255);
+        printf("<");
+        printf("      ");
     } else{
         printf("Vermelho : %3d ", r);
         t_corfundo(r, 0, 0); 
         printf("  ");
-        t_cornormal();
+        t_corfundo(255,255,255);
+        printf("       ");
     }
-    t_lincol(5, 5);
+    t_corfundo(255,255,255);
+    t_lincol(l++, 1);
+    printf("      ");
     if(s == 1){
         printf("Verde    : %3d ", g);
         t_corfundo(0, g, 0); 
         printf("  ");
-        t_cornormal();
-        printf(" <(Editando...)");
+        t_corfundo(255,255,255);
+        printf("<");
+        printf("      ");
     } else{
         printf("Verde    : %3d ", g);
         t_corfundo(0, g, 0); 
         printf("  ");
-        t_cornormal();
+        t_corfundo(255,255,255);
+        printf("       ");
     }
-    t_lincol(6, 5);
+    t_corfundo(255,255,255);
+    t_lincol(l++, 1);
+    printf("      ");
     if(s == 2){
         printf("Azul     : %3d ", b);
         t_corfundo(0, 0, b); 
         printf("  ");
-        t_cornormal();
-        printf(" <(Editando...)");
+        t_corfundo(255,255,255);
+        printf("<");
+        printf("      ");
     } else{
         printf("Azul     : %3d ", b);
         t_corfundo(0, 0, b); 
         printf("  ");
-        t_cornormal();
+        t_corfundo(255,255,255);
+        printf("       ");
     }
-    t_lincol(7, 1);
-    if(s == -1){
-        printf("Selecione a cor: ");
-    }
+    t_corfundo(255,255,255);
+    t_lincol(l++, 1);
+    printf("                              ");
+    t_lincol(l++, 1);
     t_cornormal();
     fflush(stdout);
 }
