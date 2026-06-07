@@ -712,23 +712,23 @@ void desenhaModoEditarCor(int r, int g, int b, int s){
     printf("== EDITAR COR == ");
     t_lincol(2, 1);
     printf("Enter confirmar | Esc sair");
-    t_lincol(4, 1);
+    t_lincol(4, 5);
     if(s == 0){
-        printf("r:%d<", r);
+        printf("Vermelho : %d <(Editando...)", r);
     } else{
-        printf("r:%d", r);
+        printf("Vermelho : %d", r);
     }
-    t_lincol(5, 1);
+    t_lincol(5, 5);
     if(s == 1){
-        printf("g:%d<", g);
+        printf("Verde    : %d <(Editando...)", g);
     } else{
-        printf("g:%d", g);
+        printf("Verde    : %d ", g);
     }
-    t_lincol(6, 1);
+    t_lincol(6, 5);
     if(s == 2){
-        printf("b:%d<", b);
+        printf("Azul     : %d <(Editando...)", b);
     } else{
-        printf("b:%d", b);
+        printf("Azul     : %d ", b);
     }
     t_lincol(7, 1);
     if(s == -1){
@@ -761,6 +761,10 @@ void modoEditarCor(Sistema *s){
             
             if(t == 'e' || t == 'r'){
                 selecionado = 0;
+            } else if(t == 'v' || t == 'g'){
+                selecionado = 1;
+            } else if(t == 'a' || t == 'b'){
+                selecionado = 2;
             }
             if(t == T_ESC){
                 s->modo = PRINCIPAL;
