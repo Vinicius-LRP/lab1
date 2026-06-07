@@ -765,6 +765,48 @@ void modoEditarCor(Sistema *s){
                 selecionado = 1;
             } else if(t == 'a' || t == 'b'){
                 selecionado = 2;
+            } else if(t == T_CIMA){
+                if(selecionado == 0){
+                    if(r < 255){
+                        r++;
+                    }
+                } else if(selecionado == 1){
+                    if(g < 255){
+                        g++;
+                    }
+                } else if(selecionado == 2){
+                    if(b < 255){
+                        b++;
+                    }
+                }
+            } else if(t == T_BAIXO){
+                if(selecionado == 0){
+                    if(r > 0){
+                        r--;
+                    }
+                } else if(selecionado == 1){
+                    if(g > 0){
+                        g--;
+                    }
+                } else if(selecionado == 2){
+                    if(b > 0){
+                        b--;
+                    }
+                }
+            } else if(t == T_S_CIMA){
+                if(selecionado == 0){
+                    if(r < 255){
+                        r += 10;
+                    }
+                } else if(selecionado == 1){
+                    if(g < 255){
+                        g += 10;
+                    }
+                } else if(selecionado == 2){
+                    if(b < 255){
+                        b += 10;
+                    }
+                }
             }
             if(t == T_ESC){
                 s->modo = PRINCIPAL;
