@@ -879,12 +879,19 @@ void modoEditarTextoBusca(Sistema *s){
         if(t == T_ENTER){
             strcpy(s->textoBusca, texto);
             s->modo = PRINCIPAL;
-        }
-        if(t == T_ESC){
+        } else if(t == T_ESC){
             strcpy(s->textoBusca, "\0");
             s->modo = PRINCIPAL;
+        } else if(t >= 32 && t <= 126){
+            int tam = strlen(texto);
+            if(tam < 100){
+                for(int i = tam; i > cursor; i--){
+                    texto[i] = texto[i - 1];
+                }
+                texto[cursor] = t;
+                cursor++;
+            }
         }
-
     }
 }
 
