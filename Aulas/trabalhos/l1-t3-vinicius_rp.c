@@ -618,7 +618,7 @@ void modoEditarTexto(Sistema *s){
                 if(cursor > 0) cursor--;
             } else if(t == T_DIREITA){
                 if(cursor < strlen(texto)) cursor++;
-            } else if(t >= 32 && t <= 126){ 
+            } else if(t >= 32 && t <= 126 && t != '"'){ 
                 int tam = strlen(texto);
                 if(tam < 100){
                     for(int i = tam; i > cursor; i--){
@@ -734,7 +734,7 @@ void desenhaModoEditarCor(int r, int g, int b, int s){
     }
 
     fflush(stdout);
-
+t >= 'A'
 }
 
 void modoEditarCor(Sistema *s){
@@ -903,7 +903,7 @@ void modoEditarTextoBusca(Sistema *s){
             cursor = 0;
         }else if(t == T_END){
             cursor = strlen(texto);
-        }else if(t >= 32 && t <= 126){
+        }else if(t >= 32 && t <= 126 && t != '"'){
             int tam = strlen(texto);
             if(tam < 100){
                 for(int i = tam; i > cursor; i--){
