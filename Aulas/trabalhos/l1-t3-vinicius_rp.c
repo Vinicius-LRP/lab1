@@ -318,6 +318,7 @@ int leNotas(FILE *arq, FILE *p, Sistema *s){
         a++;
         }
     }
+    fclose(arq);
     return a;
 }
 
@@ -335,7 +336,7 @@ void inserirNota(Nota n, FILE *a){
 }
 
 void inserirNotas(Nota n[], int t){
-    FILE *novo = fopen("novo.txt", "w");
+    FILE *novo = fopen("arquivo.txt", "w");
     if(novo == NULL){
         printf("Erro ao abrir!\n");
         return;
@@ -1044,7 +1045,6 @@ int main(){
     }
 
     free(s.notas);
-    fclose(arq);
     fclose(p);
     return 0;
     t_fim();
