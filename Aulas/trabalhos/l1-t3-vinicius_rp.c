@@ -447,8 +447,6 @@ void desenhaModoPrincipal(Sistema *s){
 }
 
 void modoPrincipal(Sistema *s){
-    encontrarValidos(s);
-    s->notaCorrente = s->validos[1];
     while(s->modo == PRINCIPAL){
         encontrarValidos(s);
         if(s->validos[0] == 0){
@@ -456,9 +454,11 @@ void modoPrincipal(Sistema *s){
         }
         desenhaModoPrincipal(s);
         tecla_t t;
+
         do {
             t = t_tecla();
         } while(t == T_NADA);
+
         if(t == 'i'){
             if(s->quantidade != 0 && s->notaCorrente != -1){
                 trocaPosicaoNota(s, 0, s->notaCorrente);
@@ -581,6 +581,16 @@ void modoEditarTexto(Sistema *s){
             
             if(t == T_ENTER){
                 strcpy(s->notas[s->notaCorrente].texto, texto);
+                encontrarValidos(s);
+                bool existe = false;
+                for(int i = 1; i < s->validos[0] + 1; i++){
+                    if(s->notaCorrente == s->validos[i]){
+                        existe = true;
+                    }
+                }
+                if(!existe){
+                    s->notaCorrente = s->validos[s->validos[0]];
+                }
                 s->modo = PRINCIPAL;
             } else if(t == T_ESC){
                 s->modo = PRINCIPAL;
@@ -654,6 +664,16 @@ void modoEditarEtiqueta(Sistema *s){
                 if(tam == 3){
                     for(int i = 0; i < 3; i++){
                         s->notas[s->notaCorrente].etiqueta[i] = etiqueta[i];
+                    }
+                    encontrarValidos(s);
+                    bool existe = false;
+                    for(int i = 1; i < s->validos[0] + 1; i++){
+                        if(s->notaCorrente == s->validos[i]){
+                            existe = true;
+                        }
+                    }
+                    if(!existe){
+                        s->notaCorrente = s->validos[s->validos[0]];
                     }
                     s->modo = PRINCIPAL;
                 }
@@ -860,6 +880,8 @@ void modoEditarTextoBusca(Sistema *s){
 
         if(t == T_ENTER){
             strcpy(s->textoBusca, texto);
+            encontrarValidos(s);
+            s->notaCorrente = s->validos[s->validos[0]];
             s->modo = PRINCIPAL;
         } else if(t == T_ESC){
             strcpy(s->textoBusca, "\0");
@@ -937,8 +959,10 @@ void modoEditarEtiquetaBusca(Sistema *s){
         } else if(t == T_ENTER){
             for(i = 0; i < 3; i++){
                 s->etiquetaBusca[i] = etiqueta[i];
-            s->modo = PRINCIPAL;
             }
+            encontrarValidos(s);
+            s->notaCorrente = s->validos[s->validos[0]];
+            s->modo = PRINCIPAL;
         }else if(t == T_BACKSPACE){
             if(cursor > 0){
                 cursor--;
@@ -985,6 +1009,8 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
 
     s->quantidade = leNotas(a, p, s);
     s->ultimaRemovida = notaVazia();
+    encontrarValidos(s);
+    s->notaCorrente = s->validos[s->validos[0]];
 }
 
 int main(){
