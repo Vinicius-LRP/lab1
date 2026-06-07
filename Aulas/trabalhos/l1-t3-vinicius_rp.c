@@ -915,16 +915,43 @@ void modoEditarTextoBusca(Sistema *s){
     }
 }
 
+void desenhaModoEditarEtiquetaBusca(char e[], int c){
+    t_limpa();
+    t_lincol(1,1);
+    printf("== EDITAR ETIQUETA BUSCA ==");
+    t_lincol(2, 1);
+    printf("Enter confirmar | Esc sair");
+    t_lincol(4, 1);
+    printf("%s", e);
+    t_lincol(4, c + 1);
+
+    fflush(stdout);
+}
+
 
 
 void modoEditarEtiquetaBusca(Sistema *s){
     char etiqueta[4];
-    for(int i = 0; i < 3; i++){
+    int i;
+    for(i = 0; i < 3; i++){
         etiqueta[i] = s->etiquetaBusca[i];
     }
+    etiqueta[i] = '\0';
+    int cursor = strlen(etiqueta);
     while(s->modo = EDITAR_ETIQUETA_BUSCA){
+        desenhaModoEditarEtiquetaBusca(etiqueta, cursor);
+        tecla_t t;
+        
+        do{
+            t = t_tecla();
+        } while(t == T_NADA);
 
-
+        if(t == T_ESC){
+            for(int i = 0; i < 3; i++){
+                s->etiquetaBusca[i] = '\0';
+            }
+            s->modo = PRINCIPAL;
+        }
 
     }
 }
