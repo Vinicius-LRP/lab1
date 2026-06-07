@@ -464,14 +464,12 @@ void modoPrincipal(Sistema *s){
                 trocaPosicaoNota(s, 0, s->notaCorrente);
                 s->notaCorrente = 0;
             }
-        }
-        if(t == 'f'){
+        }else if(t == 'f'){
             if(s->quantidade != 0 && s->notaCorrente != -1){
                 trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
                 s->notaCorrente = s->quantidade - 1;
             }
-        }
-        if(t == 'D'){
+        } else if(t == 'D'){
             if(s->quantidade == 0 || s->notaCorrente == -1){
                 printf("Sem nota corrente para remover!\n");
             } else{
@@ -490,8 +488,7 @@ void modoPrincipal(Sistema *s){
                     }
                 }
             }
-        }
-        if(t == 'I'){
+        } else if(t == 'I'){
             if(s->ultimaRemovida.cor.r == -1){
                 printf("Não existe ultima nota removida para inserir!\n");
             } else{
@@ -504,8 +501,7 @@ void modoPrincipal(Sistema *s){
                 s->notaCorrente = s->quantidade - 1;
                 s->ultimaRemovida = notaVazia();  
             }
-        }
-        if(t == 'n'){
+        } else if(t == 'n'){
             if(s->quantidade == s->capacidade){
                 if(!aumentaCapacidade(s)){
                     printf("Sem memoria\n");
@@ -517,52 +513,41 @@ void modoPrincipal(Sistema *s){
             if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
                 s->notaCorrente = s->quantidade - 1;
             }
-        }
-        if(t == 'g'){
+        } else if(t == 'g'){
             inserirNotas(s->notas,  s->quantidade);
-        }
-        if(t == 'e'){
+        } else if(t == 'e'){
             s->modo = EDITAR_TEXTO;
-        }
-        if(t == 'b'){
+        } else if(t == 'b'){
             s->modo = EDITAR_TEXTO_BUSCA;
-        }
-        if(t == 'c'){
+        } else if(t == 'c'){
             s->modo = EDITAR_COR;
-        }
-        if(t == T_ESQUERDA){
+        }else if(t == T_ESQUERDA){
             for(int i = 1; i < s->validos[0] + 1 ; i++){
                 if(s->validos[i] == s->notaCorrente){
                     if(i > 1) s->notaCorrente = s->validos[i - 1];
                     break;
                 }
             }
-        }
-        if(t == T_DIREITA){
+        }else if(t == T_DIREITA){
             for(int i = 1; i < s->validos[0] + 1 ; i++){
                 if(s->validos[i] == s->notaCorrente){
                     if(i < s->validos[0]) s->notaCorrente = s->validos[i + 1];
                     break;
                 } 
             }
-        }
-        if(t == T_HOME){
+        } else if(t == T_HOME){
             if(s->validos[0] != 0){
                 s->notaCorrente = s->validos[1];
             }
-        }
-        if(t == T_END){
+        } else if(t == T_END){
             if(s->validos[0] != 0){
                 s->notaCorrente = s->validos[s->validos[0]];
             }
-        }
-        if(t == 't'){
+        } else if(t == 't'){
             s->modo = EDITAR_ETIQUETA;
-        }
-        if(t == 'B'){
+        } else if(t == 'B'){
             s->modo = EDITAR_ETIQUETA_BUSCA;
-        }
-        if(t == T_ESC){
+        } else if(t == T_ESC){
             s->modo = TERMINAR;
         }
     }
