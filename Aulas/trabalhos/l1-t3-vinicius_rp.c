@@ -900,6 +900,8 @@ void modoEditarTextoBusca(Sistema *s){
             if(cursor < strlen(texto)) cursor++;
         }else if(t == T_HOME){
             cursor = 0;
+        }else if(t == T_END){
+            cursor = strlen(texto);
         }else if(t >= 32 && t <= 126){
             int tam = strlen(texto);
             if(tam < 100){
