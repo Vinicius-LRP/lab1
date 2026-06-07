@@ -711,33 +711,56 @@ void modoEditarEtiqueta(Sistema *s){
 
 void desenhaModoEditarCor(int r, int g, int b, int s){
     t_limpa();
+    t_corfundo(255,255,255);
+    t_cortexto(0,0,0);
     t_lincol(1,1);
-    printf("== EDITAR COR == ");
+    printf("     == EDITAR COR ==    ");
     t_lincol(2, 1);
     printf("Enter confirmar | Esc sair");
     t_lincol(4, 5);
     if(s == 0){
-        printf("Vermelho : %d <(Editando...)", r);
+        printf("Vermelho : %3d ", r);
+        t_corfundo(r, 0, 0); 
+        printf("  ");
+        t_cornormal();
+        printf(" <(Editando...)");
     } else{
-        printf("Vermelho : %d", r);
+        printf("Vermelho : %3d ", r);
+        t_corfundo(r, 0, 0); 
+        printf("  ");
+        t_cornormal();
     }
     t_lincol(5, 5);
     if(s == 1){
-        printf("Verde    : %d <(Editando...)", g);
+        printf("Verde    : %3d ", g);
+        t_corfundo(0, g, 0); 
+        printf("  ");
+        t_cornormal();
+        printf(" <(Editando...)");
     } else{
-        printf("Verde    : %d ", g);
+        printf("Verde    : %3d ", g);
+        t_corfundo(0, g, 0); 
+        printf("  ");
+        t_cornormal();
     }
     t_lincol(6, 5);
     if(s == 2){
-        printf("Azul     : %d <(Editando...)", b);
+        printf("Azul     : %3d ", b);
+        t_corfundo(0, 0, b); 
+        printf("  ");
+        t_cornormal();
+        printf(" <(Editando...)");
     } else{
-        printf("Azul     : %d ", b);
+        printf("Azul     : %3d ", b);
+        t_corfundo(0, 0, b); 
+        printf("  ");
+        t_cornormal();
     }
     t_lincol(7, 1);
     if(s == -1){
         printf("Selecione a cor: ");
     }
-
+    t_cornormal();
     fflush(stdout);
 }
 
