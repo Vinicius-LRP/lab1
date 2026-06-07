@@ -898,7 +898,9 @@ void modoEditarTextoBusca(Sistema *s){
             if(cursor > 0) cursor--;
         } else if(t == T_DIREITA){
             if(cursor < strlen(texto)) cursor++;
-        } else if(t >= 32 && t <= 126){
+        }else if(t == T_HOME){
+            cursor = 0;
+        }else if(t >= 32 && t <= 126){
             int tam = strlen(texto);
             if(tam < 100){
                 for(int i = tam; i > cursor; i--){
