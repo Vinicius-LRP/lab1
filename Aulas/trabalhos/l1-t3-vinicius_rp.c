@@ -750,7 +750,7 @@ void modoEditarCor(Sistema *s){
         b = s->notas[s->notaCorrente].cor.b;
     }
 
-    while(s->modo = EDITAR_COR){
+    while(s->modo == EDITAR_COR){
         if(s->notaCorrente != -1){
             desenhaModoEditarCor(r, g , b, selecionado);
             tecla_t t;
@@ -795,17 +795,25 @@ void modoEditarCor(Sistema *s){
                 }
             } else if(t == T_S_CIMA){
                 if(selecionado == 0){
-                    if(r < 255){
-                        r += 10;
-                    }
+                    r += 10;
+                    if(r > 255) r = 255;
                 } else if(selecionado == 1){
-                    if(g < 255){
-                        g += 10;
-                    }
+                    g += 10;
+                    if(g > 255) g = 255;
                 } else if(selecionado == 2){
-                    if(b < 255){
-                        b += 10;
-                    }
+                    b += 10;
+                    if(b > 255) b = 255;
+                }
+            } else if(t == T_S_BAIXO){
+                if(selecionado == 0){
+                    r -= 10;
+                    if(r < 0) r = 0;
+                } else if(selecionado == 1){
+                    g -= 10;
+                    if(g < 0) g = 0;
+                } else if(selecionado == 2){
+                    b -= 10;
+                    if(b < 0) b = 0;
                 }
             }
             if(t == T_ESC){
@@ -848,7 +856,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
         printf("Erro de memoria!\n");
         exit(1);
     }
-    s->validos = malloc(s->capacidade * sizeof(Nota));
+    s->validos = malloc(s->capacidade * sizeof(int));
     if(s->validos == NULL){
         printf("Erro de memoria!\n");
         exit(1);
