@@ -621,8 +621,8 @@ void modoEditarTexto(Sistema *s){
             } else if(t >= 32 && t <= 126 && t != '"'){ 
                 int tam = strlen(texto);
                 if(tam < 100){
-                    for(int i = tam; i > cursor; i--){
-                        texto[i] = texto[i - 1];
+                    for(int i = tam; i >= cursor; i--){
+                        texto[i + 1] = texto[i];
                     }
                     texto[cursor] = t;
                     cursor++;
@@ -734,7 +734,6 @@ void desenhaModoEditarCor(int r, int g, int b, int s){
     }
 
     fflush(stdout);
-t >= 'A'
 }
 
 void modoEditarCor(Sistema *s){
@@ -906,8 +905,8 @@ void modoEditarTextoBusca(Sistema *s){
         }else if(t >= 32 && t <= 126 && t != '"'){
             int tam = strlen(texto);
             if(tam < 100){
-                for(int i = tam; i > cursor; i--){
-                    texto[i] = texto[i - 1];
+                for(int i = tam; i >= cursor; i--){
+                    texto[i + 1] = texto[i];
                 }
                 texto[cursor] = t;
                 cursor++;
