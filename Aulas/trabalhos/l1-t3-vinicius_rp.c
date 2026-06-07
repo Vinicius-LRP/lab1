@@ -834,8 +834,13 @@ void modoEditarCor(Sistema *s){
                 s->notas[s->notaCorrente].cor.b = b;
                 s->modo = PRINCIPAL;
             } else if(t == 's'){
-
-            }else if(t == T_ESC){
+                for(int i = 1; i < s->validos[0] + 1; i++){
+                    s->notas[s->validos[i]].cor.r = r;
+                    s->notas[s->validos[i]].cor.g = g;
+                    s->notas[s->validos[i]].cor.b = b;
+                }
+                s->modo = PRINCIPAL;
+            }else if(t == T_ESC){   
                 s->modo = PRINCIPAL;
             }
 
@@ -867,7 +872,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->notaCorrente = -1;
     s->modo = PRINCIPAL;
     strcpy(s->textoBusca, "\0");
-    s->etiquetaBusca[0] = '\0';
+    s->etiquetaBusca[0] = 'X';
     s->etiquetaBusca[1] = 'X';
     s->etiquetaBusca[2] = 'X';
     s->notas = malloc(s->capacidade * sizeof(Nota));
