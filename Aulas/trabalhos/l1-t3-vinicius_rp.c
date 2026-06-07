@@ -821,14 +821,14 @@ void modoEditarCor(Sistema *s){
                     if(b > 255) b = (t - '0');
                 }
             } else if(t == T_DIREITA){
-                if(selecionado < 3){
+                if(selecionado < 2){
                     selecionado++;
                 }
             } else if(t == T_ESQUERDA){
                 if(selecionado > 0){
                     selecionado--;
                 }
-            }
+            } 
             if(t == T_ESC){
                 s->modo = PRINCIPAL;
             }
