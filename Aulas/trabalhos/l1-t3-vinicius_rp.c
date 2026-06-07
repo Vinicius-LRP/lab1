@@ -938,7 +938,7 @@ void modoEditarEtiquetaBusca(Sistema *s){
     }
     etiqueta[i] = '\0';
     int cursor = strlen(etiqueta);
-    while(s->modo = EDITAR_ETIQUETA_BUSCA){
+    while(s->modo == EDITAR_ETIQUETA_BUSCA){
         desenhaModoEditarEtiquetaBusca(etiqueta, cursor);
         tecla_t t;
         
@@ -950,6 +950,10 @@ void modoEditarEtiquetaBusca(Sistema *s){
             for(int i = 0; i < 3; i++){
                 s->etiquetaBusca[i] = '\0';
             }
+            s->modo = PRINCIPAL;
+        } else if(t == T_ENTER){
+            for(i = 0; i < 3; i++){
+                s->etiquetaBusca[i] = etiqueta[i];
             s->modo = PRINCIPAL;
         }
 
