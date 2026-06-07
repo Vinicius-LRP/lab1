@@ -1,6 +1,1 @@
-ZZZ 2 3 4 5 6 7 8 "Olá" 
-YYY 0 0 0 5 6 7 8 "Louco" 
-XXY 2 3 4 5 6 7 8 "Louco" 
-YYY 0 0 0 5 6 7 8 "Eita" 
-XXY 2 3 4 5 6 7 8 "Loucura" 
-YYY 0 0 0 5 6 7 8 "KRL" 
+XXX 2 3 4 5 6 7 8 "KRL" 

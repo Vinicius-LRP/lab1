@@ -928,8 +928,6 @@ void desenhaModoEditarEtiquetaBusca(char e[], int c){
     fflush(stdout);
 }
 
-
-
 void modoEditarEtiquetaBusca(Sistema *s){
     char etiqueta[4];
     int i;
@@ -985,9 +983,9 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
     s->notaCorrente = -1;
     s->modo = PRINCIPAL;
     strcpy(s->textoBusca, "\0");
-    s->etiquetaBusca[0] = 'X';
-    s->etiquetaBusca[1] = 'X';
-    s->etiquetaBusca[2] = 'X';
+    s->etiquetaBusca[0] = '\0';
+    s->etiquetaBusca[1] = '\0';
+    s->etiquetaBusca[2] = '\0';
     s->notas = malloc(s->capacidade * sizeof(Nota));
     if(s->notas == NULL){
         printf("Erro de memoria!\n");
