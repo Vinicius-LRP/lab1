@@ -850,8 +850,37 @@ void modoEditarCor(Sistema *s){
     }
 }
 
+void desenhaModoEditarTextoBusca(char t[], int c){
+    t_limpa();
+    t_lincol(1, 1);
+    printf("== EDITAR TEXTO BUSCA ==");
+    t_lincol(2, 1);
+    printf("Enter confirmar | Esc sair");
+    t_lincol(4, 1);
+    printf("%s", t);
+    t_lincol(4, c + 1);
+
+    fflush(stdout);
+}
+
+
 void modoEditarTextoBusca(Sistema *s){
-    s->modo = PRINCIPAL;
+    char texto[101];
+    strcpy(texto, s->textoBusca);
+    int cursor = strlen(texto);
+    while(s->modo == EDITAR_TEXTO_BUSCA){
+        desenhaModoEditarTextoBusca(texto, cursor);
+        tecla_t t;
+        
+        do{
+            t = t_tecla();
+        }while(t == T_NADA);
+
+        if(t == T_ESC){
+            strcpy(s->textoBusca, "\0");
+        }
+
+    }
 }
 
 void modoEditarEtiquetaBusca(Sistema *s){
