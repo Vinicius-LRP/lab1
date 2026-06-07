@@ -955,8 +955,20 @@ void modoEditarEtiquetaBusca(Sistema *s){
             for(i = 0; i < 3; i++){
                 s->etiquetaBusca[i] = etiqueta[i];
             s->modo = PRINCIPAL;
+            }
+        }else if(t == T_BACKSPACE){
+            if(cursor > 0){
+                cursor--;
+                etiqueta[cursor] = '\0';
+            }
+        } else if((t >= 'A' && t <= 'Z') || (t >= '0' && t <= '9')){
+            int tam = strlen(etiqueta);
+            if(tam < 3){
+                etiqueta[tam] = t;
+                etiqueta[tam + 1] = '\0';
+                cursor++;
+            }
         }
-
     }
 }
 
