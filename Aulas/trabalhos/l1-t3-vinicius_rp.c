@@ -915,8 +915,18 @@ void modoEditarTextoBusca(Sistema *s){
     }
 }
 
+
+
 void modoEditarEtiquetaBusca(Sistema *s){
-    s->modo = PRINCIPAL;
+    char etiqueta[4];
+    for(int i = 0; i < 3; i++){
+        etiqueta[i] = s->etiquetaBusca[i];
+    }
+    while(s->modo = EDITAR_ETIQUETA_BUSCA){
+
+
+
+    }
 }
 
 void incializarVetorValidos(Sistema *s){
