@@ -402,8 +402,8 @@ void encontrarValidos(Sistema *s){
         }
     }
     s->validos[0] = a - 1; 
-    for(int b = 0; b < s->capacidade; b++){
-        s->validos[a + b] = -1;
+    for(int i = a; i <= s->capacidade; i++){
+        s->validos[i] = -1;
     }
 }
 
@@ -740,16 +740,10 @@ void desenhaModoEditarCor(int r, int g, int b, int s){
 }
 
 void modoEditarCor(Sistema *s){
-    int r;
-    int g;
-    int b;
+    int r = s->notas[s->notaCorrente].cor.r;;
+    int g = s->notas[s->notaCorrente].cor.g;;
+    int b = s->notas[s->notaCorrente].cor.b;;
     int selecionado = -1;
-    if(s->notaCorrente != 1){
-        r = s->notas[s->notaCorrente].cor.r;
-        g = s->notas[s->notaCorrente].cor.g;
-        b = s->notas[s->notaCorrente].cor.b;
-    }
-
     while(s->modo == EDITAR_COR){
         if(s->notaCorrente != -1){
             desenhaModoEditarCor(r, g , b, selecionado);
@@ -815,6 +809,25 @@ void modoEditarCor(Sistema *s){
                     b -= 10;
                     if(b < 0) b = 0;
                 }
+            } else if(t >= '0' && t <= '9'){
+                if(selecionado == 0){
+                    r = (r * 10) + ( t - '0');
+                    if(r > 255) r = (t - '0');
+                } else if(selecionado == 1){
+                    g = (g * 10) + ( t - '0');
+                    if(g > 255) g = (t - '0');
+                } else if(selecionado == 2){
+                    b = (b * 10) + ( t - '0');
+                    if(b > 255) b = (t - '0');
+                }
+            } else if(t == T_DIREITA){
+                if(selecionado < 3){
+                    selecionado++;
+                }
+            } else if(t == T_ESQUERDA){
+                if(selecionado > 0){
+                    selecionado--;
+                }
             }
             if(t == T_ESC){
                 s->modo = PRINCIPAL;
@@ -856,7 +869,7 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
         printf("Erro de memoria!\n");
         exit(1);
     }
-    s->validos = malloc(s->capacidade * sizeof(int));
+    s->validos = malloc((s->capacidade + 1) * sizeof(int));
     if(s->validos == NULL){
         printf("Erro de memoria!\n");
         exit(1);
