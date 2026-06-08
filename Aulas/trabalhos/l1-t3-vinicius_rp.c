@@ -644,13 +644,22 @@ void modoEditarTexto(Sistema *s){
 
 void desenhaModoEditarEtiqueta(char e[],int c){
     t_limpa();
-    t_lincol(1, 1);
-    printf("=== EDITAR ETIQUETA ===");
+    t_corfundo(255, 255, 255);
+    t_cortexto(0, 0, 0);
+
+    for(int lin = 1; lin <= 7; lin++){
+        t_lincol(lin, 1);
+        for(int c = 0; c < 25; c++){
+            printf(" ");
+        }
+    }
     t_lincol(2, 1);
+    printf("=== EDITAR ETIQUETA ===");
+    t_lincol(3, 1);
     printf("Enter confirmar | Esc sair");
-    t_lincol(4,1);
+    t_lincol(5,1);
     printf("%s", e);
-    t_lincol(4, c + 1);
+    t_lincol(5, c + 1);
     fflush(stdout);
 }
 
