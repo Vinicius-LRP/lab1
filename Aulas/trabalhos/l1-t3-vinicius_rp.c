@@ -649,12 +649,12 @@ void desenhaModoEditarEtiqueta(char e[],int c){
 
     for(int lin = 1; lin <= 7; lin++){
         t_lincol(lin, 1);
-        for(int c = 0; c < 25; c++){
+        for(int c = 0; c < 31; c++){
             printf(" ");
         }
     }
-    t_lincol(2, 1);
-    printf("=== EDITAR ETIQUETA ===");
+    t_lincol(2, 8);
+    printf("EDITAR ETIQUETA");
     t_lincol(3, 1);
     printf("Enter confirmar | Esc sair");
     t_lincol(5,1);
