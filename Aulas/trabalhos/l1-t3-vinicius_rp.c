@@ -553,15 +553,28 @@ void modoPrincipal(Sistema *s){
     }
 }
 
-void desenhaModoEditarTexto(char t[], int c){
+void desenhaModoEditarTexto(char t[], int c)
+{
     t_limpa();
-    t_lincol(1, 1);
-    printf("=== EDITAR TEXTO ===");
-    t_lincol(2, 1);
+    t_corfundo(255,255,255);
+    t_cortexto(0,0,0);
+    t_cursor(c_bloco, c_naopisca);
+    for(int lin = 1; lin <= 7; lin++){
+        t_lincol(lin, 1);
+        for(int c = 0; c < 107; c++){
+            printf(" ");
+        }
+    }
+    t_lincol(2,47);
+    printf("EDITAR TEXTO");
+
+    t_lincol(3,38);
     printf("Enter confirma | Esc cancela");
-    t_lincol(4, 1);
+
+    t_lincol(5,4);
     printf("%s", t);
-    t_lincol(4, c+ 1); 
+    t_lincol(5, c + 4);
+
     fflush(stdout);
 }
 
@@ -714,6 +727,7 @@ void desenhaModoEditarCor(int r, int g, int b, int s, Sistema *p){
     t_limpa();
     t_corfundo(255,255,255);
     t_cortexto(0,0,0);
+    t_cursor(c_nada, c_pisca);
     t_lincol(l,1);
     printf("                              ");
     t_lincol(l++,1);
