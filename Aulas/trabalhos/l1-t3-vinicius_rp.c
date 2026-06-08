@@ -421,7 +421,6 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
             t_lincol(lin, c);
             printf(" ");
         }
-        
     }
     for(int i = 1; i <= s->validos[0]; i++){
         Nota *n = &s->notas[s->validos[i]];
@@ -443,6 +442,16 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
         }
     }
     t_lincol(l, c);
+    s->notaCorrente = -1;
+    
+    for(int i = 1; i <= s->validos[0]; i++){
+        if(c >= s->notas[s->validos[i]].retangulo.ponto.x && 
+           c <=  s->notas[s->validos[i]].retangulo.ponto.x + s->notas[s->validos[i]].retangulo.tamanho.largura &&
+           l >= s->notas[s->validos[i]].retangulo.ponto.y && 
+           l <=  s->notas[s->validos[i]].retangulo.ponto.y + s->notas[s->validos[i]].retangulo.tamanho.altura){
+            s->notaCorrente = s->validos[i];
+        }
+    }
 
     fflush(stdout);
 }
@@ -456,6 +465,7 @@ void modoPrincipal(Sistema *s){
             s->notaCorrente = -1; 
         }
         desenhaModoPrincipal(s, cursor, l_cursor);
+
         tecla_t t;
 
         do {
