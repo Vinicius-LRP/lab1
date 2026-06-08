@@ -1017,14 +1017,22 @@ void modoEditarTextoBusca(Sistema *s){
 
 void desenhaModoEditarEtiquetaBusca(char e[], int c){
     t_limpa();
-    t_lincol(1,1);
-    printf("== EDITAR ETIQUETA BUSCA ==");
-    t_lincol(2, 1);
+    t_corfundo(255, 255, 255);
+    t_cortexto(0, 0, 0);
+    t_cursor(c_bloco, c_naopisca);
+    for(int lin = 1; lin <= 7; lin++){
+        t_lincol(lin, 1);
+        for(int c = 0; c < 31; c++){
+            printf(" ");
+        }
+    }
+    t_lincol(2, 6);
+    printf("EDITAR ETIQUETA BUSCA");
+    t_lincol(3, 4);
     printf("Enter confirmar | Esc sair");
-    t_lincol(4, 1);
+    t_lincol(5,14);
     printf("%s", e);
-    t_lincol(4, c + 1);
-
+    t_lincol(5, c + 14);
     fflush(stdout);
 }
 
