@@ -409,63 +409,50 @@ void encontrarValidos(Sistema *s){
 }
 
 
-
-
-void desenhaModoPrincipal(Sistema *s, int c, int l){
+void desenhaModoPrincipal(Sistema *s){
     t_limpa();
-    t_corfundo(255,255,255);
-    t_cortexto(0,0,0);
-    t_cursor(c_bloco, c_naopisca);
-    for(int lin = 1; lin <= 20; lin++){
-        for(int c = 0; c < 150; c++){
-            t_lincol(lin, c);
-            printf(" ");
-        }
-    }
-    for(int i = 1; i <= s->validos[0]; i++){
+    int lin = 1;
+
+    t_lincol(lin++, 1);
+    printf("=== MENU PRINCIPAL ===");
+    t_lincol(lin++, 1);
+    printf("Notas encontradas: %d", s->validos[0]);
+    t_lincol(lin++, 1);
+    printf("Nota corrente = %d", s->notaCorrente);
+    t_lincol(lin++, 1);
+    imprimeVet(s->validos);
+
+    lin++;
+    for(int i = 1; i < s->validos[0] + 1; i++){
         Nota *n = &s->notas[s->validos[i]];
         bool corrente = false;
-        int a = 0;
         if(s->validos[i] == s->notaCorrente) corrente = true;
-        t_corfundo(n->cor.r, n->cor.g, n->cor.b);
-        t_cortexto(255 - n->cor.r, 255 - n->cor.g, 255 - n->cor.b);
-        for(int lin = n->retangulo.ponto.y; lin <= n->retangulo.ponto.y + n->retangulo.tamanho.altura; lin++){
-            for(int col = n->retangulo.ponto.x; col <= n->retangulo.ponto.x + n->retangulo.tamanho.largura; col++){
-                t_lincol(lin, col);
-                if(a < strlen(n->texto)){
-                    printf("%c", n->texto[a]);
-                    a++;
-                } else {
-                    printf(" ");
-                }
-            }
+        if(corrente){
+            t_corfundo(80, 80, 180); 
+            t_cortexto(255, 255, 255);
         }
-    }
-    t_lincol(l, c);
-    s->notaCorrente = -1;
-    
-    for(int i = 1; i <= s->validos[0]; i++){
-        if(c >= s->notas[s->validos[i]].retangulo.ponto.x && 
-           c <=  s->notas[s->validos[i]].retangulo.ponto.x + s->notas[s->validos[i]].retangulo.tamanho.largura &&
-           l >= s->notas[s->validos[i]].retangulo.ponto.y && 
-           l <=  s->notas[s->validos[i]].retangulo.ponto.y + s->notas[s->validos[i]].retangulo.tamanho.altura){
-            s->notaCorrente = s->validos[i];
+        t_lincol(lin++, 1);
+        if(corrente){
+            printf(" > NOTA %c%c%c  |  %s", n->etiqueta[0], n->etiqueta[1], n->etiqueta[2], n->texto);
+        } else {
+            printf("   NOTA %c%c%c  |  %s", n->etiqueta[0], n->etiqueta[1], n->etiqueta[2], n->texto);
         }
+        t_lincol(lin++, 1);
+        printf("   Cor: (%d,%d,%d)  Posicao: %d", n->cor.r, n->cor.g, n->cor.b, s->validos[i]);
+        if(corrente) t_cornormal();
+        lin++;
     }
 
     fflush(stdout);
 }
 
 void modoPrincipal(Sistema *s){
-    int cursor = 1;
-    int l_cursor = 1;
     while(s->modo == PRINCIPAL){
         encontrarValidos(s);
         if(s->validos[0] == 0){
             s->notaCorrente = -1; 
         }
-        desenhaModoPrincipal(s, cursor, l_cursor);
-
+        desenhaModoPrincipal(s);
         tecla_t t;
 
         do {
@@ -534,14 +521,14 @@ void modoPrincipal(Sistema *s){
             s->modo = EDITAR_TEXTO_BUSCA;
         } else if(t == 'c'){
             s->modo = EDITAR_COR;
-        }else if(t == ','){
+        }else if(t == T_ESQUERDA){
             for(int i = 1; i < s->validos[0] + 1 ; i++){
                 if(s->validos[i] == s->notaCorrente){
                     if(i > 1) s->notaCorrente = s->validos[i - 1];
                     break;
                 }
             }
-        }else if(t == '.'){
+        }else if(t == T_DIREITA){
             for(int i = 1; i < s->validos[0] + 1 ; i++){
                 if(s->validos[i] == s->notaCorrente){
                     if(i < s->validos[0]) s->notaCorrente = s->validos[i + 1];
@@ -562,57 +549,6 @@ void modoPrincipal(Sistema *s){
             s->modo = EDITAR_ETIQUETA_BUSCA;
         } else if(t == T_ESC){
             s->modo = TERMINAR;
-        } else if(t == T_ESQUERDA){
-            if(cursor > 1){
-                cursor--;
-            }
-        } else if(t == T_DIREITA){
-            if(cursor < 150){
-                cursor++;
-            }
-        } else if(t == T_CIMA){
-            if(l_cursor > 0){
-                l_cursor--;
-            }
-        } else if(t == T_BAIXO){
-            if(l_cursor < 20){
-                l_cursor++;
-            }
-        } else if(t == T_S_ESQUERDA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.x > 1){
-                s->notas[s->notaCorrente].retangulo.ponto.x--;
-                cursor--;
-            }
-        } else if(t == T_S_DIREITA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
-                s->notas[s->notaCorrente].retangulo.ponto.x++;
-                cursor++;
-            }
-        } else if(t == T_S_CIMA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.y > 1){
-                s->notas[s->notaCorrente].retangulo.ponto.y--;
-                l_cursor--;
-            }
-        } else if(t == T_S_BAIXO){
-            if(s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
-                s->notas[s->notaCorrente].retangulo.ponto.y++;
-                l_cursor++;
-            }
-        } else if(t == T_C_CIMA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.y > 1){
-                s->notas[s->notaCorrente].retangulo.ponto.y--;
-                s->notas[s->notaCorrente].retangulo.tamanho.altura++;
-            }
-        } else if(t == T_C_BAIXO){
-            if(s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
-                s->notas[s->notaCorrente].retangulo.tamanho.altura++;
-            }
-        } else if(t == 'C'){
-            if(s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
-                s->notas[s->notaCorrente].retangulo.tamanho.largura++;
-            }
-        } else if(t == T_C_ESQUERDA){
-
         }
     }
 }
@@ -1232,4 +1168,3 @@ int main(){
     return 0;
     t_fim();
 }
-
