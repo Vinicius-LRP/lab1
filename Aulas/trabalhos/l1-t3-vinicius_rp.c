@@ -617,13 +617,35 @@ void modoPrincipal(Sistema *s){
                 s->notas[s->notaCorrente].retangulo.tamanho.largura++;
             }
         } else if(t == T_A_CIMA){
-
+            if(s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
+                if(l_cursor == s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura){
+                    l_cursor--;
+                }
+                s->notas[s->notaCorrente].retangulo.tamanho.altura--;
+            }
         }else if(t == T_A_BAIXO){
-            
+            if(s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
+                if(l_cursor == s->notas[s->notaCorrente].retangulo.ponto.y){
+                    l_cursor++;
+                }
+                s->notas[s->notaCorrente].retangulo.tamanho.altura--;
+                s->notas[s->notaCorrente].retangulo.ponto.y++;
+            }
         }else if(t == T_A_DIREITA){
-            
+            if(s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
+                if(cursor == s->notas[s->notaCorrente].retangulo.ponto.x){
+                    cursor++;
+                }
+                s->notas[s->notaCorrente].retangulo.tamanho.largura--;
+                s->notas[s->notaCorrente].retangulo.ponto.x++;
+            }
         }else if(t == T_A_ESQUERDA){
-            
+            if(s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
+                if(cursor == s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura){
+                    cursor--;
+                }
+                s->notas[s->notaCorrente].retangulo.tamanho.largura--;
+            }
         }
     }
 }
