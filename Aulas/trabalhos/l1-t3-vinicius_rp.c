@@ -425,11 +425,16 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
     }
     for(int i = 1; i <= s->validos[0]; i++){
         Nota *n = &s->notas[s->validos[i]];
+        bool corrente = false;
+        int a = 0;
+        if(s->validos[i] == s->notaCorrente) corrente = true;
         t_corfundo(n->cor.r, n->cor.g, n->cor.b);
+        t_cortexto(255 - n->cor.r, 255 - n->cor.g, 255 - n->cor.b);
         for(int lin = n->retangulo.ponto.y; lin <= n->retangulo.ponto.y + n->retangulo.tamanho.altura; lin++){
             for(int col = n->retangulo.ponto.x; col <= n->retangulo.ponto.x + n->retangulo.tamanho.largura; col++){
                 t_lincol(lin, col);
-                printf(" ");
+                printf("%c", n->texto[a]);
+                a++;
             }
         }
     }
