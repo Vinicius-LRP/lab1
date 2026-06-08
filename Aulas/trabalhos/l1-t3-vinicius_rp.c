@@ -462,7 +462,7 @@ void modoPrincipal(Sistema *s){
         if(s->validos[0] == 0){
             s->notaCorrente = -1; 
         }
-        desenhaModoPrincipal(s, cursor, l_cursor);
+        desenhaModoPrincipal(s, s->cursor.x, s->cursor.y);
 
         tecla_t t;
 
@@ -561,40 +561,40 @@ void modoPrincipal(Sistema *s){
         } else if(t == T_ESC){
             s->modo = TERMINAR;
         } else if(t == T_ESQUERDA){
-            if(cursor > 1){
-                cursor--;
+            if(s->cursor.x > 1){
+                s->cursor.x--;
             }
         } else if(t == T_DIREITA){
-            if(cursor < 150){
-                cursor++;
+            if(s->cursor.x < 150){
+                s->cursor.x++;
             }
         } else if(t == T_CIMA){
-            if(l_cursor > 0){
-                l_cursor--;
+            if(s->cursor.y > 0){
+                s->cursor.y--;
             }
         } else if(t == T_BAIXO){
-            if(l_cursor < 20){
-                l_cursor++;
+            if(s->cursor.y < 20){
+                s->cursor.y++;
             }
         } else if(t == T_S_ESQUERDA){
             if(s->notas[s->notaCorrente].retangulo.ponto.x > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.x--;
-                cursor--;
+                s->cursor.x--;
             }
         } else if(t == T_S_DIREITA){
             if(s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
                 s->notas[s->notaCorrente].retangulo.ponto.x++;
-                cursor++;
+                s->cursor.x++;
             }
         } else if(t == T_S_CIMA){
             if(s->notas[s->notaCorrente].retangulo.ponto.y > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.y--;
-                l_cursor--;
+                s->cursor.y--;
             }
         } else if(t == T_S_BAIXO){
             if(s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
                 s->notas[s->notaCorrente].retangulo.ponto.y++;
-                l_cursor++;
+                s->cursor.y++;
             }
         } else if(t == T_C_CIMA){
             if(s->notas[s->notaCorrente].retangulo.ponto.y > 1){
@@ -614,40 +614,40 @@ void modoPrincipal(Sistema *s){
                 s->notas[s->notaCorrente].retangulo.ponto.x--;
                 s->notas[s->notaCorrente].retangulo.tamanho.largura++;
             }
-        } else if(t == T_A_CIMA){
+        } else if(t == '8'){
             if(s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
-                if(l_cursor == s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura){
-                    l_cursor--;
+                if(s->cursor.y == s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura){
+                    s->cursor.y--;
                 }
                 s->notas[s->notaCorrente].retangulo.tamanho.altura--;
             }
-        }else if(t == T_A_BAIXO){
+        }else if(t == '2'){
             if(s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
-                if(l_cursor == s->notas[s->notaCorrente].retangulo.ponto.y){
-                    l_cursor++;
+                if(s->cursor.y == s->notas[s->notaCorrente].retangulo.ponto.y){
+                    s->cursor.y++;
                 }
                 s->notas[s->notaCorrente].retangulo.tamanho.altura--;
                 s->notas[s->notaCorrente].retangulo.ponto.y++;
             }
-        }else if(t == T_A_DIREITA){
+        }else if(t == '6'){
             if(s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
-                if(cursor == s->notas[s->notaCorrente].retangulo.ponto.x){
-                    cursor++;
+                if(s->cursor.x == s->notas[s->notaCorrente].retangulo.ponto.x){
+                    s->cursor.x++;
                 }
                 s->notas[s->notaCorrente].retangulo.tamanho.largura--;
                 s->notas[s->notaCorrente].retangulo.ponto.x++;
             }
-        }else if(t == T_A_ESQUERDA){
+        }else if(t == '4'){
             if(s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
-                if(cursor == s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura){
-                    cursor--;
+                if(s->cursor.x == s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura){
+                    s->cursor.x--;
                 }
                 s->notas[s->notaCorrente].retangulo.tamanho.largura--;
             }
         } else if(t == 'p'){
             if(s->validos[0] != 0){
-                cursor = s->notas[s->validos[s->validos[0]]].retangulo.ponto.x;
-                l_cursor = s->notas[s->validos[s->validos[0]]].retangulo.ponto.y;
+                s->cursor.x = s->notas[s->validos[s->validos[0]]].retangulo.ponto.x;
+                s->cursor.y = s->notas[s->validos[s->validos[0]]].retangulo.ponto.y;
             }
         }
     }
