@@ -433,8 +433,12 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
         for(int lin = n->retangulo.ponto.y; lin <= n->retangulo.ponto.y + n->retangulo.tamanho.altura; lin++){
             for(int col = n->retangulo.ponto.x; col <= n->retangulo.ponto.x + n->retangulo.tamanho.largura; col++){
                 t_lincol(lin, col);
-                printf("%c", n->texto[a]);
-                a++;
+                if(a < strlen(n->texto)){
+                    printf("%c", n->texto[a]);
+                    a++;
+                } else {
+                    printf(" ");
+                }
             }
         }
     }
