@@ -646,7 +646,7 @@ void desenhaModoEditarEtiqueta(char e[],int c){
     t_limpa();
     t_corfundo(255, 255, 255);
     t_cortexto(0, 0, 0);
-
+    t_cursor(c_bloco, c_naopisca);
     for(int lin = 1; lin <= 7; lin++){
         t_lincol(lin, 1);
         for(int c = 0; c < 31; c++){
@@ -655,11 +655,11 @@ void desenhaModoEditarEtiqueta(char e[],int c){
     }
     t_lincol(2, 8);
     printf("EDITAR ETIQUETA");
-    t_lincol(3, 1);
+    t_lincol(3, 4);
     printf("Enter confirmar | Esc sair");
-    t_lincol(5,1);
+    t_lincol(5,14);
     printf("%s", e);
-    t_lincol(5, c + 1);
+    t_lincol(5, c + 14);
     fflush(stdout);
 }
 
