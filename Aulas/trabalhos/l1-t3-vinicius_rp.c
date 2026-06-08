@@ -947,13 +947,24 @@ void modoEditarCor(Sistema *s){
 
 void desenhaModoEditarTextoBusca(char t[], int c){
     t_limpa();
-    t_lincol(1, 1);
-    printf("== EDITAR TEXTO BUSCA ==");
-    t_lincol(2, 1);
-    printf("Enter confirmar | Esc sair");
-    t_lincol(4, 1);
+    t_corfundo(255,255,255);
+    t_cortexto(0,0,0);
+    t_cursor(c_bloco, c_naopisca);
+    for(int lin = 1; lin <= 7; lin++){
+        t_lincol(lin, 1);
+        for(int c = 0; c < 107; c++){
+            printf(" ");
+        }
+    }
+    t_lincol(2,44);
+    printf("EDITAR TEXTO BUSCA");
+
+    t_lincol(3,38);
+    printf("Enter confirma | Esc cancela");
+
+    t_lincol(5,4);
     printf("%s", t);
-    t_lincol(4, c + 1);
+    t_lincol(5, c + 4);
 
     fflush(stdout);
 }
