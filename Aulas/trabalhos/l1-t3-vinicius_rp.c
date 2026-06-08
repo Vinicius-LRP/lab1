@@ -457,8 +457,6 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
 }
 
 void modoPrincipal(Sistema *s){
-    int cursor = 1;
-    int l_cursor = 1;
     while(s->modo == PRINCIPAL){
         encontrarValidos(s);
         if(s->validos[0] == 0){
@@ -645,6 +643,11 @@ void modoPrincipal(Sistema *s){
                     cursor--;
                 }
                 s->notas[s->notaCorrente].retangulo.tamanho.largura--;
+            }
+        } else if(t == 'p'){
+            if(s->validos[0] != 0){
+                cursor = s->notas[s->validos[s->validos[0]]].retangulo.ponto.x;
+                l_cursor = s->notas[s->validos[s->validos[0]]].retangulo.ponto.y;
             }
         }
     }
@@ -1192,8 +1195,8 @@ void incializarVetorValidos(Sistema *s){
 }
 
 void inicializaSistema(Sistema *s, FILE *a, FILE *p){
-    s->cursor.x = 0;
-    s->cursor.y = 0;
+    s->cursor.x = 1;
+    s->cursor.y = 1;
     s->capacidade = 10;
     s->notaCorrente = -1;
     s->modo = PRINCIPAL;
