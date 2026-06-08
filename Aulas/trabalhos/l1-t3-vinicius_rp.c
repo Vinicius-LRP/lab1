@@ -742,9 +742,6 @@ void desenhaModoEditarCor(int r, int g, int b, int s, Sistema *p){
     t_lincol(l++,1);
     printf("                              ");
     t_lincol(l++,1);
-    printf("         Etiqueta: %c%c%c        ", p->notas[p->notaCorrente].etiqueta[0], p->notas[p->notaCorrente].etiqueta[1],
-    p->notas[p->notaCorrente].etiqueta[2]);
-    t_lincol(l++,1);
     printf("          EDITAR COR          ");
     t_lincol(l++,1);
     printf("          ");
