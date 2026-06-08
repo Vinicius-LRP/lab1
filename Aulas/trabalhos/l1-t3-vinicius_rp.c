@@ -607,12 +607,23 @@ void modoPrincipal(Sistema *s){
             if(s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
                 s->notas[s->notaCorrente].retangulo.tamanho.altura++;
             }
-        } else if(t == 'C'){
+        } else if(t == T_C_DIREITA){
             if(s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
                 s->notas[s->notaCorrente].retangulo.tamanho.largura++;
             }
         } else if(t == T_C_ESQUERDA){
+            if(s->notas[s->notaCorrente].retangulo.ponto.x > 1){
+                s->notas[s->notaCorrente].retangulo.ponto.x--;
+                s->notas[s->notaCorrente].retangulo.tamanho.largura++;
+            }
+        } else if(t == T_A_CIMA){
 
+        }else if(t == T_A_BAIXO){
+            
+        }else if(t == T_A_DIREITA){
+            
+        }else if(t == T_A_ESQUERDA){
+            
         }
     }
 }
