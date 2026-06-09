@@ -86,23 +86,35 @@ Nota notaDefault(){
 }
 
 int aumentaCapacidade(Sistema *s){
-    Nota *novaCapacidade = realloc(s->notas, s->capacidade * 2 * sizeof(Nota));
+    Nota *novasNotas = realloc(s->notas, s->capacidade * 2 * sizeof(Nota));
+    if(novasNotas == NULL) return 0;
 
-    if(novaCapacidade == NULL) return 0;
+    int *novosValidos = realloc(s->validos, (s->capacidade * 2 + 1) * sizeof(int));
+    if(novosValidos == NULL){
+        s->notas = novasNotas; 
+        return 0;
+    }
 
-    s->notas = novaCapacidade;
+    s->notas = novasNotas;
+    s->validos = novosValidos;
     s->capacidade *= 2;
-
     return 1;
 }
 
 int diminuiCapacidade(Sistema *s){
     if(s->capacidade <= 1) return 1; 
 
-    Nota *novaCapacidade = realloc(s->notas,(s->capacidade / 2) * sizeof(Nota));
-    if(novaCapacidade == NULL) return 0;
+    Nota *novasNotas = realloc(s->notas, (s->capacidade / 2) * sizeof(Nota));
+    if(novasNotas == NULL) return 0;
 
-    s->notas = novaCapacidade;
+    int *novosValidos = realloc(s->validos, (s->capacidade / 2 + 1) * sizeof(int));
+    if(novosValidos == NULL){
+        s->notas = novasNotas;
+        return 0;
+    }
+
+    s->notas = novasNotas;
+    s->validos = novosValidos;
     s->capacidade /= 2;
 
     return 1;
@@ -1265,7 +1277,7 @@ int main(){
 
     free(s.notas);
     fclose(p);
-    return 0;
     t_fim();
+    return 0;
 }
 
