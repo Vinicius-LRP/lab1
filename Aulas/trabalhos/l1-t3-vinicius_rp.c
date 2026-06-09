@@ -89,7 +89,7 @@ int aumentaCapacidade(Sistema *s){
     Nota *novasNotas = realloc(s->notas, s->capacidade * 2 * sizeof(Nota));
     if(novasNotas == NULL) return 0;
 
-    int *novosValidos = realloc(s->validos, (s->capacidade * 2 + 1) * sizeof(int));
+    int *novosValidos = realloc(s->validos, (((s->capacidade * 2) + 1) * sizeof(int)));
     if(novosValidos == NULL){
         s->notas = novasNotas; 
         return 0;
@@ -107,7 +107,7 @@ int diminuiCapacidade(Sistema *s){
     Nota *novasNotas = realloc(s->notas, (s->capacidade / 2) * sizeof(Nota));
     if(novasNotas == NULL) return 0;
 
-    int *novosValidos = realloc(s->validos, (s->capacidade / 2 + 1) * sizeof(int));
+    int *novosValidos = realloc(s->validos, ((s->capacidade / 2) + 1) * sizeof(int));
     if(novosValidos == NULL){
         s->notas = novasNotas;
         return 0;
