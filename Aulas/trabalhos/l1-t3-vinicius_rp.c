@@ -1280,6 +1280,7 @@ int main(){
     }
 
     free(s.notas);
+    free(s.validos);
     fclose(p);
     t_fim();
     return 0;
