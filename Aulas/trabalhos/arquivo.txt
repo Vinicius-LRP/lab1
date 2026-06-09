@@ -1,4 +1,4 @@
 A12 255 10 10 8 2 13 5 "T3!" 
-A12 180 50 50 15 5 11 3 "refazer laco principal" 
+A12 180 50 50 16 5 11 3 "refazer laco principal" 
 XXX 255 10 10 25 7 27 5 "T3!" 
 A12 180 50 50 50 11 5 2 "refazer laco principal" 

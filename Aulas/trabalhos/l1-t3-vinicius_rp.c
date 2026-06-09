@@ -77,8 +77,8 @@ Nota notaDefault(){
 
     n.retangulo.ponto.x = 0;
     n.retangulo.ponto.y = 0;
-    n.retangulo.tamanho.largura = 0;
-    n.retangulo.tamanho.altura = 0;
+    n.retangulo.tamanho.largura = 1;
+    n.retangulo.tamanho.altura = 1;
 
     strcpy(n.texto, "Default");
 
@@ -520,6 +520,8 @@ void modoPrincipal(Sistema *s){
                         printf("Sem memoria\n");
                     }
                 s->notas[s->quantidade] = s->ultimaRemovida;
+                s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+                s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
                 s->quantidade++;
                 s->notaCorrente = s->quantidade - 1;
                 s->ultimaRemovida = notaVazia();  
@@ -532,6 +534,8 @@ void modoPrincipal(Sistema *s){
                 }
             }
             s->notas[s->quantidade] = notaDefault();
+            s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+            s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
             s->quantidade++;
             if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
                 s->notaCorrente = s->quantidade - 1;
