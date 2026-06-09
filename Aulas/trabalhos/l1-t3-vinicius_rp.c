@@ -593,52 +593,52 @@ void modoPrincipal(Sistema *s){
                 s->cursor.y++;
             }
         } else if(t == T_S_ESQUERDA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.x > 1){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.x > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.x--;
                 s->cursor.x--;
             }
         } else if(t == T_S_DIREITA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
                 s->notas[s->notaCorrente].retangulo.ponto.x++;
                 s->cursor.x++;
             }
         } else if(t == T_S_CIMA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.y > 1){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.y > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.y--;
                 s->cursor.y--;
             }
         } else if(t == T_S_BAIXO){
-            if(s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
                 s->notas[s->notaCorrente].retangulo.ponto.y++;
                 s->cursor.y++;
             }
         } else if(t == T_C_CIMA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.y > 1){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.y > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.y--;
                 s->notas[s->notaCorrente].retangulo.tamanho.altura++;
             }
         } else if(t == T_C_BAIXO){
-            if(s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
                 s->notas[s->notaCorrente].retangulo.tamanho.altura++;
             }
         } else if(t == T_C_DIREITA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
                 s->notas[s->notaCorrente].retangulo.tamanho.largura++;
             }
         } else if(t == T_C_ESQUERDA){
-            if(s->notas[s->notaCorrente].retangulo.ponto.x > 1){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.x > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.x--;
                 s->notas[s->notaCorrente].retangulo.tamanho.largura++;
             }
         } else if(t == '8'){
-            if(s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
-                if(s->cursor.y == s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
+                if(s->cursor.y == s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura ){
                     s->cursor.y--;
                 }
                 s->notas[s->notaCorrente].retangulo.tamanho.altura--;
             }
         }else if(t == '2'){
-            if(s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
                 if(s->cursor.y == s->notas[s->notaCorrente].retangulo.ponto.y){
                     s->cursor.y++;
                 }
@@ -646,7 +646,7 @@ void modoPrincipal(Sistema *s){
                 s->notas[s->notaCorrente].retangulo.ponto.y++;
             }
         }else if(t == '6'){
-            if(s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
                 if(s->cursor.x == s->notas[s->notaCorrente].retangulo.ponto.x){
                     s->cursor.x++;
                 }
@@ -654,7 +654,7 @@ void modoPrincipal(Sistema *s){
                 s->notas[s->notaCorrente].retangulo.ponto.x++;
             }
         }else if(t == '4'){
-            if(s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
+            if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
                 if(s->cursor.x == s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura){
                     s->cursor.x--;
                 }
