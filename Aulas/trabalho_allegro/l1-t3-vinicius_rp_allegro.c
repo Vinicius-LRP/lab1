@@ -756,9 +756,7 @@ void desenhaModoEditarEtiqueta(char e[], int c){
     j_seleciona_fonte(NULL, 18);
 
     j_texto((ponto_t){70, 40}, (cor_t){0,0,0,1}, "EDITAR ETIQUETA");
-
     j_texto((ponto_t){30, 60}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
-
     j_texto((ponto_t){130, 100}, (cor_t){0,0,0,1}, e);
 
     retangulo_t rcursor = { {130 + c*10, 80}, {2, 20} };
