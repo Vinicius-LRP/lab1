@@ -462,8 +462,8 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
         for(int lin = n->retangulo.ponto.y; lin <= n->retangulo.ponto.y + n->retangulo.tamanho.altura; lin++){
             for(int col = n->retangulo.ponto.x; col <= n->retangulo.ponto.x + n->retangulo.tamanho.largura; col++){
                 if(a < len){
-                    char buf[2] = { n->texto[a++], '\0' };
-                    j_texto((ponto_t){(col-1)*10, lin*20}, ctexto, buf);
+                    char t[2] = { n->texto[a++], '\0' };
+                    j_texto((ponto_t){(col-1)*10, lin*20}, ctexto, t);
                 } else {
                     break;
                 }
@@ -568,28 +568,6 @@ void modoPrincipal(Sistema *s){
             s->modo = EDITAR_TEXTO_BUSCA;
         } else if(t == 'c'){
             s->modo = EDITAR_COR;
-        }else if(t == ','){
-            for(int i = 1; i < s->validos[0] + 1 ; i++){
-                if(s->validos[i] == s->notaCorrente){
-                    if(i > 1) s->notaCorrente = s->validos[i - 1];
-                    break;
-                }
-            }
-        }else if(t == '.'){
-            for(int i = 1; i < s->validos[0] + 1 ; i++){
-                if(s->validos[i] == s->notaCorrente){
-                    if(i < s->validos[0]) s->notaCorrente = s->validos[i + 1];
-                    break;
-                } 
-            }
-        } else if(t == T_HOME){
-            if(s->validos[0] != 0){
-                s->notaCorrente = s->validos[1];
-            }
-        } else if(t == T_END){
-            if(s->validos[0] != 0){
-                s->notaCorrente = s->validos[s->validos[0]];
-            }
         } else if(t == 't'){
             s->modo = EDITAR_ETIQUETA;
         } else if(t == 'B'){
@@ -691,9 +669,7 @@ void modoPrincipal(Sistema *s){
 
 void desenhaModoEditarTexto(char t[], int c){
     retangulo_t fundo = { {0, 0}, {1070, 140} };
-    j_retangulo(fundo, 1,
-        (cor_t){0,0,0,1},
-        (cor_t){1,1,1,1});
+    j_retangulo(fundo, 1, (cor_t){0,0,0,1}, (cor_t){1,1,1,1});
 
     j_seleciona_fonte(NULL, 18);
 
@@ -775,9 +751,7 @@ void modoEditarTexto(Sistema *s){
 
 void desenhaModoEditarEtiqueta(char e[], int c){
     retangulo_t fundo = { {0, 0}, {310, 140} };
-    j_retangulo(fundo, 1,
-        (cor_t){0,0,0,1},
-        (cor_t){1,1,1,1});
+    j_retangulo(fundo, 1,(cor_t){0,0,0,1}, (cor_t){1,1,1,1});
 
     j_seleciona_fonte(NULL, 18);
 
@@ -862,51 +836,42 @@ void modoEditarEtiqueta(Sistema *s){
 }
 
 void desenhaModoEditarCor(int r, int g, int b, int sel, Sistema *p){
+
     retangulo_t fundo = { {0, 0}, {300, 280} };
-    j_retangulo(fundo, 1,
-        (cor_t){0,0,0,1},
-        (cor_t){1,1,1,1});
+
+    j_retangulo(fundo, 1, (cor_t){0,0,0,1}, (cor_t){1,1,1,1});
 
     j_seleciona_fonte(NULL, 18);
 
     j_texto((ponto_t){100, 60}, (cor_t){0,0,0,1}, "EDITAR COR");
 
     retangulo_t prev = { {100, 60}, {100, 80} };
-    j_retangulo(prev, 1,
-        (cor_t){0,0,0,1},
-        (cor_t){r/255.0f, g/255.0f, b/255.0f, 1});
+
+    j_retangulo(prev, 1, (cor_t){0,0,0,1}, (cor_t){r/255.0, g/255.0, b/255.0, 1});
 
     j_texto((ponto_t){20, 180}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
 
-    {
-        char buf[20];
-        snprintf(buf, sizeof(buf), "Vermelho : %3d", r);
-        j_texto((ponto_t){60, 220}, (cor_t){0,0,0,1}, buf);
-        retangulo_t qr = { {210, 200}, {20, 20} };
-        j_retangulo(qr, 0, (cor_t){0,0,0,0}, (cor_t){r/255.0f, 0, 0, 1});
-        if(sel == 0)
-            j_texto((ponto_t){240, 220}, (cor_t){0,0,1,1}, "<");
-    }
-
-    {
-        char buf[20];
-        snprintf(buf, sizeof(buf), "Verde    : %3d", g);
-        j_texto((ponto_t){60, 240}, (cor_t){0,0,0,1}, buf);
-        retangulo_t qg = { {210, 220}, {20, 20} };
-        j_retangulo(qg, 0, (cor_t){0,0,0,0}, (cor_t){0, g/255.0f, 0, 1});
-        if(sel == 1)
-            j_texto((ponto_t){240, 240}, (cor_t){0,0,1,1}, "<");
-    }
-
-    {
-        char buf[20];
-        snprintf(buf, sizeof(buf), "Azul     : %3d", b);
-        j_texto((ponto_t){60, 260}, (cor_t){0,0,0,1}, buf);
-        retangulo_t qb = { {210, 240}, {20, 20} };
-        j_retangulo(qb, 0, (cor_t){0,0,0,0}, (cor_t){0, 0, b/255.0f, 1});
-        if(sel == 2)
-            j_texto((ponto_t){240, 260}, (cor_t){0,0,1,1}, "<");
-    }
+    
+    char c1[20];
+    sprintf(c1, "Vermelho : %3d", r);
+    j_texto((ponto_t){60, 220}, (cor_t){0,0,0,1}, c1);
+    retangulo_t qr = { {210, 200}, {20, 20} };
+    j_retangulo(qr, 0, (cor_t){0,0,0,0}, (cor_t){r/255.0 , 0, 0, 1});
+    if(sel == 0) j_texto((ponto_t){240, 220}, (cor_t){0,0,1,1}, "<");
+    
+    char c2[20];
+    sprintf(c2, "Verde    : %3d", g);
+    j_texto((ponto_t){60, 240}, (cor_t){0,0,0,1}, c2);
+    retangulo_t qg = { {210, 220}, {20, 20} };
+    j_retangulo(qg, 0, (cor_t){0,0,0,0}, (cor_t){0, g/255.0 , 0, 1});
+    if(sel == 1) j_texto((ponto_t){240, 240}, (cor_t){0,0,1,1}, "<");
+    
+    char c3[20];
+    sprintf(c3, "Azul     : %3d", b);
+    j_texto((ponto_t){60, 260}, (cor_t){0,0,0,1}, c3);
+    retangulo_t qb = { {210, 240}, {20, 20} };
+    j_retangulo(qb, 0, (cor_t){0,0,0,0}, (cor_t){0, 0, b/255.0 , 1});
+    if(sel == 2)j_texto((ponto_t){240, 260}, (cor_t){0,0,1,1}, "<");
 
     j_mostra();
 }
@@ -1024,9 +989,7 @@ void modoEditarCor(Sistema *s){
 
 void desenhaModoEditarTextoBusca(char t[], int c){
     retangulo_t fundo = { {0, 0}, {1070, 140} };
-    j_retangulo(fundo, 1,
-        (cor_t){0,0,0,1},
-        (cor_t){1,1,1,1});
+    j_retangulo(fundo, 1, (cor_t){0,0,0,1}, (cor_t){1,1,1,1});
 
     j_seleciona_fonte(NULL, 18);
 
@@ -1101,9 +1064,7 @@ void modoEditarTextoBusca(Sistema *s){
 
 void desenhaModoEditarEtiquetaBusca(char e[], int c){
     retangulo_t fundo = { {0, 0}, {310, 140} };
-    j_retangulo(fundo, 1,
-        (cor_t){0,0,0,1},
-        (cor_t){1,1,1,1});
+    j_retangulo(fundo, 1, (cor_t){0,0,0,1}, (cor_t){1,1,1,1});
 
     j_seleciona_fonte(NULL, 18);
 
