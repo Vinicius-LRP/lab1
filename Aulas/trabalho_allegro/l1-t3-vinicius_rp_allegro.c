@@ -122,7 +122,7 @@ int diminuiCapacidade(Sistema *s){
 
 void inserirNotaComProblema(char l[], FILE *p){
     fprintf(p, "%s", l);
-    fflush(p); // rever
+    fflush(p); 
 }
 
 int valido(char c){
@@ -280,7 +280,7 @@ int leTexto(FILE *a, char t[], char l[], FILE *p) {
     t[i] = '\0';
     if(i == 101){
         printf("Texto maior que o suportado!\n");
-        inserirNotaComProblema(l,p); //refazer essa parte
+        inserirNotaComProblema(l,p);
     }
     return 0;
 }
@@ -437,9 +437,9 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
         cor_t cborda;
 
         if (corrente) {
-            cborda = (cor_t){1, 0.8f, 0, 1};
+            cborda = (cor_t){1, 0.8, 0, 1};
         } else {
-            cborda = (cor_t){0.3f, 0.3f, 0.3f, 1};
+            cborda = (cor_t){0.3, 0.3, 0.3, 1};
         }
 
         float rx = (n->retangulo.ponto.x - 1) * 10;
