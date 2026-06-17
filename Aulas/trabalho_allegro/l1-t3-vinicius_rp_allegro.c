@@ -426,21 +426,15 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
 
     for(int i = 1; i <= s->validos[0]; i++){
         Nota *n = &s->notas[s->validos[i]];
-        bool corrente = false;
-        if(s->validos[i] == s->notaCorrente) corrente = true;
 
         float fr = n->cor.r / 255.0;
         float fg = n->cor.g / 255.0;
         float fb = n->cor.b / 255.0;
         cor_t cfundo  = {fr, fg, fb, 1};
         cor_t ctexto  = {1-fr, 1-fg, 1-fb, 1};
-        cor_t cborda;
+        cor_t cborda = {0.3, 0.3, 0.3, 1};
 
-        if (corrente) {
-            cborda = (cor_t){1, 0.8, 0, 1};
-        } else {
-            cborda = (cor_t){0.3, 0.3, 0.3, 1};
-        }
+
 
         float rx = (n->retangulo.ponto.x - 1) * 10;
         float ry = (n->retangulo.ponto.y - 1) * 20;
@@ -448,12 +442,8 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
         float rh = (n->retangulo.tamanho.altura  + 1) * 20;
 
         retangulo_t rn = { {rx, ry}, {rw, rh} };
-        int espessura;
-        if (corrente) {
-            espessura = 3;
-        } else {
-            espessura = 1;
-        }
+        int espessura = 1;
+
         j_retangulo(rn, espessura, cborda, cfundo);
 
         j_seleciona_fonte(NULL, 18);
@@ -471,7 +461,7 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
             if(a >= len) break;
         }
     }
-
+    
     retangulo_t rc = { {(c-1)*10, (l-1)*20}, {10, 20} };
     j_retangulo(rc, 2, (cor_t){0, 0, 1, 1}, (cor_t){0, 0, 0, 0});
 
