@@ -429,12 +429,18 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
         bool corrente = false;
         if(s->validos[i] == s->notaCorrente) corrente = true;
 
-        float fr = n->cor.r / 255.0f;
-        float fg = n->cor.g / 255.0f;
-        float fb = n->cor.b / 255.0f;
+        float fr = n->cor.r / 255.0;
+        float fg = n->cor.g / 255.0;
+        float fb = n->cor.b / 255.0;
         cor_t cfundo  = {fr, fg, fb, 1};
         cor_t ctexto  = {1-fr, 1-fg, 1-fb, 1};
-        cor_t cborda  = corrente ? (cor_t){1, 0.8f, 0, 1} : (cor_t){0.3f, 0.3f, 0.3f, 1};
+        cor_t cborda;
+
+        if (corrente) {
+            cborda = (cor_t){1, 0.8f, 0, 1};
+        } else {
+            cborda = (cor_t){0.3f, 0.3f, 0.3f, 1};
+        }
 
         float rx = (n->retangulo.ponto.x - 1) * 10;
         float ry = (n->retangulo.ponto.y - 1) * 20;
@@ -442,19 +448,25 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
         float rh = (n->retangulo.tamanho.altura  + 1) * 20;
 
         retangulo_t rn = { {rx, ry}, {rw, rh} };
-        j_retangulo(rn, corrente ? 3 : 1, cborda, cfundo);
+        int espessura;
+        if (corrente) {
+            espessura = 3;
+        } else {
+            espessura = 1;
+        }
+        j_retangulo(rn, espessura, cborda, cfundo);
 
         j_seleciona_fonte(NULL, 18);
         int a = 0;
         int len = strlen(n->texto);
-        for(int lin = n->retangulo.ponto.y;
-            lin <= n->retangulo.ponto.y + n->retangulo.tamanho.altura; lin++){
-            for(int col = n->retangulo.ponto.x;
-                col <= n->retangulo.ponto.x + n->retangulo.tamanho.largura; col++){
+        for(int lin = n->retangulo.ponto.y; lin <= n->retangulo.ponto.y + n->retangulo.tamanho.altura; lin++){
+            for(int col = n->retangulo.ponto.x; col <= n->retangulo.ponto.x + n->retangulo.tamanho.largura; col++){
                 if(a < len){
                     char buf[2] = { n->texto[a++], '\0' };
                     j_texto((ponto_t){(col-1)*10, lin*20}, ctexto, buf);
-                } else break;
+                } else {
+                    break;
+                }
             }
             if(a >= len) break;
         }
