@@ -667,6 +667,37 @@ void modoPrincipal(Sistema *s){
     }
 }
 
+void montaTextoComCursor(char texto[], int cursor, char saida[]) {
+    int tamanho = strlen(texto);
+    int maxVisiveis = 45;
+    int inicio = 0;
+
+    if (cursor >= maxVisiveis) {
+        inicio = cursor - maxVisiveis + 1;
+    }
+    int fim = inicio + maxVisiveis;
+
+    if (fim > tamanho) {
+        fim = tamanho;
+    }
+
+    int j = 0;
+
+    for (int i = inicio; i < fim; i++) {
+        if (i == cursor) {
+            saida[j] = '|';
+            j++;
+        }
+        saida[j] = texto[i];
+        j++;
+    }
+    if (cursor == tamanho) {
+        saida[j] = '|';
+        j++;
+    }
+    saida[j] = '\0';
+}
+
 void desenhaModoEditarTexto(char t[], int c){
     retangulo_t fundo = { {0, 0}, {1070, 140} };
     j_retangulo(fundo, 1, (cor_t){0,0,0,1}, (cor_t){1,1,1,1});
@@ -674,13 +705,11 @@ void desenhaModoEditarTexto(char t[], int c){
     j_seleciona_fonte(NULL, 18);
 
     j_texto((ponto_t){460, 40}, (cor_t){0,0,0,1}, "EDITAR TEXTO");
-
     j_texto((ponto_t){370, 60}, (cor_t){0,0,0,1}, "Enter confirma | Esc cancela");
 
-    j_texto((ponto_t){30, 100}, (cor_t){0,0,0,1}, t);
-
-    retangulo_t rcursor = { {30 + c*10, 80}, {2, 20} };
-    j_retangulo(rcursor, 0, (cor_t){0,0,0,0}, (cor_t){0,0,1,1});
+    char visivel[47];
+    montaTextoComCursor(t, c, visivel);
+    j_texto((ponto_t){30, 100}, (cor_t){0,0,0,1}, visivel);
 
     j_mostra();
 }
@@ -757,10 +786,10 @@ void desenhaModoEditarEtiqueta(char e[], int c){
 
     j_texto((ponto_t){70, 40}, (cor_t){0,0,0,1}, "EDITAR ETIQUETA");
     j_texto((ponto_t){30, 60}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
-    j_texto((ponto_t){130, 100}, (cor_t){0,0,0,1}, e);
 
-    retangulo_t rcursor = { {130 + c*10, 80}, {2, 20} };
-    j_retangulo(rcursor, 0, (cor_t){0,0,0,0}, (cor_t){0,0,1,1});
+    char visivel[4];
+    montaTextoComCursor(e, c, visivel);
+    j_texto((ponto_t){130, 100}, (cor_t){0,0,0,1}, visivel);
 
     j_mostra();
 }
@@ -992,13 +1021,11 @@ void desenhaModoEditarTextoBusca(char t[], int c){
     j_seleciona_fonte(NULL, 18);
 
     j_texto((ponto_t){430, 40}, (cor_t){0,0,0,1}, "EDITAR TEXTO BUSCA");
-
     j_texto((ponto_t){370, 60}, (cor_t){0,0,0,1}, "Enter confirma | Esc cancela");
 
-    j_texto((ponto_t){30, 100}, (cor_t){0,0,0,1}, t);
-
-    retangulo_t rcursor = { {30 + c*10, 80}, {2, 20} };
-    j_retangulo(rcursor, 0, (cor_t){0,0,0,0}, (cor_t){0,0,1,1});
+    char visivel[47];
+    montaTextoComCursor(t, c, visivel);
+    j_texto((ponto_t){30, 100}, (cor_t){0,0,0,1}, visivel);
 
     j_mostra();
 }
@@ -1069,10 +1096,9 @@ void desenhaModoEditarEtiquetaBusca(char e[], int c){
 
     j_texto((ponto_t){30, 60}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
 
-    j_texto((ponto_t){130, 100}, (cor_t){0,0,0,1}, e);
-
-    retangulo_t rcursor = { {130 + c*10, 80}, {2, 20} };
-    j_retangulo(rcursor, 0, (cor_t){0,0,0,0}, (cor_t){0,0,1,1});
+    char visivel[4];
+    montaTextoComCursor(e, c, visivel);
+    j_texto((ponto_t){130, 100}, (cor_t){0,0,0,1}, visivel);
 
     j_mostra();
 }
