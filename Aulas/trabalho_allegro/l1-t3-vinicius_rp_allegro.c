@@ -1003,7 +1003,6 @@ void desenhaModoEditarTextoBusca(char t[], int c){
     j_mostra();
 }
 
-
 void modoEditarTextoBusca(Sistema *s){
     char texto[101];
     strcpy(texto, s->textoBusca);
@@ -1043,9 +1042,9 @@ void modoEditarTextoBusca(Sistema *s){
             if(cursor > 0) cursor--;
         } else if(t == T_DIREITA){
             if(cursor < strlen(texto)) cursor++;
-        }else if(t == T_HOME){
+        }else if(t == T_CTRL_K){
             cursor = 0;
-        }else if(t == T_END){
+        }else if(t == T_CTRL_J){
             cursor = strlen(texto);
         }else if(t >= 32 && t <= 126 && t != '"'){
             int tam = strlen(texto);
