@@ -435,14 +435,22 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
         Nota *n = &s->notas[s->validos[i]];
         bool corrente = false;
         int a = 0;
+        int b = 0;
         if(s->validos[i] == s->notaCorrente) corrente = true;
         t_corfundo(n->cor.r, n->cor.g, n->cor.b);
         t_cortexto(255 - n->cor.r, 255 - n->cor.g, 255 - n->cor.b);
         for(int lin = n->retangulo.ponto.y; lin <= n->retangulo.ponto.y + n->retangulo.tamanho.altura; lin++){
             for(int col = n->retangulo.ponto.x; col <= n->retangulo.ponto.x + n->retangulo.tamanho.largura; col++){
                 t_lincol(lin, col);
-                if(a < strlen(n->texto)){
-                    printf("%c", n->texto[a]);
+                if(a < 3){
+                    printf("%c", n->etiqueta[a]);
+                    a++;   
+                } else if(a == 3){
+                    printf(" ");
+                    a++;
+                }else if(b < strlen(n->texto) && a > 3){
+                    printf("%c", n->texto[b]);
+                    b++;
                     a++;
                 } else {
                     printf(" ");
