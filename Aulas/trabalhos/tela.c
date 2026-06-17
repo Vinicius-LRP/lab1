@@ -164,6 +164,7 @@ tecla_t t_tecla()
   return processa_teclado();
 }
 
+
 void t_lincol(int lin, int col)
 {
   printf("%c[%d;%dH", 27, lin, col);

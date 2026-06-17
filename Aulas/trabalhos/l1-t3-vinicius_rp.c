@@ -122,7 +122,7 @@ int diminuiCapacidade(Sistema *s){
 
 void inserirNotaComProblema(char l[], FILE *p){
     fprintf(p, "%s", l);
-    fflush(p); // rever
+    fflush(p); 
 }
 
 int valido(char c){
@@ -280,7 +280,7 @@ int leTexto(FILE *a, char t[], char l[], FILE *p) {
     t[i] = '\0';
     if(i == 101){
         printf("Texto maior que o suportado!\n");
-        inserirNotaComProblema(l,p); //refazer essa parte
+        inserirNotaComProblema(l,p);
     }
     return 0;
 }
@@ -420,9 +420,6 @@ void encontrarValidos(Sistema *s){
     }
 }
 
-
-
-
 void desenhaModoPrincipal(Sistema *s, int c, int l){
     t_limpa();
     t_corfundo(255,255,255);
@@ -492,7 +489,7 @@ void modoPrincipal(Sistema *s){
                 trocaPosicaoNota(s, s->quantidade - 1, s->notaCorrente);
                 s->notaCorrente = s->quantidade - 1;
             }
-        } else if(t == 'D'){
+        } else if(t == 'd'){
             if(s->quantidade == 0 || s->notaCorrente == -1){
                 printf("Sem nota corrente para remover!\n");
             } else{
@@ -548,28 +545,6 @@ void modoPrincipal(Sistema *s){
             s->modo = EDITAR_TEXTO_BUSCA;
         } else if(t == 'c'){
             s->modo = EDITAR_COR;
-        }else if(t == ','){
-            for(int i = 1; i < s->validos[0] + 1 ; i++){
-                if(s->validos[i] == s->notaCorrente){
-                    if(i > 1) s->notaCorrente = s->validos[i - 1];
-                    break;
-                }
-            }
-        }else if(t == '.'){
-            for(int i = 1; i < s->validos[0] + 1 ; i++){
-                if(s->validos[i] == s->notaCorrente){
-                    if(i < s->validos[0]) s->notaCorrente = s->validos[i + 1];
-                    break;
-                } 
-            }
-        } else if(t == T_HOME){
-            if(s->validos[0] != 0){
-                s->notaCorrente = s->validos[1];
-            }
-        } else if(t == T_END){
-            if(s->validos[0] != 0){
-                s->notaCorrente = s->validos[s->validos[0]];
-            }
         } else if(t == 't'){
             s->modo = EDITAR_ETIQUETA;
         } else if(t == 'B'){
@@ -612,32 +587,32 @@ void modoPrincipal(Sistema *s){
                 s->notas[s->notaCorrente].retangulo.ponto.y++;
                 s->cursor.y++;
             }
-        } else if(t == T_C_CIMA){
+        } else if(t == T_CTRL_K){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.y > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.y--;
                 s->notas[s->notaCorrente].retangulo.tamanho.altura++;
             }
-        } else if(t == T_C_BAIXO){
+        } else if(t == T_CTRL_J){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
                 s->notas[s->notaCorrente].retangulo.tamanho.altura++;
             }
-        } else if(t == T_C_DIREITA){
+        } else if(t == T_CTRL_L){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
                 s->notas[s->notaCorrente].retangulo.tamanho.largura++;
             }
-        } else if(t == T_C_ESQUERDA){
+        } else if(t == T_CTRL_H){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.x > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.x--;
                 s->notas[s->notaCorrente].retangulo.tamanho.largura++;
             }
-        } else if(t == '8'){
+        } else if(t == T_CTRL_I){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
                 if(s->cursor.y == s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura ){
                     s->cursor.y--;
                 }
                 s->notas[s->notaCorrente].retangulo.tamanho.altura--;
             }
-        }else if(t == '2'){
+        }else if(t == T_CTRL_U){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.tamanho.altura > 1){
                 if(s->cursor.y == s->notas[s->notaCorrente].retangulo.ponto.y){
                     s->cursor.y++;
@@ -645,7 +620,7 @@ void modoPrincipal(Sistema *s){
                 s->notas[s->notaCorrente].retangulo.tamanho.altura--;
                 s->notas[s->notaCorrente].retangulo.ponto.y++;
             }
-        }else if(t == '6'){
+        }else if(t == T_CTRL_O){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
                 if(s->cursor.x == s->notas[s->notaCorrente].retangulo.ponto.x){
                     s->cursor.x++;
@@ -653,7 +628,7 @@ void modoPrincipal(Sistema *s){
                 s->notas[s->notaCorrente].retangulo.tamanho.largura--;
                 s->notas[s->notaCorrente].retangulo.ponto.x++;
             }
-        }else if(t == '4'){
+        }else if(t == T_CTRL_Y){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.tamanho.largura > 1){
                 if(s->cursor.x == s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura){
                     s->cursor.x--;
@@ -731,7 +706,7 @@ void modoEditarTexto(Sistema *s){
                         texto[i] = texto[i + 1];
                     }
                 }
-            } else if(t == '.'){
+            } else if(t == T_CTRL_D){
                 int tam = strlen(texto);
                 if(cursor < tam){
                     for(int i = cursor; i < tam; i++){
@@ -822,7 +797,7 @@ void modoEditarEtiqueta(Sistema *s){
                     cursor--;
                     etiqueta[cursor] = '\0';
                 }
-            } else if(t == 's'){
+            } else if(t == T_CTRL_T){
                 int tam = strlen(etiqueta);
                 if(tam == 3){
                     encontrarValidos(s);
@@ -1041,7 +1016,7 @@ void modoEditarCor(Sistema *s){
                 s->notas[s->notaCorrente].cor.g = g;
                 s->notas[s->notaCorrente].cor.b = b;
                 s->modo = PRINCIPAL;
-            } else if(t == 's'){
+            } else if(t == T_CTRL_T){
                 for(int i = 1; i < s->validos[0] + 1; i++){
                     s->notas[s->validos[i]].cor.r = r;
                     s->notas[s->validos[i]].cor.g = g;
@@ -1111,7 +1086,7 @@ void modoEditarTextoBusca(Sistema *s){
                     texto[i] = texto[i + 1];
                 }
             }
-        } else if(t == '.'){
+        } else if(t == T_CTRL_D){
             int tam = strlen(texto);
             if(cursor < tam){
                 for(int i = cursor; i < tam; i++){
