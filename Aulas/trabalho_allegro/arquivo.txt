@@ -1,5 +1,5 @@
 A12 0 255 220 15 5 10 3 "Mundo bonito" 
 A12 254 10 240 8 2 13 5 "Ola" 
-A12 180 50 50 50 11 5 2 "refazer laco principal" 
+A12 180 50 50 180 30 5 2 "refazer laco principal" 
 XXX 255 10 10 25 8 27 5 "T3!" 
 AAA 0 0 0 32 8 1 1 "Default" 

@@ -244,6 +244,12 @@ int leRetangulo(FILE *a, Retangulo *r){
     }
     if(verificaQuebraDeLinha(c, a))
         return 1;
+    if(x + largura > 150){
+        x = x - (x + largura - 149);
+    }
+    if(y + altura > 20){
+        y = y - (y + altura - 20);
+    }
     r->ponto.x = x;
     r->ponto.y = y;
     r->tamanho.largura = largura;
@@ -393,13 +399,13 @@ void encontrarValidos(Sistema *s){
     int a = 1;
     for(int i = 0; i < s->quantidade; i++){
         if(strcmp("\0", s->textoBusca) != 0 && s->etiquetaBusca[0] != '\0'){
-            if(!strcmp(s->notas[i].texto, s->textoBusca) && s->etiquetaBusca[0] == s->notas[i].etiqueta[0] &&
+            if(strstr(s->notas[i].texto, s->textoBusca) != NULL && s->etiquetaBusca[0] == s->notas[i].etiqueta[0] &&
                 s->etiquetaBusca[1] == s->notas[i].etiqueta[1] && s->etiquetaBusca[2] == s->notas[i].etiqueta[2]){
                 s->validos[a] = i;
                 a++;
             }
         } else if(strcmp("\0", s->textoBusca) != 0){
-            if(!strcmp(s->notas[i].texto, s->textoBusca)){
+            if(strstr(s->notas[i].texto, s->textoBusca) != NULL){
                 s->validos[a] = i;
                 a++;
             }
@@ -422,7 +428,19 @@ void encontrarValidos(Sistema *s){
 
 void desenhaModoPrincipal(Sistema *s, int c, int l){
     retangulo_t fundo = { {0, 0}, {1500, 450} };
-    j_retangulo(fundo, 0, (cor_t){1,1,1,1}, (cor_t){1,1,1,1});
+    j_retangulo(fundo, 0, (cor_t){ 1 , 1 , 1 , 1}, (cor_t){ 1 , 1 , 1 , 1});
+
+    j_seleciona_fonte(NULL, 18);
+    retangulo_t modeloLinha = j_texto_contorno("Aj");
+
+    float distanciaTopoBase = -1 * modeloLinha.inicio.y;
+    float alturaLinha = modeloLinha.tamanho.altura;
+    float margemTexto = 2;
+
+    retangulo_t modeloEspaco = j_texto_contorno("A A");
+    retangulo_t modeloDuasLetras = j_texto_contorno("AA");
+
+    float larguraEspaco = modeloEspaco.tamanho.largura - modeloDuasLetras.tamanho.largura;
 
     for(int i = 1; i <= s->validos[0]; i++){
         Nota *n = &s->notas[s->validos[i]];
@@ -430,40 +448,57 @@ void desenhaModoPrincipal(Sistema *s, int c, int l){
         float fr = n->cor.r / 255.0;
         float fg = n->cor.g / 255.0;
         float fb = n->cor.b / 255.0;
-        cor_t cfundo  = {fr, fg, fb, 1};
-        cor_t ctexto  = {1-fr, 1-fg, 1-fb, 1};
-        cor_t cborda = {0.3, 0.3, 0.3, 1};
+        cor_t cfundo  = { fr, fg, fb , 1};
+        cor_t ctexto  = { 1 - fr, 1 - fg , 1 - fb , 1};
+        cor_t cborda = { 0.3 , 0.3 , 0.3 , 1 };
 
+        float rx = ( n->retangulo.ponto.x - 1 ) * 10;
+        float ry = ( n->retangulo.ponto.y - 1 ) * 20;
+        float rl = ( n->retangulo.tamanho.largura + 1 ) * 10;
+        float ra = ( n->retangulo.tamanho.altura  + 1 ) * 20;
 
-
-        float rx = (n->retangulo.ponto.x - 1) * 10;
-        float ry = (n->retangulo.ponto.y - 1) * 20;
-        float rw = (n->retangulo.tamanho.largura + 1) * 10;
-        float rh = (n->retangulo.tamanho.altura  + 1) * 20;
-
-        retangulo_t rn = { {rx, ry}, {rw, rh} };
+        retangulo_t rn = { {rx, ry}, {rl, ra} };
         int espessura = 1;
 
-        j_retangulo(rn, espessura, cborda, cfundo);
+        j_retangulo(rn, espessura, cborda, cfundo );
 
-        j_seleciona_fonte(NULL, 18);
         int a = 0;
         int len = strlen(n->texto);
-        for(int lin = n->retangulo.ponto.y; lin <= n->retangulo.ponto.y + n->retangulo.tamanho.altura; lin++){
-            for(int col = n->retangulo.ponto.x; col <= n->retangulo.ponto.x + n->retangulo.tamanho.largura; col++){
-                if(a < len){
-                    char t[2] = { n->texto[a++], '\0' };
-                    j_texto((ponto_t){(col-1)*10, lin*20}, ctexto, t);
+        float yTopo = ry + margemTexto;
+
+        while(a < len && yTopo + alturaLinha <= ry + ra - margemTexto){
+            float xAtual = rx + margemTexto;
+            float yBase = yTopo + distanciaTopoBase;
+            bool colocouNaLinha = false;
+            while(a < len){
+                char ch = n->texto[a];
+                float larguraLetra;
+
+                if(ch == ' '){
+                    larguraLetra = larguraEspaco;
                 } else {
-                    break;
+                    char t[2] = { ch, '\0' };
+                    retangulo_t letra = j_texto_contorno(t);
+                    larguraLetra = letra.tamanho.largura;
                 }
+
+                if(xAtual + larguraLetra > rx + rl - margemTexto) break;
+
+                if(ch != ' '){
+                    char t[2] = { ch, '\0' };
+                    j_texto((ponto_t){ xAtual, yBase }, ctexto, t);
+                }
+                xAtual += larguraLetra;
+                a++;
+                colocouNaLinha = true;
             }
-            if(a >= len) break;
+            if(!colocouNaLinha) break;
+            yTopo += alturaLinha;
         }
     }
-    
-    retangulo_t rc = { {(c-1)*10, (l-1)*20}, {10, 20} };
-    j_retangulo(rc, 2, (cor_t){0, 0, 1, 1}, (cor_t){0, 0, 0, 0});
+
+    retangulo_t rc = { {(c-1) * 10, (l-1) * 20}, {10, 20} };
+    j_retangulo( rc, 2, (cor_t){0, 0 , 1 , 1 } , (cor_t){0 , 0 , 0 , 0} );
 
     j_mostra();
 
@@ -530,8 +565,20 @@ void modoPrincipal(Sistema *s){
                         printf("Sem memoria\n");
                     }
                 s->notas[s->quantidade] = s->ultimaRemovida;
-                s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
-                s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+                if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura && 
+                    s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
+                    s->notas[s->quantidade].retangulo.ponto.x = 149 - s->notas[s->quantidade].retangulo.tamanho.largura;
+                    s->notas[s->quantidade].retangulo.ponto.y = 20 - s->notas[s->quantidade].retangulo.tamanho.altura;
+                } else if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura){
+                    s->notas[s->quantidade].retangulo.ponto.x = 149 - s->notas[s->quantidade].retangulo.tamanho.largura;
+                    s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+                }else if(s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
+                    s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+                    s->notas[s->quantidade].retangulo.ponto.y = 20 - s->notas[s->quantidade].retangulo.tamanho.altura;
+                }else{
+                    s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+                    s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+                }
                 s->quantidade++;
                 s->notaCorrente = s->quantidade - 1;
                 s->ultimaRemovida = notaVazia();  
@@ -544,8 +591,20 @@ void modoPrincipal(Sistema *s){
                 }
             }
             s->notas[s->quantidade] = notaDefault();
-            s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
-            s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+            if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura && 
+                s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
+                s->notas[s->quantidade].retangulo.ponto.x = 149 - s->notas[s->quantidade].retangulo.tamanho.largura;
+                s->notas[s->quantidade].retangulo.ponto.y = 20 - s->notas[s->quantidade].retangulo.tamanho.altura;
+            } else if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura){
+                s->notas[s->quantidade].retangulo.ponto.x = 149 - s->notas[s->quantidade].retangulo.tamanho.largura;
+                s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+            }else if(s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
+                s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+                s->notas[s->quantidade].retangulo.ponto.y = 20 - s->notas[s->quantidade].retangulo.tamanho.altura;
+            }else{
+                s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+                s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+            }
             s->quantidade++;
             if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
                 s->notaCorrente = s->quantidade - 1;
@@ -569,7 +628,7 @@ void modoPrincipal(Sistema *s){
                 s->cursor.x--;
             }
         } else if(t == T_DIREITA){
-            if(s->cursor.x < 150){
+            if(s->cursor.x < 149){
                 s->cursor.x++;
             }
         } else if(t == T_CIMA){
@@ -860,13 +919,13 @@ void desenhaModoEditarCor(int r, int g, int b, int sel, Sistema *p){
 
     j_seleciona_fonte(NULL, 18);
 
-    j_texto((ponto_t){100, 60}, (cor_t){0,0,0,1}, "EDITAR COR");
+    j_texto((ponto_t){93, 40}, (cor_t){0,0,0,1}, "EDITAR COR");
 
     retangulo_t prev = { {100, 60}, {100, 80} };
 
     j_retangulo(prev, 1, (cor_t){0,0,0,1}, (cor_t){r/255.0, g/255.0, b/255.0, 1});
 
-    j_texto((ponto_t){20, 180}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
+    j_texto((ponto_t){40, 180}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
 
     
     char c1[20];
@@ -877,14 +936,14 @@ void desenhaModoEditarCor(int r, int g, int b, int sel, Sistema *p){
     if(sel == 0) j_texto((ponto_t){240, 220}, (cor_t){0,0,1,1}, "<");
     
     char c2[20];
-    sprintf(c2, "Verde    : %3d", g);
+    sprintf(c2, "Verde       : %3d", g);
     j_texto((ponto_t){60, 240}, (cor_t){0,0,0,1}, c2);
     retangulo_t qg = { {210, 220}, {20, 20} };
     j_retangulo(qg, 0, (cor_t){0,0,0,0}, (cor_t){0, g/255.0 , 0, 1});
     if(sel == 1) j_texto((ponto_t){240, 240}, (cor_t){0,0,1,1}, "<");
     
     char c3[20];
-    sprintf(c3, "Azul     : %3d", b);
+    sprintf(c3, "Azul         : %3d", b);
     j_texto((ponto_t){60, 260}, (cor_t){0,0,0,1}, c3);
     retangulo_t qb = { {210, 240}, {20, 20} };
     j_retangulo(qb, 0, (cor_t){0,0,0,0}, (cor_t){0, 0, b/255.0 , 1});
@@ -1010,7 +1069,7 @@ void desenhaModoEditarTextoBusca(char t[], int c){
 
     j_seleciona_fonte(NULL, 18);
 
-    j_texto((ponto_t){430, 40}, (cor_t){0,0,0,1}, "EDITAR TEXTO BUSCA");
+    j_texto((ponto_t){400, 40}, (cor_t){0,0,0,1}, "EDITAR TEXTO BUSCA");
     j_texto((ponto_t){370, 60}, (cor_t){0,0,0,1}, "Enter confirma | Esc cancela");
 
     char visivel[47];
@@ -1082,7 +1141,7 @@ void desenhaModoEditarEtiquetaBusca(char e[], int c){
 
     j_seleciona_fonte(NULL, 18);
 
-    j_texto((ponto_t){50, 40}, (cor_t){0,0,0,1}, "EDITAR ETIQUETA BUSCA");
+    j_texto((ponto_t){30, 40}, (cor_t){0,0,0,1}, "EDITAR ETIQUETA BUSCA");
 
     j_texto((ponto_t){30, 60}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
 
