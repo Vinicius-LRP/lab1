@@ -244,6 +244,12 @@ int leRetangulo(FILE *a, Retangulo *r){
     }
     if(verificaQuebraDeLinha(c, a))
         return 1;
+    if(x + largura > 150){
+        x = x - (x + largura - 149);
+    }
+    if(y + altura > 20){
+        y = y - (y + altura - 20);
+    }
     r->ponto.x = x;
     r->ponto.y = y;
     r->tamanho.largura = largura;
@@ -525,8 +531,20 @@ void modoPrincipal(Sistema *s){
                         printf("Sem memoria\n");
                     }
                 s->notas[s->quantidade] = s->ultimaRemovida;
-                s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
-                s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+                if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura && 
+                   s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
+                    s->notas[s->quantidade].retangulo.ponto.x = 149 - s->notas[s->quantidade].retangulo.tamanho.largura;
+                    s->notas[s->quantidade].retangulo.ponto.y = 20 - s->notas[s->quantidade].retangulo.tamanho.altura;
+                } else if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura){
+                    s->notas[s->quantidade].retangulo.ponto.x = 149 - s->notas[s->quantidade].retangulo.tamanho.largura;
+                    s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+                }else if(s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
+                    s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+                    s->notas[s->quantidade].retangulo.ponto.y = 20 - s->notas[s->quantidade].retangulo.tamanho.altura;
+                }else{
+                    s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+                    s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+                }
                 s->quantidade++;
                 s->notaCorrente = s->quantidade - 1;
                 s->ultimaRemovida = notaVazia();  
@@ -539,8 +557,20 @@ void modoPrincipal(Sistema *s){
                 }
             }
             s->notas[s->quantidade] = notaDefault();
-            s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
-            s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+            if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura && 
+                s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
+                s->notas[s->quantidade].retangulo.ponto.x = 149 - s->notas[s->quantidade].retangulo.tamanho.largura;
+                s->notas[s->quantidade].retangulo.ponto.y = 20 - s->notas[s->quantidade].retangulo.tamanho.altura;
+            } else if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura){
+                s->notas[s->quantidade].retangulo.ponto.x = 149 - s->notas[s->quantidade].retangulo.tamanho.largura;
+                s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+            }else if(s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
+                s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+                s->notas[s->quantidade].retangulo.ponto.y = 20 - s->notas[s->quantidade].retangulo.tamanho.altura;
+            }else{
+                s->notas[s->quantidade].retangulo.ponto.x = s->cursor.x;
+                s->notas[s->quantidade].retangulo.ponto.y = s->cursor.y;
+            }
             s->quantidade++;
             if(strcmp("\0", s->textoBusca) == 0 && s->etiquetaBusca[0] == '\0'){
                 s->notaCorrente = s->quantidade - 1;
@@ -564,7 +594,7 @@ void modoPrincipal(Sistema *s){
                 s->cursor.x--;
             }
         } else if(t == T_DIREITA){
-            if(s->cursor.x < 150){
+            if(s->cursor.x < 149){
                 s->cursor.x++;
             }
         } else if(t == T_CIMA){
