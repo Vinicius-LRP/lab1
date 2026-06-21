@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "tela.h"
+#include "janela.h"
 
 static int PRINCIPAL = 0;
 static int EDITAR_TEXTO = 1;
@@ -427,56 +427,90 @@ void encontrarValidos(Sistema *s){
 }
 
 void desenhaModoPrincipal(Sistema *s, int c, int l){
-    t_limpa();
-    t_corfundo(255,255,255);
-    t_cortexto(0,0,0);
-    t_cursor(c_bloco, c_naopisca);
-    for(int lin = 1; lin <= 20; lin++){
-        for(int c = 0; c < 150; c++){
-            t_lincol(lin, c);
-            printf(" ");
-        }
-    }
+    retangulo_t fundo = { {0, 0}, {1500, 450} };
+    j_retangulo(fundo, 0, (cor_t){ 1 , 1 , 1 , 1}, (cor_t){ 1 , 1 , 1 , 1});
+
+    j_seleciona_fonte(NULL, 18);
+    retangulo_t modeloLinha = j_texto_contorno("Aj");
+
+    float distanciaTopoBase = -1 * modeloLinha.inicio.y;
+    float alturaLinha = modeloLinha.tamanho.altura;
+    float margemTexto = 2;
+
+    retangulo_t modeloEspaco = j_texto_contorno("A A");
+    retangulo_t modeloDuasLetras = j_texto_contorno("AA");
+
+    float larguraEspaco = modeloEspaco.tamanho.largura - modeloDuasLetras.tamanho.largura;
+
     for(int i = 1; i <= s->validos[0]; i++){
         Nota *n = &s->notas[s->validos[i]];
-        bool corrente = false;
+
+        float fr = n->cor.r / 255.0;
+        float fg = n->cor.g / 255.0;
+        float fb = n->cor.b / 255.0;
+        cor_t cfundo  = { fr, fg, fb , 1};
+        cor_t ctexto  = { 1 - fr, 1 - fg , 1 - fb , 1};
+        cor_t cborda = { 0.3 , 0.3 , 0.3 , 1 };
+
+        float rx = ( n->retangulo.ponto.x - 1 ) * 10;
+        float ry = ( n->retangulo.ponto.y - 1 ) * 20;
+        float rl = ( n->retangulo.tamanho.largura + 1 ) * 10;
+        float ra = ( n->retangulo.tamanho.altura  + 1 ) * 20;
+
+        retangulo_t rn = { {rx, ry}, {rl, ra} };
+        int espessura = 1;
+
+        j_retangulo(rn, espessura, cborda, cfundo );
+
         int a = 0;
-        int b = 0;
-        if(s->validos[i] == s->notaCorrente) corrente = true;
-        t_corfundo(n->cor.r, n->cor.g, n->cor.b);
-        t_cortexto(255 - n->cor.r, 255 - n->cor.g, 255 - n->cor.b);
-        for(int lin = n->retangulo.ponto.y; lin <= n->retangulo.ponto.y + n->retangulo.tamanho.altura; lin++){
-            for(int col = n->retangulo.ponto.x; col <= n->retangulo.ponto.x + n->retangulo.tamanho.largura; col++){
-                t_lincol(lin, col);
-                if(a < 3){
-                    printf("%c", n->etiqueta[a]);
-                    a++;   
-                } else if(a == 3){
-                    printf(" ");
-                    a++;
-                }else if(b < strlen(n->texto) && a > 3){
-                    printf("%c", n->texto[b]);
-                    b++;
-                    a++;
+        int len = strlen(n->texto);
+        float yTopo = ry + margemTexto;
+
+        while(a < len && yTopo + alturaLinha <= ry + ra - margemTexto){
+            float xAtual = rx + margemTexto;
+            float yBase = yTopo + distanciaTopoBase;
+            bool colocouNaLinha = false;
+            while(a < len){
+                char ch = n->texto[a];
+                float larguraLetra;
+
+                if(ch == ' '){
+                    larguraLetra = larguraEspaco;
                 } else {
-                    printf(" ");
+                    char t[2] = { ch, '\0' };
+                    retangulo_t letra = j_texto_contorno(t);
+                    larguraLetra = letra.tamanho.largura;
                 }
+
+                if(xAtual + larguraLetra > rx + rl - margemTexto) break;
+
+                if(ch != ' '){
+                    char t[2] = { ch, '\0' };
+                    j_texto((ponto_t){ xAtual, yBase }, ctexto, t);
+                }
+                xAtual += larguraLetra;
+                a++;
+                colocouNaLinha = true;
             }
-        }
-    }
-    t_lincol(l, c);
-    s->notaCorrente = -1;
-    
-    for(int i = 1; i <= s->validos[0]; i++){
-        if(c >= s->notas[s->validos[i]].retangulo.ponto.x && 
-           c <=  s->notas[s->validos[i]].retangulo.ponto.x + s->notas[s->validos[i]].retangulo.tamanho.largura &&
-           l >= s->notas[s->validos[i]].retangulo.ponto.y && 
-           l <=  s->notas[s->validos[i]].retangulo.ponto.y + s->notas[s->validos[i]].retangulo.tamanho.altura){
-            s->notaCorrente = s->validos[i];
+            if(!colocouNaLinha) break;
+            yTopo += alturaLinha;
         }
     }
 
-    fflush(stdout);
+    retangulo_t rc = { {(c-1) * 10, (l-1) * 20}, {10, 20} };
+    j_retangulo( rc, 2, (cor_t){0, 0 , 1 , 1 } , (cor_t){0 , 0 , 0 , 0} );
+
+    j_mostra();
+
+    s->notaCorrente = -1;
+    for(int i = 1; i <= s->validos[0]; i++){
+        if(c >= s->notas[s->validos[i]].retangulo.ponto.x &&
+           c <= s->notas[s->validos[i]].retangulo.ponto.x + s->notas[s->validos[i]].retangulo.tamanho.largura &&
+           l >= s->notas[s->validos[i]].retangulo.ponto.y &&
+           l <= s->notas[s->validos[i]].retangulo.ponto.y + s->notas[s->validos[i]].retangulo.tamanho.altura){
+            s->notaCorrente = s->validos[i];
+        }
+    }
 }
 
 void modoPrincipal(Sistema *s){
@@ -490,7 +524,7 @@ void modoPrincipal(Sistema *s){
         tecla_t t;
 
         do {
-            t = t_tecla();
+            t = j_tecla();
         } while(t == T_NADA);
 
         if(t == 'i'){
@@ -532,7 +566,7 @@ void modoPrincipal(Sistema *s){
                     }
                 s->notas[s->quantidade] = s->ultimaRemovida;
                 if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura && 
-                   s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
+                    s->cursor.y > 20 - s->notas[s->quantidade].retangulo.tamanho.altura){
                     s->notas[s->quantidade].retangulo.ponto.x = 149 - s->notas[s->quantidade].retangulo.tamanho.largura;
                     s->notas[s->quantidade].retangulo.ponto.y = 20 - s->notas[s->quantidade].retangulo.tamanho.altura;
                 } else if(s->cursor.x > 149 - s->notas[s->quantidade].retangulo.tamanho.largura){
@@ -605,22 +639,22 @@ void modoPrincipal(Sistema *s){
             if(s->cursor.y < 20){
                 s->cursor.y++;
             }
-        } else if(t == T_S_ESQUERDA){
+        } else if(t == 'H'){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.x > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.x--;
                 s->cursor.x--;
             }
-        } else if(t == T_S_DIREITA){
+        } else if(t == 'L'){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.x + s->notas[s->notaCorrente].retangulo.tamanho.largura < 149){
                 s->notas[s->notaCorrente].retangulo.ponto.x++;
                 s->cursor.x++;
             }
-        } else if(t == T_S_CIMA){
+        } else if(t == 'K'){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.y > 1){
                 s->notas[s->notaCorrente].retangulo.ponto.y--;
                 s->cursor.y--;
             }
-        } else if(t == T_S_BAIXO){
+        } else if(t == 'J'){
             if(s->notaCorrente != -1 && s->notas[s->notaCorrente].retangulo.ponto.y + s->notas[s->notaCorrente].retangulo.tamanho.altura < 20){
                 s->notas[s->notaCorrente].retangulo.ponto.y++;
                 s->cursor.y++;
@@ -682,29 +716,51 @@ void modoPrincipal(Sistema *s){
     }
 }
 
-void desenhaModoEditarTexto(char t[], int c)
-{
-    t_limpa();
-    t_corfundo(255,255,255);
-    t_cortexto(0,0,0);
-    t_cursor(c_bloco, c_naopisca);
-    for(int lin = 1; lin <= 7; lin++){
-        t_lincol(lin, 1);
-        for(int c = 0; c < 107; c++){
-            printf(" ");
-        }
+void montaTextoComCursor(char texto[], int cursor, char saida[]) {
+    int tamanho = strlen(texto);
+    int maxVisiveis = 45;
+    int inicio = 0;
+
+    if (cursor >= maxVisiveis) {
+        inicio = cursor - maxVisiveis + 1;
     }
-    t_lincol(2,47);
-    printf("EDITAR TEXTO");
+    int fim = inicio + maxVisiveis;
 
-    t_lincol(3,38);
-    printf("Enter confirma | Esc cancela");
+    if (fim > tamanho) {
+        fim = tamanho;
+    }
 
-    t_lincol(5,4);
-    printf("%s", t);
-    t_lincol(5, c + 4);
+    int j = 0;
 
-    fflush(stdout);
+    for (int i = inicio; i < fim; i++) {
+        if (i == cursor) {
+            saida[j] = '|';
+            j++;
+        }
+        saida[j] = texto[i];
+        j++;
+    }
+    if (cursor == tamanho) {
+        saida[j] = '|';
+        j++;
+    }
+    saida[j] = '\0';
+}
+
+void desenhaModoEditarTexto(char t[], int c){
+    retangulo_t fundo = { {0, 0}, {1070, 140} };
+    j_retangulo(fundo, 1, (cor_t){0,0,0,1}, (cor_t){1,1,1,1});
+
+    j_seleciona_fonte(NULL, 18);
+
+    j_texto((ponto_t){460, 40}, (cor_t){0,0,0,1}, "EDITAR TEXTO");
+    j_texto((ponto_t){370, 60}, (cor_t){0,0,0,1}, "Enter confirma | Esc cancela");
+
+    char visivel[47];
+    montaTextoComCursor(t, c, visivel);
+    j_texto((ponto_t){30, 100}, (cor_t){0,0,0,1}, visivel);
+
+    j_mostra();
 }
 
 void modoEditarTexto(Sistema *s){
@@ -718,7 +774,7 @@ void modoEditarTexto(Sistema *s){
             desenhaModoEditarTexto(texto, cursor);
             tecla_t t;
             do {
-                t = t_tecla();
+                t = j_tecla();
             } while(t == T_NADA);
             
             if(t == T_ENTER){
@@ -771,25 +827,20 @@ void modoEditarTexto(Sistema *s){
     }
 }
 
-void desenhaModoEditarEtiqueta(char e[],int c){
-    t_limpa();
-    t_corfundo(255, 255, 255);
-    t_cortexto(0, 0, 0);
-    t_cursor(c_bloco, c_naopisca);
-    for(int lin = 1; lin <= 7; lin++){
-        t_lincol(lin, 1);
-        for(int c = 0; c < 31; c++){
-            printf(" ");
-        }
-    }
-    t_lincol(2, 8);
-    printf("EDITAR ETIQUETA");
-    t_lincol(3, 4);
-    printf("Enter confirmar | Esc sair");
-    t_lincol(5,14);
-    printf("%s", e);
-    t_lincol(5, c + 14);
-    fflush(stdout);
+void desenhaModoEditarEtiqueta(char e[], int c){
+    retangulo_t fundo = { {0, 0}, {310, 140} };
+    j_retangulo(fundo, 1,(cor_t){0,0,0,1}, (cor_t){1,1,1,1});
+
+    j_seleciona_fonte(NULL, 18);
+
+    j_texto((ponto_t){70, 40}, (cor_t){0,0,0,1}, "EDITAR ETIQUETA");
+    j_texto((ponto_t){30, 60}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
+
+    char visivel[4];
+    montaTextoComCursor(e, c, visivel);
+    j_texto((ponto_t){130, 100}, (cor_t){0,0,0,1}, visivel);
+
+    j_mostra();
 }
 
 void modoEditarEtiqueta(Sistema *s){
@@ -807,7 +858,7 @@ void modoEditarEtiqueta(Sistema *s){
             desenhaModoEditarEtiqueta(etiqueta, cursor);
             tecla_t t;
             do{
-                t = t_tecla();
+                t = j_tecla();
             } while(t == T_NADA);
             
             if(t == T_ENTER){
@@ -860,104 +911,45 @@ void modoEditarEtiqueta(Sistema *s){
     }
 }
 
-void desenhaModoEditarCor(int r, int g, int b, int s, Sistema *p){
-    int l = 1;
-    t_limpa();
-    t_corfundo(255,255,255);
-    t_cortexto(0,0,0);
-    t_cursor(c_nada, c_pisca);
-    t_lincol(l,1);
-    printf("                              ");
-    t_lincol(l++,1);
-    printf("                              ");
-    t_lincol(l++,1);
-    printf("          EDITAR COR          ");
-    t_lincol(l++,1);
-    printf("          ");
-    t_corfundo(r, g, b);
-    printf("          ");
-    t_corfundo(255, 255, 255);
-    printf("          ");
-    t_lincol(l++,1);
-    printf("          ");
-    t_corfundo(r, g, b);
-    printf("          ");
-    t_corfundo(255, 255, 255);
-    printf("          ");
-    t_lincol(l++,1);
-    printf("          ");
-    t_corfundo(r, g, b);
-    printf("          ");
-    t_corfundo(255, 255, 255);
-    printf("          ");
-    t_lincol(l++,1);
-    printf("          ");
-    t_corfundo(r, g, b);
-    printf("          ");
-    t_corfundo(255, 255, 255);
-    printf("          ");
-    t_lincol(l++,1);
-    printf("                              ");
-    t_lincol(l++, 1);
-    printf("  Enter confirmar | Esc sair  ");
-    t_lincol(l++, 1);
-    printf("                              ");
-    t_lincol(l++, 1);
-    printf("      ");
-    if(s == 0){
-        printf("Vermelho : %3d ", r);
-        t_corfundo(r, 0, 0); 
-        printf("  ");
-        t_corfundo(255,255,255);
-        printf("<");
-        printf("      ");
-    } else{
-        printf("Vermelho : %3d ", r);
-        t_corfundo(r, 0, 0); 
-        printf("  ");
-        t_corfundo(255,255,255);
-        printf("       ");
-    }
-    t_corfundo(255,255,255);
-    t_lincol(l++, 1);
-    printf("      ");
-    if(s == 1){
-        printf("Verde    : %3d ", g);
-        t_corfundo(0, g, 0); 
-        printf("  ");
-        t_corfundo(255,255,255);
-        printf("<");
-        printf("      ");
-    } else{
-        printf("Verde    : %3d ", g);
-        t_corfundo(0, g, 0); 
-        printf("  ");
-        t_corfundo(255,255,255);
-        printf("       ");
-    }
-    t_corfundo(255,255,255);
-    t_lincol(l++, 1);
-    printf("      ");
-    if(s == 2){
-        printf("Azul     : %3d ", b);
-        t_corfundo(0, 0, b); 
-        printf("  ");
-        t_corfundo(255,255,255);
-        printf("<");
-        printf("      ");
-    } else{
-        printf("Azul     : %3d ", b);
-        t_corfundo(0, 0, b); 
-        printf("  ");
-        t_corfundo(255,255,255);
-        printf("       ");
-    }
-    t_corfundo(255,255,255);
-    t_lincol(l++, 1);
-    printf("                              ");
-    t_lincol(l++, 1);
-    t_cornormal();
-    fflush(stdout);
+void desenhaModoEditarCor(int r, int g, int b, int sel, Sistema *p){
+
+    retangulo_t fundo = { {0, 0}, {300, 280} };
+
+    j_retangulo(fundo, 1, (cor_t){0,0,0,1}, (cor_t){1,1,1,1});
+
+    j_seleciona_fonte(NULL, 18);
+
+    j_texto((ponto_t){93, 40}, (cor_t){0,0,0,1}, "EDITAR COR");
+
+    retangulo_t prev = { {100, 60}, {100, 80} };
+
+    j_retangulo(prev, 1, (cor_t){0,0,0,1}, (cor_t){r/255.0, g/255.0, b/255.0, 1});
+
+    j_texto((ponto_t){40, 180}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
+
+    
+    char c1[20];
+    sprintf(c1, "Vermelho : %3d", r);
+    j_texto((ponto_t){60, 220}, (cor_t){0,0,0,1}, c1);
+    retangulo_t qr = { {210, 200}, {20, 20} };
+    j_retangulo(qr, 0, (cor_t){0,0,0,0}, (cor_t){r/255.0 , 0, 0, 1});
+    if(sel == 0) j_texto((ponto_t){240, 220}, (cor_t){0,0,1,1}, "<");
+    
+    char c2[20];
+    sprintf(c2, "Verde       : %3d", g);
+    j_texto((ponto_t){60, 240}, (cor_t){0,0,0,1}, c2);
+    retangulo_t qg = { {210, 220}, {20, 20} };
+    j_retangulo(qg, 0, (cor_t){0,0,0,0}, (cor_t){0, g/255.0 , 0, 1});
+    if(sel == 1) j_texto((ponto_t){240, 240}, (cor_t){0,0,1,1}, "<");
+    
+    char c3[20];
+    sprintf(c3, "Azul         : %3d", b);
+    j_texto((ponto_t){60, 260}, (cor_t){0,0,0,1}, c3);
+    retangulo_t qb = { {210, 240}, {20, 20} };
+    j_retangulo(qb, 0, (cor_t){0,0,0,0}, (cor_t){0, 0, b/255.0 , 1});
+    if(sel == 2)j_texto((ponto_t){240, 260}, (cor_t){0,0,1,1}, "<");
+
+    j_mostra();
 }
 
 void modoEditarCor(Sistema *s){
@@ -971,7 +963,7 @@ void modoEditarCor(Sistema *s){
             tecla_t t;
 
             do{
-                t = t_tecla();
+                t = j_tecla();
             } while(t == T_NADA);
             
             if(t == 'e' || t == 'r'){
@@ -1008,7 +1000,7 @@ void modoEditarCor(Sistema *s){
                         b--;
                     }
                 }
-            } else if(t == T_S_CIMA){
+            } else if(t == 'K'){
                 if(selecionado == 0){
                     r += 10;
                     if(r > 255) r = 255;
@@ -1019,7 +1011,7 @@ void modoEditarCor(Sistema *s){
                     b += 10;
                     if(b > 255) b = 255;
                 }
-            } else if(t == T_S_BAIXO){
+            } else if(t == 'J'){
                 if(selecionado == 0){
                     r -= 10;
                     if(r < 0) r = 0;
@@ -1072,29 +1064,20 @@ void modoEditarCor(Sistema *s){
 }
 
 void desenhaModoEditarTextoBusca(char t[], int c){
-    t_limpa();
-    t_corfundo(255,255,255);
-    t_cortexto(0,0,0);
-    t_cursor(c_bloco, c_naopisca);
-    for(int lin = 1; lin <= 7; lin++){
-        t_lincol(lin, 1);
-        for(int c = 0; c < 107; c++){
-            printf(" ");
-        }
-    }
-    t_lincol(2,44);
-    printf("EDITAR TEXTO BUSCA");
+    retangulo_t fundo = { {0, 0}, {1070, 140} };
+    j_retangulo(fundo, 1, (cor_t){0,0,0,1}, (cor_t){1,1,1,1});
 
-    t_lincol(3,38);
-    printf("Enter confirma | Esc cancela");
+    j_seleciona_fonte(NULL, 18);
 
-    t_lincol(5,4);
-    printf("%s", t);
-    t_lincol(5, c + 4);
+    j_texto((ponto_t){400, 40}, (cor_t){0,0,0,1}, "EDITAR TEXTO BUSCA");
+    j_texto((ponto_t){370, 60}, (cor_t){0,0,0,1}, "Enter confirma | Esc cancela");
 
-    fflush(stdout);
+    char visivel[47];
+    montaTextoComCursor(t, c, visivel);
+    j_texto((ponto_t){30, 100}, (cor_t){0,0,0,1}, visivel);
+
+    j_mostra();
 }
-
 
 void modoEditarTextoBusca(Sistema *s){
     char texto[101];
@@ -1105,7 +1088,7 @@ void modoEditarTextoBusca(Sistema *s){
         tecla_t t;
         
         do{
-            t = t_tecla();
+            t = j_tecla();
         }while(t == T_NADA);
 
         if(t == T_ENTER){
@@ -1135,9 +1118,9 @@ void modoEditarTextoBusca(Sistema *s){
             if(cursor > 0) cursor--;
         } else if(t == T_DIREITA){
             if(cursor < strlen(texto)) cursor++;
-        }else if(t == T_HOME){
+        }else if(t == T_CTRL_K){
             cursor = 0;
-        }else if(t == T_END){
+        }else if(t == T_CTRL_J){
             cursor = strlen(texto);
         }else if(t >= 32 && t <= 126 && t != '"'){
             int tam = strlen(texto);
@@ -1153,24 +1136,20 @@ void modoEditarTextoBusca(Sistema *s){
 }
 
 void desenhaModoEditarEtiquetaBusca(char e[], int c){
-    t_limpa();
-    t_corfundo(255, 255, 255);
-    t_cortexto(0, 0, 0);
-    t_cursor(c_bloco, c_naopisca);
-    for(int lin = 1; lin <= 7; lin++){
-        t_lincol(lin, 1);
-        for(int c = 0; c < 31; c++){
-            printf(" ");
-        }
-    }
-    t_lincol(2, 6);
-    printf("EDITAR ETIQUETA BUSCA");
-    t_lincol(3, 4);
-    printf("Enter confirmar | Esc sair");
-    t_lincol(5,14);
-    printf("%s", e);
-    t_lincol(5, c + 14);
-    fflush(stdout);
+    retangulo_t fundo = { {0, 0}, {310, 140} };
+    j_retangulo(fundo, 1, (cor_t){0,0,0,1}, (cor_t){1,1,1,1});
+
+    j_seleciona_fonte(NULL, 18);
+
+    j_texto((ponto_t){30, 40}, (cor_t){0,0,0,1}, "EDITAR ETIQUETA BUSCA");
+
+    j_texto((ponto_t){30, 60}, (cor_t){0,0,0,1}, "Enter confirmar | Esc sair");
+
+    char visivel[4];
+    montaTextoComCursor(e, c, visivel);
+    j_texto((ponto_t){130, 100}, (cor_t){0,0,0,1}, visivel);
+
+    j_mostra();
 }
 
 void modoEditarEtiquetaBusca(Sistema *s){
@@ -1186,7 +1165,7 @@ void modoEditarEtiquetaBusca(Sistema *s){
         tecla_t t;
         
         do{
-            t = t_tecla();
+            t = j_tecla();
         } while(t == T_NADA);
 
         if(t == T_ESC){
@@ -1252,7 +1231,8 @@ void inicializaSistema(Sistema *s, FILE *a, FILE *p){
 }
 
 int main(){
-    t_inicia();
+    tamanho_t tam = { 1500, 450 };
+    j_inicializa(tam, "Sistema de Notas");
     Sistema s;
     FILE *arq = fopen("arquivo.txt", "r");
     FILE *p = fopen("problemas.txt", "w");
@@ -1295,7 +1275,7 @@ int main(){
     free(s.notas);
     free(s.validos);
     fclose(p);
-    t_fim();
+    j_finaliza();
     return 0;
 }
 
